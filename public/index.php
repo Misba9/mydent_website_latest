@@ -22,6 +22,14 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
+$configCache = __DIR__.'/../bootstrap/cache/config.php';
+if (file_exists($configCache)) {
+    $content = @file_get_contents($configCache);
+    if ($content && (str_contains($content, '/Volumes/storage/') || (str_contains($content, 'database.sqlite') && !file_exists(__DIR__.'/../database/database.sqlite')))) {
+        @unlink($configCache);
+    }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
