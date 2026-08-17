@@ -209,4 +209,7 @@ mix.styles([
     'public/assets/front/vendor/bootstrap.min.css',
     'public/assets/front/vendor/slick.css',
     'public/assets/front/vendor/slick-theme.css',
-], 'public/css/front-third-party.css')
+], 'public/css/front-third-party.css');
+
+mix.disableNotifications();
+
