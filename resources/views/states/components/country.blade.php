@@ -1,0 +1,1 @@
+<span>{{ $row->country->name ?? '' }}</span>

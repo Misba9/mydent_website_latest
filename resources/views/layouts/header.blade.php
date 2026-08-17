@@ -6,12 +6,24 @@
          id="nav-header">
         <div class="container-fluid">
             <div class="navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    @include('layouts.sub_menu')
-                </ul>
+                <div class="d-flex align-items-center">
+                    @if(Auth::check())
+                        @if(isRole('patient'))
+                            <h3 class="text-gray-900 fw-bold mb-0 me-4 fs-3">Patient Panel</h3>
+                        @elseif(isRole('doctor'))
+                            <h3 class="text-gray-900 fw-bold mb-0 me-4 fs-3">Doctor Panel</h3>
+                        @elseif(isRole('clinic_admin'))
+                            <h3 class="text-gray-900 fw-bold mb-0 me-4 fs-3">Admin Panel</h3>
+                        @endif
+                    @endif
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @include('layouts.sub_menu')
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
+
     <ul class="nav align-items-center">
         @impersonating
         <li class="px-xxl-3 px-2">

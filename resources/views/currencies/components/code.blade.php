@@ -1,0 +1,1 @@
+<span class="badge bg-light-info">{{ $row->currency_code }}</span>

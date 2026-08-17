@@ -1,0 +1,1 @@
+<span class="badge bg-light-info text-info fw-bold">{{ $row->category->name ?? 'General' }}</span>

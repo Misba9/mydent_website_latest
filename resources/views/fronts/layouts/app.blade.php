@@ -105,12 +105,15 @@
     </script>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     @include('fronts.layouts.header')
-    @yield('front-content')
+    <main class="flex-grow-1">
+        @yield('front-content')
+    </main>
     @include('fronts.layouts.footer')
     @stack('scripts')
 
 </body>
+
 
 </html>

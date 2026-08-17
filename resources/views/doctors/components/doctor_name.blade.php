@@ -1,13 +1,9 @@
 <div class="d-flex align-items-center">
     <div class="image image-circle image-mini me-3">
-        <a href="{{ route('doctors.show', $row->id) }}">
-            <img src="{{ $row->user->profile_image }}" alt="user" class="img-fluid rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
-        </a>
+        <img src="{{ $row->user->profile_image ?? asset('assets/image/infycare-logo.png') }}" class="user-img rounded-circle object-cover" width="35" height="35" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
     </div>
     <div class="d-flex flex-column">
-        <a href="{{ route('doctors.show', $row->id) }}" class="text-gray-900 fw-bold text-decoration-none fs-6 mb-1">
-            {{ $row->user->full_name }}
-        </a>
-        <span class="text-muted fs-small">{{ $row->user->email }}</span>
+        <a href="{{ route('doctors.show', $row->id) }}" class="text-gray-800 fw-bold text-hover-primary text-decoration-none">{{ $row->user->full_name ?? 'N/A' }}</a>
+        <small class="text-muted fs-7">{{ $row->user->email ?? '' }}</small>
     </div>
 </div>

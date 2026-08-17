@@ -1,0 +1,1 @@
+<span>{{ $row->medical_history ?? 'N/A' }}</span>

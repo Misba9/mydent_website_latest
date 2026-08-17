@@ -71,7 +71,7 @@ Route::get('/checkout/buy-now', [CartController::class, 'buyNowCheckout'])->name
 Route::get('/issue/{slug}', [App\Http\Controllers\IssueController::class, 'show'])->name('issue.show');
 
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:clinic_admin'])->group(function () {
     Route::resource('articles', ArticleController::class);
 });
 // For frontend article details
@@ -79,49 +79,44 @@ Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('art
 Route::get('/articles', [ArticleController::class, 'ind'])->name('articles.index');
 
 
-
-
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success', [CheckoutController::class, 'paymentSuccess'])->name('checkout.success');
 
 
-Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'showOrders'])->name('orders.front');
-Route::post('/admin/orders/{order}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'showOrders'])->middleware(['auth', 'role:clinic_admin'])->name('orders.front');
+Route::post('/admin/orders/{order}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus'])->middleware(['auth', 'role:clinic_admin'])->name('orders.updateStatus');
 
 
 // Blog Routes
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
-Route::get('/blogs/create', [BlogController::class, 'create'])->name('blogs.create');
-Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
-Route::get('/blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
-Route::put('/blogs/{blog}', [BlogController::class, 'update'])->name('blogs.update');
-Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
 Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show');
 
+Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
+    Route::get('/blogs/create', [BlogController::class, 'create'])->name('blogs.create');
+    Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
+    Route::get('/blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+    Route::put('/blogs/{blog}', [BlogController::class, 'update'])->name('blogs.update');
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+});
 
 
-// Product listing
-Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
-
-// Show create product form
-Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])
-    ->middleware(['auth', 'xss', 'checkUserStatus', 'checkImpersonateUser', 'permission:manage_ecom'])
-    ->name('products.create');
-
-// Store new product
-Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
-
-// Show edit product form
-Route::get('/products/{product}/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('products.edit');
-
-// Update existing product
-Route::put('/products/{product}', [App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
-
-// Delete product
-Route::delete('/products/{product}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
-// web.php
+// Public Product Listing & Detail
+Route::get('/products', [App\Http\Controllers\Front\FrontController::class, 'ecom'])->name('products.index');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('front.product.show');
+Route::get('/products/{id}', [ProductController::class, 'show']);
+
+// Admin Product Management
+Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
+    Route::get('/admin/products', [App\Http\Controllers\ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
+});
+
+
 // Cart routes
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
@@ -132,8 +127,12 @@ Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.r
 
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::get('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
+
 
 Route::get('google-auth', [GoogleCalendarController::class, 'oauth'])->name('googleAuth');
 Route::get(
@@ -156,6 +155,8 @@ Route::get('/login', function () {
 
 Route::middleware('setLanguage')->group(function () {
     Route::get('/', [FrontController::class, 'medical'])->name('medical');
+    Route::get('/medical', [FrontController::class, 'medical']);
+
     Route::get('/medical-about-us', [FrontController::class, 'medicalAboutUs'])->name('medicalAboutUs');
     Route::get('/medical-services', [FrontController::class, 'medicalServices'])->name('medicalServices');
     Route::get('/medical-appointment', [FrontController::class, 'medicalAppointment'])->name('medicalAppointment');
@@ -268,7 +269,7 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImpersonateUser')->group(function () {
+Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImpersonateUser', 'role:clinic_admin')->group(function () {
     Route::resource('main-banners', \App\Http\Controllers\Admin\MainBannerController::class);
     Route::get('homepage-videos', [HomepageVideoController::class, 'index'])->name('homepage-videos.index');
     Route::get('homepage-videos/create', [HomepageVideoController::class, 'create'])->name('homepage-videos.create');
@@ -451,7 +452,7 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
     Route::get('prescription-pdf/{id}', [PrescriptionController::class, 'convertToPDF'])->name('prescriptions.pdf');
 });
 
-Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus')->group(function () {
+Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'role:clinic_admin')->group(function () {
    // Manage medicine route
     Route::resource('categories', CategoryController::class)->parameters(['categories' => 'category']);
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');

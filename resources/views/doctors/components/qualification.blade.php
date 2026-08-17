@@ -1,0 +1,1 @@
+<span class="badge bg-light-primary text-primary fw-bold">{{ $row->qualification ?? 'BDS / MDS' }}</span>

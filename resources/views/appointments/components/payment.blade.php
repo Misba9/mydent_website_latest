@@ -1,0 +1,1 @@
+<span class="badge bg-light-{{ $row->payment_type ? 'success' : 'warning' }}">{{ $row->payment_type ? 'Paid' : 'Pending' }}</span>

@@ -1,0 +1,1 @@
+<span class="badge bg-light-info">{{ $row->user->roles->first()->name ?? 'Staff' }}</span>

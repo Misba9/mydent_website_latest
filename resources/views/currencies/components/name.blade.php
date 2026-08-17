@@ -1,0 +1,1 @@
+<span class="text-gray-800 fw-bold">{{ $row->currency_name }}</span>

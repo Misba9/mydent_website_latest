@@ -1,0 +1,1 @@
+<span class="fw-bold text-success">{{ getCurrencyIcon() }}{{ number_format($row->charge, 2) }}</span>

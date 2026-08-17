@@ -1,0 +1,1 @@
+<span class="badge bg-light-success text-success">{{ $row->payment_type ?? 'Online' }}</span>

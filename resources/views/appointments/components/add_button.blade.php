@@ -1,0 +1,1 @@
+<div class="card-toolbar ms-auto"><a href="{{ route('appointments.create') }}" class="btn btn-primary"><i class="fas fa-plus me-2"></i> Add Appointment</a></div>

@@ -1,0 +1,1 @@
+<span class="text-gray-800 fw-bold fs-6">{{ $row->name }}</span>

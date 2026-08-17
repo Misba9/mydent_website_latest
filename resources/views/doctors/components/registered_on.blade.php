@@ -1,3 +1,1 @@
-<span class="badge bg-light text-dark">
-    {{ $row->created_at ? $row->created_at->format('M d, Y') : 'N/A' }}
-</span>
+<span class="badge bg-light-info text-info">{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d') }}</span>

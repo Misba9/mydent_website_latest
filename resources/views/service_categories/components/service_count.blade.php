@@ -1,0 +1,1 @@
+<span class="badge bg-light-primary fw-bold">{{ $row->services_count ?? 0 }}</span>

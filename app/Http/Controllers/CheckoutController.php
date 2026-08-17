@@ -104,27 +104,35 @@ class CheckoutController extends Controller
 
 
     private function createOrderWithCart(Request $request, $total, $paymentStatus, $cart)
-{
-    $productNames = collect($cart)->pluck('name')->toArray();
+    {
+        $productNames = collect($cart)->pluck('name')->toArray();
 
-    Order::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'address' => $request->address,
-        'city' => $request->city,
-        'state' => $request->state,
-        'country' => $request->country,
-        'pincode' => $request->pincode,
-        'payment_method' => $request->payment_method,
-        'products' => json_encode($productNames),
-        'payment_status' => $paymentStatus,
-        'total' => $total,
-        'status' => 'Pending',
-    ]);
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+        $tax = $subtotal * 0.05;
 
-    return redirect()->route('checkout.success')->with('success', 'Order placed successfully!');
-}
+        Order::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'pincode' => $request->pincode,
+            'payment_method' => $request->payment_method,
+            'products' => json_encode($productNames),
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'total' => $total,
+            'status' => 'Pending',
+        ]);
+
+        return redirect()->route('checkout.success')->with('success', 'Order placed successfully!');
+    }
+
 
     public function paymentSuccess()
     {

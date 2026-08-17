@@ -1,0 +1,1 @@
+<span class="badge bg-light-info text-info">{{ \Carbon\Carbon::parse($row->opd_date)->format('Y-m-d H:i') }}</span>

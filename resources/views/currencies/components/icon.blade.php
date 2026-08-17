@@ -1,0 +1,1 @@
+<span class="badge bg-light-primary fs-6">{{ $row->currency_icon }}</span>

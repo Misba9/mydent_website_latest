@@ -1,0 +1,1 @@
+<span>{{ $row->state->name ?? '' }}</span>

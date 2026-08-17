@@ -1,0 +1,1 @@
+<a href="{{ route('patients.patient.visits.show', $row->id) }}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"><i class="fa-solid fa-eye text-primary"></i></a>

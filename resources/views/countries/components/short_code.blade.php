@@ -1,0 +1,1 @@
+<span class="badge bg-light-info">{{ $row->short_code }}</span>

@@ -1,0 +1,1 @@
+<span class="badge bg-light-primary">{{ $row->is_completed ? 'Completed' : 'Booked' }}</span>
