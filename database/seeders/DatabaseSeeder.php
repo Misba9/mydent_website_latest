@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultPaymentGatewaySeeder::class);
         $this->call(DefaultMedicinePermissionSeeder::class);
         $this->call(DefaultAssignPermissionSeeder::class);
+        $this->call(DefaultProductsSeeder::class);
+
 
     }
 }
