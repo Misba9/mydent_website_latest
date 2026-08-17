@@ -47,7 +47,7 @@
     <!-- Scripts -->
     <script src="{{ asset('backend/js/vendor.js') }}"></script>
     <script src="{{ mix('assets/js/auto_fill/auto_fill.js') }}"></script>
-    <script src="{{ asset('backend/js/3rd-party-custom.js') }}"></script>
+    <script src="{{ mix('js/third-party.js') }}"></script>
     @stack('scripts')
     <script>
     $(document).ready(function () {

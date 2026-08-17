@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="mb-sm-7 mb-4 form-check">
-                    <input type="checkbox" class="form-check-input" id="remember_me">
+                    <input type="checkbox" name="remember" class="form-check-input" id="remember_me">
                     <label class="form-check-label" for="remember_me">{{ __('messages.common.remember_me') }}</label>
                 </div>
                 <div class="d-grid">
