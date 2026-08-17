@@ -54,7 +54,10 @@ class AppServiceProvider extends ServiceProvider
                 \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
             }
             if (\Illuminate\Support\Facades\Schema::hasTable('model_has_roles')) {
-                \Illuminate\Support\Facades\DB::statement("UPDATE model_has_roles SET model_type = 'App\\\\Models\\\\User' WHERE model_type LIKE '%\\\\\\\\%' OR model_type NOT LIKE '%\\\\%'");
+                \Illuminate\Support\Facades\DB::table('model_has_roles')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
+            }
+            if (\Illuminate\Support\Facades\Schema::hasTable('model_has_permissions')) {
+                \Illuminate\Support\Facades\DB::table('model_has_permissions')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
             }
         } catch (\Throwable $e) {
             // Silently swallow any database boot connection errors if database is initializing

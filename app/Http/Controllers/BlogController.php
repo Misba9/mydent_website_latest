@@ -74,9 +74,12 @@ public function update(Request $request, Blog $blog)
 
     // If a new thumbnail is uploaded, replace the old one
     if ($request->hasFile('thumbnail')) {
-        // Delete old one
-        Storage::disk('public')->delete($blog->thumbnail);
-        $blog->thumbnail = $request->file('thumbnail')->store('blogs', 'public');
+        if ($blog->thumbnail && file_exists(public_path($blog->thumbnail))) {
+            @unlink(public_path($blog->thumbnail));
+        }
+        $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
+        $request->file('thumbnail')->move(public_path('uploads/blogs'), $thumbnailName);
+        $blog->thumbnail = 'uploads/blogs/' . $thumbnailName;
     }
 
     $blog->update([
@@ -95,7 +98,9 @@ public function update(Request $request, Blog $blog)
 // Handle blog deletion
 public function destroy(Blog $blog)
 {
-    Storage::disk('public')->delete($blog->thumbnail);
+    if ($blog->thumbnail && file_exists(public_path($blog->thumbnail))) {
+        @unlink(public_path($blog->thumbnail));
+    }
     $blog->delete();
 
     return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully!');

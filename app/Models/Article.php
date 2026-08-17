@@ -13,4 +13,9 @@ class Article extends Model
         'thumbnail',
         'content'
     ];
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        return getMediaUrl($this->thumbnail, 'assets/image/mydent-logo.png');
+    }
 }

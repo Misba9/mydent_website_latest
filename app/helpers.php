@@ -90,11 +90,14 @@ function getAppFavicon()
 function getMediaUrl($path, $defaultFallback = null)
 {
     if (empty($path)) {
-        return $defaultFallback ? asset($defaultFallback) : asset('assets/image/mydent-logo.png');
+        return $defaultFallback && file_exists(public_path($defaultFallback)) ? asset($defaultFallback) : asset('assets/image/mydent-logo.png');
     }
 
-    // If path is a full HTTP/HTTPS URL, extract path component
+    // If path is a full HTTP/HTTPS URL, extract path component if it belongs to local domain or contains uploads/uploads
     if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+        if (!str_contains($path, 'mydent.in') && !str_contains($path, 'localhost') && !str_contains($path, '127.0.0.1') && !str_contains($path, 'uploads/uploads')) {
+            return $path;
+        }
         $parsedPath = parse_url($path, PHP_URL_PATH);
         $path = ltrim($parsedPath ?? '', '/');
     }
@@ -107,13 +110,23 @@ function getMediaUrl($path, $defaultFallback = null)
         $path = substr($path, strlen('uploads/'));
     }
 
-    // Fix storage/public/ or public/storage/ prefixes
+    // Fix public/storage/ or public/uploads/ prefixes
     if (str_starts_with($path, 'public/storage/')) {
+        $path = substr($path, strlen('public/'));
+    } elseif (str_starts_with($path, 'public/uploads/')) {
         $path = substr($path, strlen('public/'));
     }
 
     // Decode URL-encoded components (e.g. %20) to check local filesystem existence
     $decodedPath = rawurldecode($path);
+
+    // If path does not start with uploads/, storage/, assets/, web/, check if adding uploads/ exists
+    if (!str_starts_with($decodedPath, 'uploads/') && !str_starts_with($decodedPath, 'storage/') && !str_starts_with($decodedPath, 'assets/') && !str_starts_with($decodedPath, 'web/')) {
+        if (file_exists(public_path('uploads/' . $decodedPath))) {
+            return asset('uploads/' . $decodedPath);
+        }
+        $decodedPath = 'uploads/' . $decodedPath;
+    }
 
     // If file exists on disk, return asset URL
     if (file_exists(public_path($decodedPath))) {
@@ -125,7 +138,7 @@ function getMediaUrl($path, $defaultFallback = null)
         return asset($defaultFallback);
     }
 
-    return asset($decodedPath);
+    return asset('assets/image/mydent-logo.png');
 }
 
 

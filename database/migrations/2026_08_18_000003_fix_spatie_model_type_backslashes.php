@@ -13,14 +13,14 @@ return new class extends Migration
     {
         if (Schema::hasTable('model_has_roles')) {
             try {
-                DB::statement("UPDATE model_has_roles SET model_type = 'App\\\\Models\\\\User'");
+                DB::table('model_has_roles')->update(['model_type' => 'App\Models\User']);
             } catch (\Throwable $e) {
             }
         }
 
         if (Schema::hasTable('model_has_permissions')) {
             try {
-                DB::statement("UPDATE model_has_permissions SET model_type = 'App\\\\Models\\\\User'");
+                DB::table('model_has_permissions')->update(['model_type' => 'App\Models\User']);
             } catch (\Throwable $e) {
             }
         }
@@ -42,7 +42,13 @@ return new class extends Migration
 
         if (Schema::hasTable('model_has_roles')) {
             try {
-                DB::statement("UPDATE model_has_roles SET model_type = 'App\\\\Models\\\\User'");
+                DB::table('model_has_roles')->update(['model_type' => 'App\Models\User']);
+            } catch (\Throwable $e) {
+            }
+        }
+        if (Schema::hasTable('model_has_permissions')) {
+            try {
+                DB::table('model_has_permissions')->update(['model_type' => 'App\Models\User']);
             } catch (\Throwable $e) {
             }
         }

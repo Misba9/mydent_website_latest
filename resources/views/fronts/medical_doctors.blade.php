@@ -701,14 +701,20 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const scrollContainer = document.getElementById('scrollCards');
+        const btnLeft = document.getElementById('scrollLeft');
+        const btnRight = document.getElementById('scrollRight');
 
-        document.getElementById('scrollLeft').addEventListener('click', function () {
-            scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
-        });
+        if (btnLeft && scrollContainer) {
+            btnLeft.addEventListener('click', function () {
+                scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
+            });
+        }
 
-        document.getElementById('scrollRight').addEventListener('click', function () {
-            scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
-        });
+        if (btnRight && scrollContainer) {
+            btnRight.addEventListener('click', function () {
+                scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
+            });
+        }
     });
 </script>
 @endpush

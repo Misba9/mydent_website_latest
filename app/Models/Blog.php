@@ -17,5 +17,9 @@ class Blog extends Model
         'aligner_count',
         'content',
     ];
-    
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        return getMediaUrl($this->thumbnail, 'assets/image/mydent-logo.png');
+    }
 }

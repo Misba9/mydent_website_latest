@@ -600,6 +600,7 @@ care - everything in one place
   <script>
    function scrollBlog(direction) {
   const container = document.getElementById('blog-scroll');
+  if (!container) return;
   const cardWidth = container.querySelector('.blog-card')?.offsetWidth || 300;
   const gap = 25;
   const scrollAmount = cardWidth + gap;
@@ -718,6 +719,7 @@ $categories = Product::select('category', 'category_thumbnail')
   <script>
     function scrollCategory(direction) {
   const container = document.getElementById('category-scroll');
+  if (!container) return;
   const cardWidth = container.querySelector('.category-card')?.offsetWidth || 220;
   const gap = 20;
   const scrollAmount = cardWidth + gap;
@@ -1253,21 +1255,29 @@ $categories = Product::select('category', 'category_thumbnail')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const scrollContainer = document.getElementById('scrollCards');
+        const btnLeft = document.getElementById('scrollLeft');
+        const btnRight = document.getElementById('scrollRight');
 
-        document.getElementById('scrollLeft').addEventListener('click', function () {
-            scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
-        });
+        if (btnLeft && scrollContainer) {
+            btnLeft.addEventListener('click', function () {
+                scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
+            });
+        }
 
-        document.getElementById('scrollRight').addEventListener('click', function () {
-            scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
-        });
+        if (btnRight && scrollContainer) {
+            btnRight.addEventListener('click', function () {
+                scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
+            });
+        }
     });
 </script>
 
 <script>
 function scrollRight() {
         const container = document.getElementById('scrollCards');
-        container.scrollBy({ left: 300, behavior: 'smooth' });
+        if (container) {
+            container.scrollBy({ left: 300, behavior: 'smooth' });
+        }
     }
 
 
@@ -1299,7 +1309,9 @@ function scrollRight() {
         accordionButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const target = this.getAttribute('data-bs-target');
+                if (!target) return;
                 const collapse = document.querySelector(target);
+                if (!collapse) return;
                 
                 if (collapse.classList.contains('show')) {
                     collapse.classList.remove('show');
@@ -1328,10 +1340,12 @@ function scrollRight() {
 
     window.addEventListener('scroll', function () {
         var banner = document.getElementById('sticky-banner');
-        if (window.scrollY > 300) {
-            banner.style.transform = 'translateY(0)';
-        } else {
-            banner.style.transform = 'translateY(100%)';
+        if (banner) {
+            if (window.scrollY > 300) {
+                banner.style.transform = 'translateY(0)';
+            } else {
+                banner.style.transform = 'translateY(100%)';
+            }
         }
     });
 </script>
