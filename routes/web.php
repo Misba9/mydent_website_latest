@@ -69,11 +69,7 @@ Route::get('/checkout/buy-now', [CartController::class, 'buyNowCheckout'])->name
 
 // 
 Route::get('/issue/{slug}', [App\Http\Controllers\IssueController::class, 'show'])->name('issue.show');
-Route::resource('admin/main-banners', \App\Http\Controllers\Admin\MainBannerController::class);
-Route::get('homepage-videos', [HomepageVideoController::class, 'index'])->name('homepage-videos.index');
-Route::get('homepage-videos/create', [HomepageVideoController::class, 'create'])->name('homepage-videos.create');
-Route::post('homepage-videos', [HomepageVideoController::class, 'store'])->name('homepage-videos.store');
-Route::delete('homepage-videos/{id}', [HomepageVideoController::class, 'destroy'])->name('homepage-videos.destroy');
+
 
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     Route::resource('articles', ArticleController::class);
@@ -273,7 +269,14 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
 });
 
 Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImpersonateUser')->group(function () {
+    Route::resource('main-banners', \App\Http\Controllers\Admin\MainBannerController::class);
+    Route::get('homepage-videos', [HomepageVideoController::class, 'index'])->name('homepage-videos.index');
+    Route::get('homepage-videos/create', [HomepageVideoController::class, 'create'])->name('homepage-videos.create');
+    Route::post('homepage-videos', [HomepageVideoController::class, 'store'])->name('homepage-videos.store');
+    Route::delete('homepage-videos/{id}', [HomepageVideoController::class, 'destroy'])->name('homepage-videos.destroy');
+
     //Logs
+
     Route::get('logs', [LogViewerController::class, 'index']);
     //Impersonate
     //    Route::impersonate();

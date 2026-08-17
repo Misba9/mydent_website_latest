@@ -48,7 +48,8 @@ public function edit(MainBanner $mainBanner) {
 
 public function update(Request $request, MainBanner $mainBanner) {
     $data = $request->validate([
-        'page' => 'required|string' . $mainBanner->id,
+        'page' => 'required|string',
+
         'title' => 'nullable|string',
         'image' => 'nullable|image|max:2048',
     ]);

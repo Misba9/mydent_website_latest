@@ -70,8 +70,9 @@ function getAppFavicon()
  */
 function getLogInUserId()
 {
-    return Auth::user()->id;
+    return Auth::check() ? Auth::user()->id : null;
 }
+
 
 /**
  * @return mixed
@@ -653,19 +654,18 @@ function canAccessRecord($model, $id)
  */
 function getLoggedinDoctor()
 {
-    return Auth::user()->hasRole(['Doctor']);
+    return Auth::check() ? Auth::user()->hasRole(['Doctor']) : false;
 }
 
 function isRole(string $role)
 {
-
-    if (getLogInUser()->hasRole($role)) {
-
+    if (Auth::check() && getLogInUser() && getLogInUser()->hasRole($role)) {
         return true;
     }
 
     return false;
 }
+
 
 function isZoomTokenExpire()
 {

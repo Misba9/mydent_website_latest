@@ -141,10 +141,9 @@ class FrontController extends AppBaseController
     public function termsCondition(): \Illuminate\View\View
     {
         $termsSetting = Setting::where('key', 'terms_conditions')->first();
-        $termConditions = [];
-        if ($termsSetting) {
-            $termConditions['terms_conditions'] = $termsSetting->value;
-        }
+        $termConditions = [
+            'terms_conditions' => $termsSetting ? $termsSetting->value : 'Terms & Conditions content coming soon.'
+        ];
 
         return view('fronts.terms_conditions', compact('termConditions'));
     }
@@ -155,13 +154,13 @@ class FrontController extends AppBaseController
     public function privacyPolicy(): \Illuminate\View\View
     {
         $privacySetting = Setting::where('key', 'privacy_policy')->first();
-        $privacyPolicy = [];
-        if ($privacySetting) {
-            $privacyPolicy['privacy_policy'] = $privacySetting->value;
-        }
+        $privacyPolicy = [
+            'privacy_policy' => $privacySetting ? $privacySetting->value : 'Privacy Policy content coming soon.'
+        ];
 
         return view('fronts.privacy_policy', compact('privacyPolicy'));
     }
+
 
     /**
      * @return Application|Factory|View

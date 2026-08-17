@@ -19,6 +19,7 @@ class PatientAppointmentController extends AppBaseController
         $paymentStatus = Arr::except($allPaymentStatus, [Appointment::MANUALLY]);
         $paymentGateway = getPaymentGateway();
 
-        return view('patients.appointments.index', compact('paymentStatus', 'paymentGateway'));
+        return view('appointments.index', compact('paymentStatus', 'paymentGateway'));
+
     }
 }

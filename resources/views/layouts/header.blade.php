@@ -2,7 +2,7 @@
     <button type="button" class="btn px-0 aside-menu-container__aside-menubar d-block d-xl-none sidebar-btn">
         <i class="fa-solid fa-bars fs-1"></i>
     </button>
-    <nav class="navbar navbar-expand-xl navbar-light {{(Auth()->user()->dark_mode) ? 'bg-light' : 'bg-white' }} top-navbar d-xl-flex d-block px-3 px-xl-0 py-4 py-xl-0 "
+    <nav class="navbar navbar-expand-xl navbar-light {{(Auth::check() && Auth::user()->dark_mode) ? 'bg-light' : 'bg-white' }} top-navbar d-xl-flex d-block px-3 px-xl-0 py-4 py-xl-0 "
          id="nav-header">
         <div class="container-fluid">
             <div class="navbar-collapse">
@@ -23,7 +23,7 @@
         </li>
         @endImpersonating
         <li class="px-sm-3 px-2">
-            @if(Auth::user()->dark_mode)
+            @if(Auth::check() && Auth::user()->dark_mode)
                 <a href="javascript:void(0)" title="Switch to Light mode"><i
                         class="fa-solid fa-moon text-primary fs-2 apply-dark-mode"></i></a>
             @else
@@ -31,10 +31,11 @@
                         class="fa-solid fa-sun text-primary fs-2 apply-dark-mode"></i></a>
             @endif
         </li>
+
         @php
                 $notifications = getNotification();
             @endphp
-            @if(getLogInUser()->hasRole('doctor') || getLogInUser()->hasRole('patient'))
+            @if(Auth::check() && (getLogInUser()->hasRole('doctor') || getLogInUser()->hasRole('patient')))
             <li class="px-sm-3 px-2">
                 <div class="dropdown custom-dropdown d-flex align-items-center py-4">
                     <button class="btn dropdown-toggle hide-arrow ps-2 pe-0" type="button" id="dropdownMenuButton1"
@@ -84,6 +85,7 @@
             </li>
         @endif
 
+        @if(Auth::check())
         <li class="px-sm-3 px-2">
             <div class="dropdown d-flex align-items-center py-4">
                 <div class="image image-circle image-mini">
@@ -122,6 +124,7 @@
                     <ul class="pt-4">
                         <li>
                             <a class="dropdown-item text-gray-900" href="{{ route('profile.setting') }}">
+
                             <span class="dropdown-icon me-4 text-gray-600">
                                 <i class="fa-solid fa-user"></i>
                             </span>
@@ -183,7 +186,9 @@
                 </div>
             </div>
         </li>
+        @endif
         <li>
+
             <button type="button" class="btn px-0 d-block d-xl-none header-btn pb-2">
                 <i class="fa-solid fa-bars fs-1"></i>
             </button>

@@ -6,7 +6,8 @@
     <section id="content">
         <div class="content-wrap p-t-100">
             <div class="container p-t-30">
-                <div class="mt-100">{!! $termConditions['terms_conditions'] !!}</div>
+                <div class="mt-100">{!! $termConditions['terms_conditions'] ?? 'Terms & Conditions content coming soon.' !!}</div>
+
             </div>
         </div>
     </section>

@@ -13,14 +13,15 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/third-party.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/pages.css') }}">
 
-    @if (!Auth::user()->dark_mode)
-        <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.css') }}">
-    @else
+    @if (Auth::check() && Auth::user()->dark_mode)
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style-dark.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.dark.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/custom-pages-dark.css') }}">
+    @else
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.css') }}">
     @endif
+
 
     <!-- Fonts -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -41,7 +42,7 @@
         @if (config('services.stripe.key'))
             stripe = Stripe('{{ config('services.stripe.key') }}');
         @endif
-        let usersRole = '{{ !empty(getLogInUser()->roles->first()) ? getLogInUser()->roles->first()->name : '' }}';
+        let usersRole = '{{ (Auth::check() && !empty(getLogInUser()->roles->first())) ? getLogInUser()->roles->first()->name : '' }}';
         let currencyIcon = '{{ getCurrencyIcon() }}';
         let isSetFirstFocus = true;
         let womanAvatar = '{{ url(asset('web/media/avatars/female.png')) }}';
@@ -49,9 +50,9 @@
         let changePasswordUrl = "{{ route('user.changePassword') }}";
         let updateLanguageURL = "{{ route('change-language') }}";
         let phoneNo = '';
-        let dashboardChartBGColor = "{{ Auth::user()->dark_mode ? '#13151f' : '#FFFFFF' }}";
-        let dashboardChartFontColor = "{{ Auth::user()->dark_mode ? '#FFFFFF' : '#000000' }}";
-        let userRole = '{{ getLogInUser()->hasRole('patient') }}';
+        let dashboardChartBGColor = "{{ (Auth::check() && Auth::user()->dark_mode) ? '#13151f' : '#FFFFFF' }}";
+        let dashboardChartFontColor = "{{ (Auth::check() && Auth::user()->dark_mode) ? '#FFFFFF' : '#000000' }}";
+        let userRole = '{{ (Auth::check() && getLogInUser()->hasRole('patient')) }}';
         let appointmentStripePaymentUrl = '{{ url('appointment-stripe-charge') }}';
         let checkLanguageSession = '{{ checkLanguageSession() }}'
         let noData = "{{ __('messages.common.no_data_available') }}"
@@ -59,6 +60,7 @@
         let currentLoginUserId = "{{ getLogInUserId() }}";
         let prescriptionStatusRoute =
             "{{ isRole('doctor') ? 'doctors.prescription.status' : (isRole('patient') ? 'patients.prescription.status' : 'prescription.status') }}";
+
 
         Lang.setLocale(checkLanguageSession);
         let options = {
@@ -117,12 +119,16 @@
                 </div>
             </div>
         </div>
-        {{ Form::hidden('currentLanguage', getLoginUser()->language != null ? getLoginUser()->language : checkLanguageSession(), ['class' => 'currentLanguage']) }}
+        {{ Form::hidden('currentLanguage', (Auth::check() && getLoginUser() && getLoginUser()->language != null) ? getLoginUser()->language : checkLanguageSession(), ['class' => 'currentLanguage']) }}
+
     </div>
 
-    @include('profile.changePassword')
-    @include('profile.email_notification')
-    @include('profile.changelanguage')
+    @if(Auth::check())
+        @include('profile.changePassword')
+        @include('profile.email_notification')
+        @include('profile.changelanguage')
+    @endif
+
     @stack('scripts')
 
 </body>

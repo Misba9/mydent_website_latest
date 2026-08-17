@@ -6,7 +6,8 @@
     <section id="content">
         <div class="content-wrap p-t-100">
             <div class="container p-t-30">
-                <div class="mt-100">{!! $privacyPolicy['privacy_policy'] !!}</div>
+                <div class="mt-100">{!! $privacyPolicy['privacy_policy'] ?? 'Privacy Policy content coming soon.' !!}</div>
+
             </div>
         </div>
     </section>

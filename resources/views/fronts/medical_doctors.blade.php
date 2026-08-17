@@ -126,12 +126,13 @@
                         <div class="card mx-lg-2 flex-fill">
                             <div class="card-body text-center d-flex flex-column">
                                 <div class="card-image mb-4 rounded-circle">
-                                    <img src="{{ $doctor->user->profile_image }}" alt="Infy Care" class="img-fluid rounded-circle object-image-cover" />
+                                    <img src="{{ optional($doctor->user)->profile_image }}" alt="Infy Care" class="img-fluid rounded-circle object-image-cover" />
                                 </div>
-                                <h4 class="text-primary">{{ $doctor->user->full_name }}</h4>
+                                <h4 class="text-primary">{{ optional($doctor->user)->full_name }}</h4>
                                 <label class="designation-label pb-4 mb-3 d-block">
-                                    {{ $doctor->specializations->first()->name }}
+                                    {{ optional($doctor->specializations->first())->name }}
                                 </label>
+
                                 <ul class="social-media d-flex justify-content-center" >
                                     @if(!empty($doctor->twitter_url))
                                         <li class="pe-2">
