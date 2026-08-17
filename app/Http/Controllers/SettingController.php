@@ -41,8 +41,30 @@ class SettingController extends AppBaseController
      */
     public function index(Request $request): \Illuminate\View\View
     {
-        $setting = Setting::pluck('value', 'key')->toArray();
+        $defaultSettings = [
+            'clinic_name' => 'MyDent Clinic',
+            'contact_no' => '1234567890',
+            'region_code' => '91',
+            'default_country_code' => 'IN',
+            'email' => 'contact@mydent.com',
+            'specialities' => '[]',
+            'logo' => 'assets/image/infycare-logo.png',
+            'favicon' => 'assets/image/infyCare-favicon.ico',
+            'address_one' => '',
+            'address_two' => '',
+            'country_id' => null,
+            'state_id' => null,
+            'city_id' => null,
+            'postal_code' => '',
+            'email_verified' => 0,
+            'currency' => 1,
+            'currency_position' => 1,
+            'about_us' => 'MyDent Dental Clinic System',
+        ];
+        $setting = array_merge($defaultSettings, Setting::pluck('value', 'key')->toArray());
+
         $sectionName = ($request->get('section') === null) ? 'general' : $request->get('section');
+
         $states = $cities = [];
         if (isset($setting['country_id'])) {
             $states = getStates($setting['country_id']);

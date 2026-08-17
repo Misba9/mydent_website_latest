@@ -1,0 +1,1 @@
+{{-- Purchase Medicines JS Templates --}}
