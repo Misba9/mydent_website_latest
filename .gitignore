@@ -1,5 +1,9 @@
+.env
+.env.*
+!.env.example
 .env.before-hostinger
 /node_modules
+
 /vendor
 *.zip
 u919945289_*.sql
