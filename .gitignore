@@ -6,13 +6,12 @@
 /node_modules
 /vendor
 *.zip
+*.mov
 u919945289_*.sql
 *client_secret*.json
 /storage/*.log
 /storage/logs/*.log
 /storage/*.json
-/public/storage
-/public/uploads
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
@@ -22,6 +21,7 @@ yarn-error.log
 /.idea
 /.vscode
 .idea
+
 
 /DEVSENSE/packages-cache/authorizenet
 
