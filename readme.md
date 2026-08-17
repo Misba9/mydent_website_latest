@@ -25,9 +25,9 @@ You can test different user roles on the login page ([http://127.0.0.1:8000/logi
 
 | Role | Email | Password |
 | --- | --- | --- |
-| **Super Admin** | `admin@infycare.com` | `123456` |
-| **Doctor** | `doctor@infycare.com` | `123456` |
-| **Patient** | `patient@infycare.com` | `123456` |
+| **Super Admin** | `admin@mydent.in` | `123456` |
+| **Doctor** | `doctor@mydent.in` | `123456` |
+| **Patient** | `patient@mydent.in` | `123456` |
 | **Staff** | `john@gamil.com` | `123456` |
 
 ---

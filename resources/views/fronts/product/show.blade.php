@@ -29,7 +29,7 @@
                                      alt="{{ $product->name }}" 
                                      class="img-fluid rounded-15" 
                                      style="max-height: 400px; object-fit: contain;"
-                                     onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+                                     onerror="this.src='{{ asset('assets/image/mydent-logo.png') }}'">
                             @else
                                 <div class="py-10">
                                     <i class="fa-solid fa-box-open text-muted" style="font-size: 80px;"></i>

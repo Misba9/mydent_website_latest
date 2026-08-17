@@ -64,7 +64,7 @@
                             <div class="d-block">
                                 <div class="image-picker">
                                     <div class="image previewImage" id="appLogoPreview"
-                                         style="background-image: url('{{($setting['logo'])?asset($setting['logo']):asset('assets/image/infyCare-favicon.ico')}}')">
+                                         style="background-image: url('{{($setting['logo'])?asset($setting['logo']):asset('assets/image/mydent-logo.png')}}')">
                                     </div>
                                     <span class="picker-edit rounded-circle text-gray-500 fs-small"
                                           data-bs-toggle="tooltip"
@@ -89,7 +89,7 @@
                             <div class="d-block">
                                 <div class="image-picker">
                                     <div class="image previewImage" id="faviconPreview"
-                                         style="background-image: url('{{($setting['favicon'])?asset($setting['favicon']):asset('assets/image/infyom-logo.png')}}');">
+                                         style="background-image: url('{{($setting['favicon'])?asset($setting['favicon']):asset('assets/image/mydent-favicon.ico')}}');">
                                     </div>
                                     <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
                                           data-placement="top" data-bs-original-title="{{ __('messages.setting.change_favicon') }}">

@@ -1,5 +1,1173 @@
-/*! For license information please see pages.js.LICENSE.txt */
-(()=>{var __webpack_modules__={5518:()=>{listenClick(".languageSelection",(function(){var e=$(this).data("prefix-value");$.ajax({type:"POST",url:route("front.change.language"),data:{_token:csrfToken,languageName:e},success:function(){location.reload()}})}))},2880:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}document.addEventListener("turbo:load",(function(){var t;if(!$("#appointmentDateFilter").length)return;var a=moment().startOf("week"),n=moment().endOf("week");function i(e,t){$("#appointmentDateFilter").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#appointmentDateFilter").daterangepicker({startDate:a,endDate:n,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},i),i(a,n)}));$("#appointmentDateFilter");listenClick("#appointmentResetFilter",(function(){$("#paymentStatus").val(0).trigger("change"),$("#appointmentStatus").val(1).trigger("change"),$("#appointmentDateFilter").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#appointmentDateFilter").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#apptmentFilterBtn"),$(".dropdown-menu"))})),listenClick("#doctorApptResetFilter",(function(){$("#doctorApptPaymentStatus").val(1).trigger("change"),$("#appointmentDateFilter").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#appointmentDateFilter").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#doctorAptFilterBtn"),$(".dropdown-menu"))})),listenClick(".appointment-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("appointments.destroy",t),Lang.get("messages.web.appointment"))})),listenChange(".appointment-status-change",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a=$(this);$.ajax({url:route("change-status",t),type:"POST",data:{appointmentId:t,appointmentStatus:e},success:function(e){$(a).children("option.booked").addClass("hide"),Turbo.visit(window.location.href),displaySuccessMessage(e.message)}})})),listenChange(".appointment-change-payment-status",(function(){var e=$(this).val(),t=$(this).attr("data-id");$("#paymentStatusModal").modal("show").appendTo("body"),$("#paymentStatus").val(e),$("#appointmentId").val(t)})),listenChange("#appointmentDateFilter",(function(){window.livewire.emit("changeDateFilter",$(this).val()),window.livewire.emit("changeStatusFilter",$("#appointmentStatus").val()),window.livewire.emit("changePaymentTypeFilter",$("#paymentStatus").val())})),listenChange("#paymentStatus",(function(){window.livewire.emit("changeDateFilter",$("#appointmentDateFilter").val()),window.livewire.emit("changeStatusFilter",$("#appointmentStatus").val()),window.livewire.emit("changePaymentTypeFilter",$(this).val())})),listenChange("#doctorApptPaymentStatus",(function(){window.livewire.emit("changeDateFilter",$("#appointmentDateFilter").val()),window.livewire.emit("changeStatusFilter",$(this).val())})),listenChange("#appointmentStatus",(function(){window.livewire.emit("changeDateFilter",$("#appointmentDateFilter").val()),window.livewire.emit("changeStatusFilter",$(this).val()),window.livewire.emit("changePaymentTypeFilter",$("#paymentStatus").val())})),listenSubmit("#appointmentPaymentStatusForm",(function(e){e.preventDefault();var t=$("#paymentStatus").val(),a=$("#appointmentId").val(),n=$("#paymentType").val();$.ajax({url:route("change-payment-status",a),type:"POST",data:{appointmentId:a,paymentStatus:t,paymentMethod:n,loginUserId:currentLoginUserId},success:function(e){e.success&&(displaySuccessMessage(e.message),$("#paymentStatusModal").modal("hide"),location.reload())},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},2984:()=>{document.addEventListener("turbo:load",(function(){p(),h()}));var e,t,a,n,i,s,r,o,d,l,c=!1,u=null,m={id:"",uId:"",eventName:"",patientName:"",eventDescription:"",eventStatus:"",startDate:"",endDate:"",amount:0,service:"",doctorName:""};var p=function(){if($("#adminAppointmentCalendar").length&&"patient"!=usersRole){var t=document.getElementById("adminAppointmentCalendar"),a=$(".currentLanguage").val();(e=new FullCalendar.Calendar(t,{locale:a,themeSystem:"bootstrap5",height:750,buttonText:{today:Lang.get("messages.datepicker.today"),day:Lang.get("messages.admin_dashboard.day"),month:Lang.get("messages.admin_dashboard.month")},headerToolbar:{left:"title",center:"prev,next today",right:"dayGridDay,dayGridMonth"},initialDate:new Date,timeZone:"UTC",dayMaxEvents:!0,events:function(e,t,a){$.ajax({url:route("appointments.calendar"),type:"GET",data:e,success:function(e){e.success&&t(e.data)},error:function(e){displayErrorMessage(e.responseJSON.message),a()}})},eventMouseEnter:function(e){g({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,patient:e.event.extendedProps.patient,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,doctorName:e.event.extendedProps.doctorName}),f(e.el)},eventMouseLeave:function(){v()},eventClick:function(e){v(),u=e.event.id,g({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,patient:e.event.extendedProps.patient,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,doctorName:e.event.extendedProps.doctorName}),w()}})).render()}},h=function(){if($("#eventModal").length){var e=document.getElementById("eventModal");r=new bootstrap.Modal(e),t=e.querySelector('[data-calendar="event_name"]'),i=e.querySelector('[data-calendar="event_patient_name"]'),e.querySelector('[data-calendar="event_description"]'),a=e.querySelector('[data-calendar="event_status"]'),l=e.querySelector('[data-calendar="event_amount"]'),d=e.querySelector('[data-calendar="event_uId"]'),o=e.querySelector('[data-calendar="event_service"]'),n=e.querySelector('[data-calendar="event_start_date"]'),s=e.querySelector('[data-calendar="event_end_date"]')}},g=function(e){m.id=e.id,m.eventName=e.title,m.patientName=e.patient,m.eventDescription=e.description,m.eventStatus=e.status,m.startDate=e.startStr,m.endDate=e.endStr,m.amount=e.amount,m.uId=e.uId,m.service=e.service,m.doctorName=e.doctorName},f=function(e){v();var t=m.allDay?moment(m.startDate).format("Do MMM, YYYY"):moment(m.startDate).format("Do MMM, YYYY - h:mm a"),a=m.allDay?moment(m.endDate).format("Do MMM, YYYY"):moment(m.endDate).format("Do MMM, YYYY - h:mm a");m.doctorName,m.patientName},v=function(){c&&(undefined.dispose(),c=!1)},w=function(){var e,c;$(".fc-popover").addClass("hide"),r.show();var u=$("#bookCalenderConst").val(),p=$("#checkInCalenderConst").val(),h=$("#checkOutCalenderConst").val(),g=$("#cancelCalenderConst").val();e=moment(m.startDate).utc().format("DD MMM, YYYY - h:mm A"),c=moment(m.endDate).utc().format("DD MMM, YYYY - h:mm A"),s.innerText=": "+c,n.innerText=": "+e,t.innerText=Lang.get("messages.doctor.doctor")+m.doctorName,i.innerText=Lang.get("messages.doctor_appointment.patient")+m.patientName,$(a).empty(),$(a).append('\n<option class="booked" disabled value="'.concat(u,'" ').concat(m.eventStatus==u?"selected":"",">").concat(Lang.get("messages.appointment.booked"),'</option>\n<option value="').concat(p,'" ').concat(m.eventStatus==p?"selected":""," ").concat(m.eventStatus==p?"selected":"","\n    ").concat(m.eventStatus==g||m.eventStatus==h?"disabled":"",">").concat(Lang.get("messages.appointment.check_in"),'</option>\n<option value="').concat(h,'" ').concat(m.eventStatus==h?"selected":"","\n    ").concat(m.eventStatus==g||m.eventStatus==u?"disabled":"",">").concat(Lang.get("messages.appointment.check_out"),'</option>\n<option value="').concat(g,'" ').concat(m.eventStatus==g?"selected":""," ").concat(m.eventStatus==p?"disabled":"","\n   ").concat(m.eventStatus==h?"disabled":"",">").concat(Lang.get("messages.appointment.cancelled"),"</option>\n")),$(a).val(m.eventStatus).trigger("change"),l.innerText=addCommas(m.amount),d.innerText=m.uId,o.innerText=m.service};listenChange("#changeAppointmentStatus",(function(){if(!$(this).val())return!1;var t=$(this).val(),a=u;if(parseInt(t)===m.eventStatus)return!1;$.ajax({url:route("change-status",a),type:"POST",data:{appointmentId:a,appointmentStatus:t},success:function(t){displaySuccessMessage(t.message),$("#eventModal").modal("hide"),e.refetchEvents()}})}))},3879:(e,t,a)=>{"use strict";a(7908);document.addEventListener("turbo:load",(function(){if(!$("#appointmentDate").length)return;var e=$(".currentLanguage").val();$("#appointmentDate").flatpickr({locale:e,minDate:new Date,disableMobile:!0}),$(".no-time-slot").removeClass("d-none")}));var n,i,s=$("#appointmentDate"),r=(new Date).getTimezoneOffset();r=0===r?0:-r,listenChange("#appointmentDate",(function(){n=$(this).val();var e=$("#userRole").val(),t=$("#doctorRole").val(),a=$("#appointmentIsEdit").val();$(".appointment-slot-data").html("");var i="";isEmpty(e)&&isEmpty(t)?i=route("doctor-session-time"):(isEmpty(e)||(i=route("patients.doctor-session-time")),isEmpty(t)||(i=route("doctors.doctor-session-time"))),$.ajax({url:i,type:"GET",data:{adminAppointmentDoctorId:$("#adminAppointmentDoctorId").val(),date:n,timezone_offset_minutes:r},success:function(e){e.success&&(null!=e.data.bookedSlot&&e.data.bookedSlot.length>0&&0==e.data.slots.length&&($(".no-time-slot").addClass("d-none"),$(".doctor-time-over").removeClass("d-none")),$.each(e.data.slots,(function(t,n){a&&fromTime==n?($(".no-time-slot").addClass("d-none"),$(".doctor-time-over").addClass("d-none"),$(".appointment-slot-data").append('<span class="time-slot col-lg-2  activeSlot" data-id="'+n+'">'+n+"</span>")):($(".no-time-slot").addClass("d-none"),$(".doctor-time-over").addClass("d-none"),null==e.data.bookedSlot?$(".appointment-slot-data").append('<span class="time-slot col-lg-2" data-id="'+n+'">'+n+"</span>"):-1!==$.inArray(n,e.data.bookedSlot)?$(".appointment-slot-data").append('<span class="time-slot col-lg-2 bookedSlot " data-id="'+n+'">'+n+"</span>"):$(".appointment-slot-data").append('<span class="time-slot col-lg-2" data-id="'+n+'">'+n+"</span>"))})))},error:function(e){$(".no-time-slot").removeClass("d-none"),$(".doctor-time-over").addClass("d-none"),displayErrorMessage(e.responseJSON.message)}})})),listenClick(".time-slot",(function(){$(".time-slot").hasClass("activeSlot")?($(".time-slot").removeClass("activeSlot"),$(this).addClass("activeSlot")):$(this).addClass("activeSlot");var e=$(this).attr("data-id").split("-"),t=e[0],a=e[1];$("#timeSlot").val(""),$("#toTime").val(""),$("#timeSlot").val(t),$("#toTime").val(a)}));var o;parseInt($("#addFees").val());function d(e){$.ajax({type:"POST",url:route("razorpay.failed"),data:{data:e},success:function(e){e.success&&displaySuccessMessage(e.message)},error:function(){}})}listenChange("#adminAppointmentDoctorId",(function(){$("#chargeId").val(""),$("#payableAmount").val(""),s.val(""),$("#addFees").val(""),$(".appointment-slot-data").html(""),$(".no-time-slot").removeClass("d-none");var e=isEmpty(userRole)?route("get-service"):route("patients.get-service");$.ajax({url:e,type:"GET",data:{appointmentDoctorId:$(this).val()},success:function(e){e.success&&($("#appointmentDate").removeAttr("disabled"),$("#appointmentServiceId").empty(),$("#appointmentServiceId").append($('<option value=""></option>').text(Lang.get("messages.common.select_service"))),$.each(e.data,(function(e,t){$("#appointmentServiceId").append($("<option></option>").attr("value",t.id).text(t.name))})))}})})),listenChange("#appointmentServiceId",(function(){var e=isEmpty(userRole)?route("get-charge"):route("patients.get-charge");$.ajax({url:e,type:"GET",data:{chargeId:$(this).val()},success:function(e){e.success&&($("#chargeId").val(""),$("#addFees").val(""),$("#payableAmount").val(""),e.data&&($("#chargeId").val(e.data.charges),$("#payableAmount").val(e.data.charges),i=e.data.charges))}})})),listenKeyup("#addFees",(function(e){8!=e.which&&isNaN(String.fromCharCode(e.which))&&e.preventDefault(),o="",o=parseFloat(i)+parseFloat($(this).val()?$(this).val():0),$("#payableAmount").val(o.toFixed(2))})),listenSubmit("#addAppointmentForm",(function(e){e.preventDefault();var t=new FormData($(this)[0]);$(".submitAppointmentBtn").prop(Lang.get("messages.common.discard"),!0),$(".submitAppointmentBtn").text(Lang.get("messages.common.please_wait")),$.ajax({url:$(this).attr("action"),type:"POST",data:t,processData:!1,contentType:!1,success:function(e){if(e.success){var t=e.data.appointmentId;if(displaySuccessMessage(e.message),$("#addAppointmentForm")[0].reset(),$("#addAppointmentForm").val("").trigger("change"),e.data.payment_type==$("#paystackMethod").val())return location.href=e.data.redirect_url;if(e.data.payment_type==$("#paytmMethod").val()&&window.location.replace(route("paytm.init",{appointmentId:t})),e.data.payment_type==$("#authorizeMethod").val()&&Turbo.visit(route("authorize.init",{appointmentId:t})),e.data.payment_type==$("#paypalMethod").val()&&$.ajax({type:"GET",url:route("paypal.init"),data:{appointmentId:t},success:function(e){200==e.status&&(location.href=e.link)},error:function(e){}}),e.data.payment_type==$("#manuallyMethod").val()&&window.location.replace(route("manually-payment",{appointmentId:t})),e.data.payment_type==$("#stripeMethod").val()){var a=e.data[0].sessionId;stripe.redirectToCheckout({sessionId:a}).then((function(e){manageAjaxErrors(e)}))}e.data.payment_type==$("#razorpayMethodMethod").val()&&$.ajax({type:"POST",url:route("razorpay.init"),data:{appointmentId:t},success:function(e){if(e.success){var a=e.data,n=a.id,i=a.amount,s=a.name,r=a.email,o=a.contact;options.amount=i,options.order_id=n,options.prefill.name=s,options.prefill.email=r,options.prefill.contact=o,options.prefill.appointmentID=t;var l=new Razorpay(options);l.open(),l.on("payment.failed",d)}},error:function(e){},complete:function(){}})}},error:function(e){displayErrorMessage(e.responseJSON.message),$(".submitAppointmentBtn").prop(Lang.get("messages.common.discard"),!1),$(".submitAppointmentBtn").text(Lang.get("messages.common.save"))},complete:function(){}})}))},1648:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}function t(e){$.ajax({type:"POST",url:route("razorpay.failed"),data:{data:e},success:function(e){e.success&&displaySuccessMessage(e.message)},error:function(){}})}document.addEventListener("turbo:load",(function(){var t;if(!$("#patientAppointmentDate").length)return;var a=moment().startOf("week"),n=moment().endOf("week");function i(e,t){$("#patientAppointmentDate").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#patientAppointmentDate").daterangepicker({startDate:a,endDate:n,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},i),i(a,n)})),listenClick("#patientPanelApptmentResetFilter",(function(){livewire.emit("refresh"),$("#patientPaymentStatus").val(0).trigger("change"),$("#patientAppointmentStatus").val(1).trigger("change"),$("#patientAppointmentDate").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#patientAppointmentDate").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#patientPanelApptFilterBtn"),$(".dropdown-menu"))})),listenChange("#patientAppointmentDate",(function(){window.livewire.emit("changeDateFilter",$(this).val())})),listenChange("#patientPaymentStatus",(function(){window.livewire.emit("changeDateFilter",$("#patientAppointmentDate").val()),window.livewire.emit("changePaymentTypeFilter",$(this).val())})),listenChange("#patientAppointmentStatus",(function(){window.livewire.emit("changeDateFilter",$("#patientAppointmentDate").val()),window.livewire.emit("changeStatusFilter",$(this).val())})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$("#patientPaymentStatus").length&&$("#patientPaymentStatus").select2(),$("#patientAppointmentStatus").length&&$("#patientAppointmentStatus").select2()}))})),listenClick(".patient-panel-apptment-delete-btn",(function(e){var t=$("#userRole").val(),a=$(e.currentTarget).attr("data-id"),n=isEmpty(t)?route("appointments.destroy",a):route("patients.appointments.destroy",a);deleteItem(n,"Appointment")})),listenClick(".patient-cancel-appointment",(function(e){var t=$(e.currentTarget).attr("data-id");cancelAppointment(route("patients.cancel-status"),Lang.get("messages.web.appointment"),t)})),window.cancelAppointment=function(e,t,a){swal({title:Lang.get("messages.common.cancelled_appointment"),text:Lang.get("messages.common.are_you_sure_cancel")+t+" ?",type:"warning",icon:"warning",showCancelButton:!0,closeOnConfirm:!1,confirmButtonColor:"#266CB0",showLoaderOnConfirm:!0,buttons:{confirm:Lang.get("messages.common.yes"),cancel:Lang.get("messages.common.no")}}).then((function(e){e&&function(e,t,a){$.ajax({url:route("patients.cancel-status"),type:"POST",data:{appointmentId:a},success:function(e){e.success&&livewire.emit("refresh"),swal({title:Lang.get("messages.common.cancelled_appointment"),text:t+Lang.get("messages.common.has_cancel"),icon:"success",confirmButtonColor:"#266CB0",timer:2e3})},error:function(e){swal({title:"Error",icon:"error",text:e.responseJSON.message,type:"error",confirmButtonColor:"#266CB0",timer:5e3})}})}(0,t,a)}))},listenClick("#submitBtn",(function(e){e.preventDefault();var a=$("#paymentGatewayType").val();if(isEmpty(a))return displayErrorMessage(Lang.get("messages.flash.select_payment")),!1;var n=$("#patientAppointmentId").val(),i=$("#patientPaymentForm").find("#submitBtn");return setAdminBtnLoader(i),2==a&&$.ajax({url:route("patients.appointment-payment"),type:"POST",data:{appointmentId:n},success:function(e){var t=e.data.sessionId;stripe.redirectToCheckout({sessionId:t}).then((function(e){manageAjaxErrors(e)}))}}),7==a&&window.location.replace(route("paytm.init",{appointmentId:n})),3==a&&window.location.replace(route("paystack.init",{appointmentData:n})),6==a&&window.location.replace(route("authorize.init",{appointmentId:n})),4==a&&$.ajax({type:"GET",url:route("paypal.init"),data:{appointmentId:n},success:function(e){if(200==e.status){location.href=e.link}},error:function(e){},complete:function(){}}),5==a&&$.ajax({type:"POST",url:route("razorpay.init"),data:{appointmentId:n},success:function(e){if(e.success){var a=e.data,i=a.id,s=a.amount,r=a.name,o=a.email,d=a.contact;options.amount=s,options.order_id=i,options.prefill.name=r,options.prefill.email=o,options.prefill.contact=d,options.prefill.appointmentID=n;var l=new Razorpay(options);l.open(),l.on("payment.failed",t)}},error:function(e){},complete:function(){}}),!1})),listenClick(".payment-btn",(function(e){var t=$(this).attr("data-id");$("#paymentGatewayModal").modal("show").appendTo("body"),$("#patientAppointmentId").val(t)})),listen("hidden.bs.modal","#paymentGatewayModal",(function(e){$("#patientPaymentForm")[0].reset(),$("#paymentGatewayType").val(null).trigger("change")}))},7254:()=>{document.addEventListener("turbo:load",(function(){if(!$("#appointmentCalendar").length)return;c(),u()}));var e,t,a,n,i,s,r,o,d=!1,l={id:"",uId:"",eventName:"",eventDescription:"",eventStatus:"",startDate:"",endDate:"",amount:0,service:"",doctorName:""};var c=function(){if("patient"==usersRole){var e=$(".currentLanguage").val(),t=document.getElementById("appointmentCalendar");new FullCalendar.Calendar(t,{locale:e,themeSystem:"bootstrap5",height:750,buttonText:{today:Lang.get("messages.datepicker.today"),day:Lang.get("messages.admin_dashboard.day"),month:Lang.get("messages.admin_dashboard.month")},headerToolbar:{left:"title",center:"prev,next today",right:"dayGridDay,dayGridMonth"},initialDate:new Date,timeZone:"UTC",dayMaxEvents:!0,events:function(e,t,a){$.ajax({url:route("patients.appointments.calendar"),type:"GET",data:e,success:function(e){e.success&&t(e.data)},error:function(e){displayErrorMessage(e.responseJSON.message),a()}})},eventMouseEnter:function(e){m({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,description:e.event.extendedProps.description,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,doctorName:e.event.extendedProps.doctorName}),p(e.el)},eventMouseLeave:function(){h()},eventClick:function(e){h(),m({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,description:e.event.extendedProps.description,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,doctorName:e.event.extendedProps.doctorName}),g()}}).render()}},u=function(){if($("#patientEventModal").length){var d=document.getElementById("patientEventModal");i=new bootstrap.Modal(d),e=d.querySelector('[data-calendar="event_name"]'),d.querySelector('[data-calendar="event_description"]'),t=d.querySelector('[data-calendar="event_status"]'),o=d.querySelector('[data-calendar="event_amount"]'),r=d.querySelector('[data-calendar="event_uId"]'),s=d.querySelector('[data-calendar="event_service"]'),a=d.querySelector('[data-calendar="event_start_date"]'),n=d.querySelector('[data-calendar="event_end_date"]')}},m=function(e){l.id=e.id,l.eventName=e.title,l.eventDescription=e.description,l.eventStatus=e.status,l.startDate=e.startStr,l.endDate=e.endStr,l.amount=e.amount,l.uId=e.uId,l.service=e.service,l.doctorName=e.doctorName},p=function(e){h();var t=l.allDay?moment(l.startDate).format("Do MMM, YYYY"):moment(l.startDate).format("Do MMM, YYYY - h:mm a"),a=l.allDay?moment(l.endDate).format("Do MMM, YYYY"):moment(l.endDate).format("Do MMM, YYYY - h:mm a");l.doctorName},h=function(){d&&(undefined.dispose(),d=!1)},g=function(){var d,c;$(".fc-popover").addClass("hide"),i.show(),d=moment(l.startDate).utc().format("Do MMM, YYYY - h:mm A"),c=moment(l.endDate).utc().format("Do MMM, YYYY - h:mm A"),n.innerText=": "+c,a.innerText=": "+d,e.innerText="Doctor: "+l.doctorName,$(t).val(l.eventStatus),o.innerText=addCommas(l.amount),r.innerText=l.uId,s.innerText=l.service}},4166:()=>{"use strict";listenClick(".brand-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("brands.destroy",t),Lang.get("messages.medicine.brand"))})),listenSubmit("#createBrandForm, #editBrandForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1}))},1554:()=>{"use strict";listenClick(".add-category",(function(){$("#add_categories_modal").modal("show").appendTo("body")})),listenSubmit("#addMedicineCategoryForm",(function(e){e.preventDefault();var t=jQuery(this).find("#medicineCategorySave");t.button("loading"),$.ajax({url:$("#indexCategoryCreateUrl").val(),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#add_categories_modal").modal("hide"),Livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){t.button("reset")}})})),listenSubmit("#editMedicineCategoryForm",(function(e){e.preventDefault();var t=jQuery(this).find("#editCategorySave");t.button("loading");var a=$("#editMedicineCategoryId").val();$.ajax({url:route("categories.update",a),type:"put",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#edit_categories_modal").modal("hide"),$("#categoriesShowUrl").length?window.location.href=$("#categoriesShowUrl").val():livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){t.button("reset")}})})),listen("hidden.bs.modal","#add_categories_modal",(function(){resetModalForm("#addMedicineCategoryForm","#medicineCategoryErrorsBox")})),listen("hidden.bs.modal","#edit_categories_modal",(function(){resetModalForm("#editMedicineCategoryForm","#editMedicineCategoryErrorsBox")})),listenClick(".category-edit-btn",(function(e){if(!$(".ajaxCallIsRunning").val()){ajaxCallInProgress();var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("categories.edit",t),type:"GET",success:function(e){if(e.success){var t=e.data;$("#editMedicineCategoryId").val(t.id),$("#editCategoryName").val(t.name),1===t.is_active?$("#editCategoryIsActive").prop("checked",!0):$("#editCategoryIsActive").prop("checked",!1),$("#edit_categories_modal").modal("show"),ajaxCallCompleted()}},error:function(e){manageAjaxErrors(e)}})}})),listenClick(".category-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("categories.destroy",t),Lang.get("messages.medicine.category"))})),listenChange(".medicine-category-status",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("active.deactive",t),method:"post",cache:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),window.livewire.emit("refresh"))}})})),listenClick("#categoryResetFilter",(function(){$("#medicineCategoryHead").val(2).trigger("change"),hideDropdownManually($("#medicineCategoryFilterBtn"),$(".dropdown-menu"))})),listenChange("#medicineCategoryHead",(function(){window.livewire.emit("changeFilter","statusFilter",$(this).val()),hideDropdownManually($("#medicineCategoryFilterBtn"),$("#medicineCategoryFilter"))}))},2228:()=>{listenClick("#createCity",(function(){$("#createCityModal").modal("show").appendTo("body"),$("#stateCity").select2({dropdownParent:$("#createCityModal")})})),listen("hidden.bs.modal","#createCityModal",(function(){resetModalForm("#createCityForm","#createCityValidationErrorsBox"),$("#stateCity").val(null).trigger("change")})),listen("hidden.bs.modal","#editCityModal",(function(){resetModalForm("#editCityForm","#editCityValidationErrorsBox")})),listenClick(".city-edit-btn",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("cities.edit",t),type:"GET",success:function(e){$("#cityID").val(e.data.id),$("#editCityName").val(e.data.name),$("#editCityStateId").val(e.data.state_id).trigger("change"),$("#editCityModal").modal("show")}}),$("#editCityStateId").select2({dropdownParent:$("#editCityModal")})})),listenSubmit("#createCityForm",(function(e){e.preventDefault(),$.ajax({url:route("cities.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#createCityModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editCityForm",(function(e){e.preventDefault();var t=$("#cityID").val();$.ajax({url:route("cities.update",t),type:"PUT",data:$(this).serialize(),success:function(e){$("#editCityModal").modal("hide"),displaySuccessMessage(e.message),livewire.emit("refresh")},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".city-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("cities.destroy",t),Lang.get("messages.common.city"))}))},7534:()=>{function e(e){$.ajax({url:route("clinic-schedules.store"),type:"POST",data:e,processData:!1,contentType:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),1500))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){}})}listenSubmit("#clinicScheduleSaveForm",(function(t){t.preventDefault();var a=new FormData($(this)[0]);$.ajax({url:route("checkRecord"),type:"POST",data:$(this).serialize(),success:function(t){e(a)},error:function(t){swal({title:Lang.get("messages.common.deleted"),text:t.responseJSON.message,type:"warning",icon:"warning",showCancelButton:!0,closeOnConfirm:!0,confirmButtonColor:"#266CB0",showLoaderOnConfirm:!0,cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes_update")}).then((function(t){t&&e(a)}))}})})),listenChange('select[name^="clinicStartTimes"]',(function(e){var t=$(this)[0].selectedIndex,a=$(this).closest(".weekly-row").find('select[name^="clinicEndTimes"] option');a.eq(t+1).prop("selected",!0).trigger("change"),a.each((function(e){e<=t?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))}))},3853:()=>{listenClick(".country-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("countries.destroy",t),Lang.get("messages.common.country"))})),listenClick("#addCountry",(function(){$("#addCountryModal").modal("show").appendTo("body")})),listenSubmit("#addCountryForm",(function(e){e.preventDefault(),$.ajax({url:route("countries.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addCountryModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".country-edit-btn",(function(e){$("#editCountryModal").modal("show").appendTo("body");var t=$(e.currentTarget).attr("data-id");$("#editCountryId").val(t),$.ajax({url:route("countries.edit",t),type:"GET",success:function(e){e.success&&($("#editCountryName").val(e.data.name),$("#editShortCodeName").val(e.data.short_code))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editCountryForm",(function(e){e.preventDefault();var t=$("#editCountryId").val();$.ajax({url:route("countries.update",t),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editCountryModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listen("hidden.bs.modal","#addCountryModal",(function(e){$("#addCountryForm")[0].reset()}))},1710:()=>{listenClick("#createCurrency",(function(){$("#createCurrencyModal").modal("show").appendTo("body")})),listen("hidden.bs.modal","#createCurrencyModal",(function(){resetModalForm("#createCurrencyForm","#createCurrencyValidationErrorsBox")})),listen("hidden.bs.modal","#editCurrencyModal",(function(){resetModalForm("#editCurrencyForm","#editCurrencyValidationErrorsBox")})),listenClick(".currency-edit-btn",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("currencies.edit",t),type:"GET",success:function(e){$("#currencyID").val(e.data.id),$("#editCurrency_Name").val(e.data.currency_name),$("#editCurrency_Icon").val(e.data.currency_icon),$("#editCurrency_Code").val(e.data.currency_code),$("#editCurrencyModal").modal("show")}})})),listenSubmit("#createCurrencyForm",(function(e){e.preventDefault(),$.ajax({url:route("currencies.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#createCurrencyModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editCurrencyForm",(function(e){e.preventDefault();var t=$("#currencyID").val();$.ajax({url:route("currencies.update",t),type:"PUT",data:$(this).serialize(),success:function(e){$("#editCurrencyModal").modal("hide"),displaySuccessMessage(e.message),livewire.emit("refresh")},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){}})})),listenClick(".currency-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("currencies.destroy",t),Lang.get("messages.setting.currency"))}))},48:function(){function e(t){return(e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(t)}document.addEventListener("DOMContentLoaded",(function(){if(!$("#expiryMonth").length||!$("#expiryYear").length)return;$("#expiryMonth").select2(),$("#expiryYear").select2()})),listenClick("#submitBtn",(function(e){$(".demoInputBox").css("background-color","");var t="",a=$("#cardHolderName").val(),n=$("#cardNumber").val(),i=$("#expiryMonth").val(),s=$("#expiryYear").val(),r=$("#cvv").val();return""==a?(t+="Card holder name fields are required.",$(".error").html(t),$("#errorCard").addClass("show"),!1):""==a||/^[a-z ,.'-]+$/i.test(a)?""==n?(t="Card number fields are required.",$(".error").html(t),$("#errorCard").addClass("show"),!1):""===i?(t="Expiration month fields are required.",$(".error").html(t),$("#errorCard").addClass("show"),!1):""===s?(t+="Expiration year fields are required.",$(".error").html(t),$("#errorCard").addClass("show"),!1):(i=parseInt(i)+1,new Date(s+"-"+i+"-01")<new Date?(t+="Enter valid expiration date.",$(".error").html(t),$("#errorCard").addClass("show"),!1):""==r?(t+="CVV number fields are required.",$(".error").html(t),$("#errorCard").addClass("show"),!1):""==r||/^[0-9]{3,3}$/.test(r)?(""!=n&&$("#cardNumber").validateCreditCard((function(e){if(!e.valid)return t="Card number is invalid.",$(".error").html(t),$("#errorCard").addClass("show"),!1})),""==t&&void 0):(t+="CVV is invalid.",$(".error").html(t),$("#errorCard").addClass("show"),!1)):(t="Card holder name is Invalid.",$(".error").html(t),$("#errorCard").addClass("show"),!1)})),function(){var t,a,n,i=[].indexOf||function(e){for(var t=0,a=this.length;t<a;t++)if(t in this&&this[t]===e)return t;return-1};n=function(){function e(){this.trie={}}return e.prototype.push=function(e){var t,a,n,i,s,r,o;for(e=e.toString(),s=this.trie,o=[],a=n=0,i=(r=e.split("")).length;n<i;a=++n)null==s[t=r[a]]&&(a===e.length-1?s[t]=null:s[t]={}),o.push(s=s[t]);return o},e.prototype.find=function(e){var t,a,n,i,s,r;for(e=e.toString(),s=this.trie,a=n=0,i=(r=e.split("")).length;n<i;a=++n){if(t=r[a],!s.hasOwnProperty(t))return!1;if(null===s[t])return!0;s=s[t]}},e}(),a=function(){function e(e){if(this.trie=e,this.trie.constructor!==n)throw Error("Range constructor requires a Trie parameter")}return e.rangeWithString=function(t){var a,i,s,r,o,d,l,c,u;if("string"!=typeof t)throw Error("rangeWithString requires a string parameter");for(t=(t=t.replace(/ /g,"")).split(","),u=new n,a=0,s=t.length;a<s;a++)if(o=(d=t[a]).match(/^(\d+)-(\d+)$/))for(r=i=l=o[1],c=o[2];l<=c?i<=c:i>=c;r=l<=c?++i:--i)u.push(r);else{if(!d.match(/^\d+$/))throw Error("Invalid range '"+o+"'");u.push(d)}return new e(u)},e.prototype.match=function(e){return this.trie.find(e)},e}(),(t=jQuery).fn.validateCreditCard=function(n,s){var r,o,d,l,c,u,m,p,h,g,f,v,w,y;for(l=[{name:"amex",range:"34,37",valid_length:[15]},{name:"diners_club_carte_blanche",range:"300-305",valid_length:[14]},{name:"diners_club_international",range:"36",valid_length:[14]},{name:"jcb",range:"3528-3589",valid_length:[16]},{name:"laser",range:"6304, 6706, 6709, 6771",valid_length:[16,17,18,19]},{name:"visa_electron",range:"4026, 417500, 4508, 4844, 4913, 4917",valid_length:[16]},{name:"visa",range:"4",valid_length:[13,14,15,16,17,18,19]},{name:"mastercard",range:"51-55,2221-2720",valid_length:[16]},{name:"discover",range:"6011, 622126-622925, 644-649, 65",valid_length:[16]},{name:"dankort",range:"5019",valid_length:[16]},{name:"maestro",range:"50, 56-69",valid_length:[12,13,14,15,16,17,18,19]},{name:"uatp",range:"1",valid_length:[15]}],r=!1,n&&("object"===e(n)?(s=n,r=!1,n=null):"function"==typeof n&&(r=!0)),null==s&&(s={}),null==s.accept&&(s.accept=function(){var e,t,a;for(a=[],e=0,t=l.length;e<t;e++)o=l[e],a.push(o.name);return a}()),p=0,h=(f=s.accept).length;p<h;p++)if(d=f[p],i.call(function(){var e,t,a;for(a=[],e=0,t=l.length;e<t;e++)o=l[e],a.push(o.name);return a}(),d)<0)throw Error("Credit card type '"+d+"' is not supported");return c=function(e){var t,n,r;for(r=function(){var e,t,a,n;for(n=[],e=0,t=l.length;e<t;e++)a=(o=l[e]).name,i.call(s.accept,a)>=0&&n.push(o);return n}(),t=0,n=r.length;t<n;t++)if(d=r[t],a.rangeWithString(d.range).match(e))return d;return null},m=function(e){var t,a,n,i,s,r;for(r=0,i=a=0,n=(s=e.split("").reverse()).length;a<n;i=++a)t=+(t=s[i]),r+=i%2?(t*=2)<10?t:t-9:t;return r%10==0},u=function(e,t){var a;return a=e.length,i.call(t.valid_length,a)>=0},w=function(e){var t,a;return a=!1,t=!1,null!=(d=c(e))&&(a=m(e),t=u(e,d)),{card_type:d,valid:a&&t,luhn_valid:a,length_valid:t}},y=this,v=function(){var e;return e=g(t(y).val()),w(e)},g=function(e){return e.replace(/[ -]/g,"")},r?(this.on("input.jccv",function(e){return function(){return t(e).off("keyup.jccv"),n.call(e,v())}}(this)),this.on("keyup.jccv",function(e){return function(){return n.call(e,v())}}(this)),n.call(this,v()),this):v()}}.call(this)},4532:(__unused_webpack_module,__unused_webpack_exports,__webpack_require__)=>{document.addEventListener("turbo:load",loadCustomData);var source=null,jsrender=__webpack_require__(2743),csrfToken=$('meta[name="csrf-token"]').attr("content");function initAllComponents(){select2initialize(),refreshCsrfToken(),alertInitialize(),modalInputFocus(),inputFocus(),IOInitImageComponent(),IOInitSidebar(),tooltip(),togglePassword(),setLoginUserLanguage()}function tooltip(){[].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')).map((function(e){return new bootstrap.Tooltip(e)}))}function alertInitialize(){$(".alert").delay(5e3).slideUp(300)}function refreshCsrfToken(){csrfToken=$('meta[name="csrf-token"]').attr("content"),$.ajaxSetup({headers:{"X-CSRF-TOKEN":csrfToken}})}function select2initialize(){$('[data-control="select2"]').each((function(){$(this).select2()}))}$.ajaxSetup({headers:{"X-CSRF-TOKEN":csrfToken}}),document.addEventListener("turbo:load",initAllComponents),document.addEventListener("click",(function(e){var t=$(e.target).closest('.show[data-ic-dropdown-btn="true"]'),a=$(e.target).closest('.show[data-ic-dropdown="true"]');t.length>0||a.length>0||($('[data-ic-dropdown-btn="true"]').removeClass("show"),$('[data-ic-dropdown="true"]').removeClass("show"))})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$('[data-control="select2"]').each((function(){$(this).select2()}))}))}));var inputFocus=function(){$('input:text:not([readonly="readonly"]):not([name="search"]):not(.front-input)').first().focus()},modalInputFocus=function(){$((function(){$(".modal").on("shown.bs.modal",(function(){$(this).find("input:text")[0]&&$(this).find("input:text")[0].focus()}))}))};function loadCustomData(){$(document).find(".nav-item.dropdown ul li").hasClass("active")&&($(document).find(".nav-item.dropdown ul li.active").parent("ul").css("display","block"),$(document).find(".nav-item.dropdown ul li.active").parent("ul").parent("li").addClass("active")),$(window).width()>992&&$(".no-hover").on("click",(function(){$(this).toggleClass("open")}))}function deleteItemAjax(url,header){var callFunction=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;$.ajax({url,type:"DELETE",dataType:"json",success:function success(obj){obj.success&&(window.livewire.emit("refresh"),window.livewire.emit("resetPage")),swal({icon:"success",title:Lang.get("messages.common.deleted"),text:header+" "+Lang.get("messages.common.has_been"),timer:2e3,buttons:{confirm:Lang.get("messages.prescription.ok")}}),callFunction&&eval(callFunction)},error:function(e){swal({title:Lang.get("messages.common.error"),icon:"error",text:e.responseJSON.message,type:"error",timer:4e3,buttons:{confirm:Lang.get("messages.prescription.ok")}})}})}function togglePassword(){$('[data-toggle="password"]').each((function(){var e=$(this),t=$(this).parent().find(".input-icon");t.css("cursor","pointer").addClass("input-password-hide"),t.on("click",(function(){t.hasClass("input-password-hide")?(t.removeClass("input-password-hide").addClass("input-password-show"),t.find(".bi").removeClass("bi-eye-slash-fill").addClass("bi-eye-fill"),e.attr("type","text")):(t.removeClass("input-password-show").addClass("input-password-hide"),t.find(".bi").removeClass("bi-eye-fill").addClass("bi-eye-slash-fill"),e.attr("type","password"))}))}))}function setLoginUserLanguage(){var e=$(".currentLanguage").val();Lang.setLocale(e)}$(document).ajaxComplete((function(){$('[data-toggle="tooltip"]').tooltip({html:!0,offset:10})})),listen("select2:open",(function(){var e=document.querySelectorAll(".select2-container--open .select2-search__field");e[e.length-1].focus()})),listen("focus",".select2.select2-container",(function(e){var t=e.originalEvent,a=$(this).find(".select2-selection--single").length>0;t&&a&&$(this).siblings("select:enabled").select2("open")})),$((function(){$(".modal").on("shown.bs.modal",(function(){"modal fade event-modal show"!=$(this).attr("class")&&$(this).find("input:text,input:password").first().focus()}))})),toastr.options={closeButton:!0,debug:!1,newestOnTop:!1,progressBar:!0,positionClass:"toast-top-right",preventDuplicates:!1,onclick:null,showDuration:"300",hideDuration:"1000",timeOut:"5000",extendedTimeOut:"1000",showEasing:"swing",hideEasing:"linear",showMethod:"fadeIn",hideMethod:"fadeOut"},window.resetModalForm=function(e,t){$(e)[0].reset(),$("select.select2Selector").each((function(e,t){var a="#"+$(this).attr("id");$(a).val(""),$(a).trigger("change")})),$(t).hide()},window.printErrorMessage=function(e,t){$(e).show().html(""),$(e).text(t.responseJSON.message)},window.manageAjaxErrors=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"editValidationErrorsBox";404==e.status||422==e.status?toastr.error(e.responseJSON.message):printErrorMessage("#"+t,e)},window.displaySuccessMessage=function(e){toastr.success(e)},window.displayErrorMessage=function(e){toastr.error(e)},window.deleteItem=function(e,t){var a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure")+' "'+t+'" ?',buttons:{confirm:Lang.get("messages.common.yes"),cancel:Lang.get("messages.common.no")},reverseButtons:!0,icon:"warning"}).then((function(n){n&&deleteItemAjax(e,t,a)}))},window.format=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"DD-MMM-YYYY";return moment(e).format(t)},window.processingBtn=function(e,t){var a=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,n=$(e).find(t);"loading"===a?n.button("loading"):n.button("reset")},window.prepareTemplateRender=function(e,t){return jsrender.templates(e).render(t)},window.isValidFile=function(e,t){var a=$(e).val().split(".").pop().toLowerCase();return-1==$.inArray(a,["gif","png","jpg","jpeg"])?($(e).val(""),$(t).removeClass("d-none"),$(t).html("The image must be a file of type: jpeg, jpg, png.").show(),$(t).delay(5e3).slideUp(300),!1):($(t).hide(),!0)},window.displayPhoto=function(e,t){var a=!0;if(e.files&&e.files[0]){var n=new FileReader;if(n.onload=function(e){var n=new Image;n.src=e.target.result,n.onload=function(){$(t).attr("src",e.target.result),a=!0}},e.files[0].size>2097152)return displayErrorMessage("Icon size should be less than 2 MB"),!1;a&&(n.readAsDataURL(e.files[0]),$(t).show())}},window.removeCommas=function(e){return e.replace(/,/g,"")},window.DatetimepickerDefaults=function(e){return $.extend({},{sideBySide:!0,ignoreReadonly:!0,icons:{close:"fa fa-times",time:"fa fa-clock-o",date:"fa fa-calendar",up:"fa fa-arrow-up",down:"fa fa-arrow-down",previous:"fa fa-chevron-left",next:"fa fa-chevron-right",today:"fa fa-clock-o",clear:"fa fa-trash-o"}},e)},window.isEmpty=function(e){return null==e||""===e},window.screenLock=function(){$("#overlay-screen-lock").show(),$("body").css({"pointer-events":"none",opacity:"0.6"})},window.screenUnLock=function(){$("body").css({"pointer-events":"auto",opacity:"1"}),$("#overlay-screen-lock").hide()},window.onload=function(){window.startLoader=function(){$(".infy-loader").show()},window.stopLoader=function(){$(".infy-loader").hide()},stopLoader()},window.setBtnLoader=function(e){if(e.attr("data-old-text"))return e.html(e.attr("data-old-text")).prop("disabled",!1),void e.removeAttr("data-old-text");e.attr("data-old-text",e.text()),e.html('<i class="icon-line-loader icon-spin m-0"></i>').prop("disabled",!0)},window.setAdminBtnLoader=function(e){if(e.attr("data-old-text"))return e.html(e.attr("data-old-text")).prop("disabled",!1),void e.removeAttr("data-old-text");e.attr("data-old-text",e.text()),e.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop("disabled",!0)},window.urlValidation=function(e,t){return!(""!=e&&!e.match(t))},listenClick(".languageSelection",(function(){var e=$(this).data("prefix-value");$.ajax({type:"POST",url:"/change-language",data:{languageName:e},success:function(){location.reload()}})})),listenClick("#register",(function(e){e.preventDefault(),$(".open #dropdownLanguage").trigger("click"),$(".open #dropdownLogin").trigger("click")})),listenClick("#language",(function(e){e.preventDefault(),$(".open #dropdownRegister").trigger("click"),$(".open #dropdownLogin").trigger("click")})),listenClick("#login",(function(e){e.preventDefault(),$(".open #dropdownRegister").trigger("click"),$(".open #dropdownLanguage").trigger("click")})),window.checkSummerNoteEmpty=function(e,t){var a=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0;return $(e).summernote("isEmpty")&&1===a?(displayErrorMessage(t),$(document).find(".note-editable").html("<p><br></p>"),!1):!(!$(e).summernote("isEmpty")&&($(document).find(".note-editable").contents().each((function(){3===this.nodeType&&(this.textContent=this.textContent.replace(/\u00A0/g,""))})),0==$(document).find(".note-editable").text().trim().length&&($(document).find(".note-editable").html("<p><br></p>"),$(e).val(null),1===a)))||(displayErrorMessage(t),!1)},window.preparedTemplate=function(){source=$("#actionTemplate").html(),window.preparedTemplate=Handlebars.compile(source)},window.ajaxCallInProgress=function(){ajaxCallIsRunning=!0},window.ajaxCallCompleted=function(){ajaxCallIsRunning=!1},window.avoidSpace=function(e){if(32==(e?e.which:window.event.keyCode))return!1},listenClick("#readNotification",(function(e){e.preventDefault(),e.stopPropagation();var t=$(this).attr("data-id"),a=$(this);$.ajax({type:"POST",url:route("notifications.read",t),data:{notificationId:t},success:function(){var e=parseInt($("#header-notification-counter").text());$("#header-notification-counter").text(e-1),a.remove();var t=document.getElementsByClassName("readNotification").length;$("#counter").text(t),0==t&&($(".notification-counter").addClass("d-none"),$("#readAllNotification").addClass("d-none"),$(".empty-state").removeClass("d-none"),$(".notification-toggle").removeClass("beep")),displaySuccessMessage(Lang.get("messages.flash.notification_read"))},error:function(e){manageAjaxErrors(e)}})})),listenClick("#readAllNotification",(function(e){e.preventDefault(),e.stopPropagation(),$.ajax({type:"POST",url:route("notifications.read.all"),success:function(){$("#header-notification-counter").text(0),$("#header-notification-counter").addClass("d-none"),$(".readNotification").remove(),$("#readAllNotification").addClass("d-none"),$(".empty-state").removeClass("d-none"),$(".notification-toggle").removeClass("beep"),displaySuccessMessage(Lang.get("messages.flash.notification_read"))},error:function(e){manageAjaxErrors(e)}})})),window.getAvgReviewHtmlData=function(e){var t=e.length,a=0;$(e).each((function(e,t){a+=t.rating}));for(var n=a/t,i='<div class="avg-review-star-div d-flex align-self-center mb-1">',s=0;s<5;s++)i+=n>0?n>.5?'<i class="fas fa-star review-star"></i>':'<i class="fas fa-star-half-alt review-star"></i>':'<i class="far fa-star review-star"></i>',n--;return i+="</div>"},listenClick(".apply-dark-mode",(function(e){e.preventDefault(),$.ajax({url:route("update-dark-mode"),type:"get",success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),500))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),window.openDropdownManually=function(e,t){e.hasClass("show")?(e.removeClass("show"),t.removeClass("show")):(e.addClass("show"),t.addClass("show"))},window.hideDropdownManually=function(e,t){e.removeClass("show"),t.removeClass("show")},document.addEventListener("turbo:before-cache",(function(){var e=".select2-hidden-accessible";$(e).each((function(){$(this).select2("destroy")})),$(e).each((function(){$(this).select2()})),$(".toast").addClass("d-none")})),window.setValueOfEmptySpan=function(){$("span.showSpan").each((function(){$(this).text()||$(this).text("N/A")}))}},1848:()=>{window.listen=function(e,t,a){$(document).on(e,t,a)},window.listenClick=function(e,t){$(document).on("click",e,t)},window.listenSubmit=function(e,t){$(document).on("submit",e,t)},window.listenChange=function(e,t){$(document).on("change",e,t)},window.listenKeyup=function(e,t){$(document).on("keyup",e,t)}},7957:()=>{"use strict";window.setPrice=function(e,t){if(""!=t||t>0){"number"!=typeof t&&(t=t.replace(/,/g,""));var a=addCommas(t);$(e).val(a)}},window.addCommas=function(e){for(var t=(e+="").split("."),a=t[0],n=t.length>1?"."+t[1]:"",i=/(\d+)(\d{3})/;i.test(a);)a=a.replace(i,"$1,$2");return a+n},window.getFormattedPrice=function(e){if(""!=e||e>0)return"number"!=typeof e&&(e=e.replace(/,/g,"")),addCommas(e)},window.priceFormatSelector=function(e){$(document).on("input keyup keydown keypress",e,(function(e){var t=$(this).val();if(""===t)$(this).val("");else{if(/[0-9]+(,[0-9]+)*$/.test(t))return $(this).val(getFormattedPrice(t)),!0;$(this).val(t.replace(/[^0-9 \,]/,""))}}))},window.removeCommas=function(e){return e.replace(/,/g,"")},priceFormatSelector(".price-input")},6619:()=>{document.addEventListener("turbo:load",(function(){(function(){if(!$("#phoneNumber").length)return!1;var e=document.querySelector("#phoneNumber"),t=document.querySelector("#error-msg"),a=document.querySelector("#valid-msg"),n=[Lang.get("messages.invalid_number"),Lang.get("messages.invalid_country_number"),Lang.get("messages.too_short"),Lang.get("messages.too_long"),Lang.get("messages.invalid_number")],i=window.intlTelInput(e,{initialCountry:defaultCountryCodeValue,separateDialCode:!0,geoIpLookup:function(e,t){$.get("https://ipinfo.io",(function(){}),"jsonp").always((function(t){var a=t&&t.country?t.country:"";e(a)}))},utilsScript:"../../public/assets/js/inttel/js/utils.min.js"}),s=function(){e.classList.remove("error"),t.innerHTML="",t.classList.add("d-none"),a.classList.add("d-none")};e.addEventListener("blur",(function(){if(s(),e.value.trim())if(i.isValidNumber())a.classList.remove("d-none");else{e.classList.add("error");var r=i.getValidationError();t.innerHTML=n[r],t.classList.remove("d-none")}})),e.addEventListener("change",s),e.addEventListener("keyup",s),"undefined"!=typeof phoneNo&&""!==phoneNo&&setTimeout((function(){$("#phoneNumber").trigger("change")}),500);$("#phoneNumber").on("blur keyup change countrychange",(function(){"undefined"!=typeof phoneNo&&""!==phoneNo&&(i.setNumber("+"+phoneNo),phoneNo="");var e=i.selectedCountryData.dialCode;$("#prefix_code").val(e)}));var r=i.selectedCountryData.dialCode;$("#prefix_code").val(r);var o=$("#phoneNumber").val().replaceAll("-"," ").replace(/\s/g,"");$("#phoneNumber").val(o),$("#phoneNumber").focus(),$("#phoneNumber").trigger("blur")})(),function(){if(!$("#userCreateForm").length)return!1;$("#userCreateForm").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1}))}(),function(){if(!$("#userEditForm").length)return!1;$("#userEditForm").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1}))}(),function(){if(!$("#editForm").length)return!1;$("#editForm").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1}))}(),function(){if(!$("#createSetting").length)return!1;$("#createSetting").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1}))}()})),$(document).on("click",".iti__country",(function(){var e=$(".iti__selected-flag>.iti__flag").attr("class");e=e.split(/\s+/)[1];var t=$(".iti__selected-dial-code").text();window.localStorage.setItem("flagClassLocal",e),window.localStorage.setItem("dialCodeValLocal",t)}))},1112:()=>{listenKeyup("#menuSearch",(function(){var e=$(this).val().toLowerCase();$(".nav-item").filter((function(){$(".no-record").addClass("d-none"),$(this).toggle($(this).text().toLowerCase().indexOf(e)>-1),0==$(".nav-item:visible").last().length&&$(".no-record").removeClass("d-none")}))})),listenClick(".sidebar-aside-toggle",(function(){!0===$(this).hasClass("active")?$(".sidebar-search-box").addClass("d-none"):$(".sidebar-search-box").removeClass("d-none")}))},9434:()=>{document.addEventListener("turbo:load",(function(){if(!$("#adminChartData").length)return;var n=JSON.parse($("#adminChartData").val());t=[],e=[],a=0,$.each(n,(function(n,i){t.push(n),e.push(i),a+=i})),i()}));var e=[],t=[],a=0,n="area";function i(){if($("#appointmentChartId").length){$(".totalEarning").text(a),$("#appointmentChartId").remove(),$(".appointmentChart").append('<div id="appointmentChartId" style="height: 350px" class="card-rounded-bottom"></div>');var i=document.getElementById("appointmentChartId");i&&new ApexCharts(i,{series:[{name:Lang.get("messages.doctor_appointment.amount"),type:n,stacked:!0,data:e}],chart:{fontFamily:"inherit",stacked:!0,type:n,height:350,toolbar:{show:!1},background:dashboardChartBGColor},plotOptions:{bar:{stacked:!0,horizontal:!1,borderRadius:4,columnWidth:["12%"]}},legend:{show:!1},dataLabels:{enabled:!1},stroke:{curve:"smooth",show:!0,width:2,colors:["transparent"]},xaxis:{categories:t,axisBorder:{show:!1},axisTicks:{show:!1},labels:{style:{colors:dashboardChartFontColor,fontSize:"12px"}}},yaxis:{labels:{style:{colors:dashboardChartFontColor,fontSize:"12px"}}},fill:{opacity:1},states:{normal:{filter:{type:"none",value:0}},hover:{filter:{type:"none",value:0}},active:{allowMultipleDataPointsSelection:!1,filter:{type:"none",value:0}}},tooltip:{style:{fontSize:"12px"},y:{formatter:function(e){return currencyIcon+" "+e}}},grid:{borderColor:"--bs-gray-200",strokeDashArray:4,yaxis:{lines:{show:!0}},padding:{top:0,right:0,bottom:0,left:0}},theme:{mode:"dark",palette:"palette1",monochrome:{enabled:!1,color:"#13151f",shadeTo:"dark",shadeIntensity:0}}}).render()}}listenClick("#changeChart",(function(){"area"==n?(n="bar",$(".chart").addClass("fa-chart-area"),$(".chart").removeClass("fa-chart-bar"),i()):(n="area",$(".chart").removeClass("fa-chart-area"),$(".chart").addClass("fa-chart-bar"),i())})),listenClick("#monthData",(function(e){e.preventDefault(),$.ajax({url:route("patientData.dashboard"),type:"GET",data:{month:"month"},success:function(e){e.success&&($("#monthlyReport").empty(),$(document).find("#week").removeClass("show active"),$(document).find("#day").removeClass("show active"),$(document).find("#month").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.profile,name:t.user.full_name,email:t.user.email,patientId:t.patient_unique_id,registered:moment.parseZone(t.user.created_at).format("Do MMM Y hh:mm A"),appointment_count:t.appointments_count,route:route("patients.show",t.id)}];$(document).find("#monthlyReport").append(prepareTemplateRender("#adminDashboardTemplate",a))})):$(document).find("#monthlyReport").append('<tr class="text-center">\n                                                    <td colspan="5" class="text-muted fw-bold">'.concat(noData,"</td>\n                                                </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenChange("#serviceId",(function(n){n.preventDefault();var s=$("#serviceId").val(),r=$("#dashboardDoctorId").val(),o=$("#serviceCategoryId").val();$(".totalEarning").text(""),$.ajax({url:route("admin.dashboard"),type:"GET",data:{serviceId:s,dashboardDoctorId:r,serviceCategoryId:o},success:function(n){n.success&&(t=[],e=[],a=0,$.each(n.data,(function(n,i){t.push(n),e.push(i),a+=i})),$(".totalEarning").text(a),i())},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenChange("#dashboardDoctorId",(function(n){n.preventDefault();var s=$("#serviceId").val(),r=$("#dashboardDoctorId").val(),o=$("#serviceCategoryId").val();$(".totalEarning").text(""),$.ajax({url:route("admin.dashboard"),type:"GET",data:{serviceId:s,dashboardDoctorId:r,serviceCategoryId:o},success:function(n){n.success&&(t=[],e=[],a=0,$.each(n.data,(function(n,i){t.push(n),e.push(i),a+=i})),$(".totalEarning").text(a),i())},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenChange("#serviceCategoryId",(function(n){n.preventDefault();var s=$("#serviceId").val(),r=$("#dashboardDoctorId").val(),o=$("#serviceCategoryId").val();$(".totalEarning").text(""),$.ajax({url:route("admin.dashboard"),type:"GET",data:{serviceId:s,dashboardDoctorId:r,serviceCategoryId:o},success:function(n){n.success&&(t=[],e=[],a=0,$.each(n.data,(function(n,i){t.push(n),e.push(i),a+=i})),$(".totalEarning").text(a),i())},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#dashboardResetBtn",(function(){$("#serviceId").val("").trigger("change"),$("#dashboardDoctorId").val("").trigger("change"),$("#serviceCategoryId").val("").trigger("change"),$("#serviceCategoryId").val("").trigger("change"),hideDropdownManually($("#dashboardFilterBtn"),$(".dropdown-menu"))})),listenClick("#weekData",(function(e){e.preventDefault(),$.ajax({url:route("patientData.dashboard"),type:"GET",data:{week:"week"},success:function(e){e.success&&($("#weeklyReport").empty(),$(document).find("#month").removeClass("show active"),$(document).find("#day").removeClass("show active"),$(document).find("#week").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.profile,name:t.user.full_name,email:t.user.email,patientId:t.patient_unique_id,registered:moment.parseZone(t.user.created_at).format("Do MMM Y hh:mm A"),appointment_count:t.appointments_count,route:route("patients.show",t.id)}];$(document).find("#weeklyReport").append(prepareTemplateRender("#adminDashboardTemplate",a))})):$(document).find("#weeklyReport").append('<tr class="text-center">\n                                                    <td colspan="5" class="text-muted fw-bold">'.concat(noData,"</td>\n                                                </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#dayData",(function(e){e.preventDefault(),$.ajax({url:route("patientData.dashboard"),type:"GET",data:{day:"day"},success:function(e){e.success&&($("#dailyReport").empty(),$(document).find("#month").removeClass("show active"),$(document).find("#week").removeClass("show active"),$(document).find("#day").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.profile,name:t.user.full_name,email:t.user.email,patientId:t.patient_unique_id,registered:moment.parseZone(t.user.created_at).format("Do MMM Y hh:mm A"),appointment_count:t.appointments_count,route:route("patients.show",t.id)}];$(document).find("#dailyReport").append(prepareTemplateRender("#adminDashboardTemplate",a))})):$(document).find("#dailyReport").append('\n                    <tr class="text-center">\n                        <td colspan="5" class="text-muted fw-bold"> '.concat(noData,"</td>\n                    </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".dayData",(function(){$(this).addClass("text-primary"),$(".weekData ,.monthData").removeClass("text-primary")})),listenClick(".weekData",(function(){$(this).addClass("text-primary"),$(".dayData ,.monthData").removeClass("text-primary")})),listenClick(".monthData",(function(){$(this).addClass("text-primary"),$(".weekData ,.dayData").removeClass("text-primary")}))},7225:()=>{listenClick("#doctorMonthData",(function(e){e.preventDefault(),$.ajax({url:route("doctors.appointment.dashboard"),type:"GET",data:{month:"month"},success:function(e){e.success&&($("#doctorMonthlyReport").empty(),$(document).find("#week").removeClass("show active"),$(document).find("#day").removeClass("show active"),$(document).find("#month").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.patient.profile,name:t.patient.user.full_name,email:t.patient.user.email,patientId:t.patient.patient_unique_id,date:moment(t.date).format("Do MMM, Y"),from_time:t.from_time,from_time_type:t.from_time_type,to_time:t.to_time,to_time_type:t.to_time_type,route:route("doctors.patient.detail",t.patient_id)}];$(document).find("#doctorMonthlyReport").append(prepareTemplateRender("#doctorDashboardTemplate",a))})):$(document).find("#doctorMonthlyReport").append('\n                                                <tr>\n                                                    <td colspan="4" class="text-center fw-bold text-muted">'.concat(noData,"</td>\n                                                </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#doctorWeekData",(function(e){e.preventDefault(),$.ajax({url:route("doctors.appointment.dashboard"),type:"GET",data:{week:"week"},success:function(e){e.success&&($("#doctorWeeklyReport").empty(),$(document).find("#month").removeClass("show active"),$(document).find("#day").removeClass("show active"),$(document).find("#week").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.patient.profile,name:t.patient.user.full_name,email:t.patient.user.email,patientId:t.patient.patient_unique_id,date:moment(t.date).format("Do MMM, Y"),from_time:t.from_time,from_time_type:t.from_time_type,to_time:t.to_time,to_time_type:t.to_time_type,route:route("doctors.patient.detail",t.patient_id)}];$(document).find("#doctorWeeklyReport").append(prepareTemplateRender("#doctorDashboardTemplate",a))})):$(document).find("#doctorWeeklyReport").append('\n                                                <tr>\n                                                    <td colspan="4" class="text-center fw-bold text-muted">'.concat(noData,"</td>\n                                                </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#doctorDayData",(function(e){e.preventDefault(),$.ajax({url:route("doctors.appointment.dashboard"),type:"GET",data:{day:"day"},success:function(e){e.success&&($("#doctorDailyReport").empty(),$(document).find("#month").removeClass("show active"),$(document).find("#week").removeClass("show active"),$(document).find("#day").addClass("show active"),""!=e.data.patients.data?$.each(e.data.patients.data,(function(e,t){var a=[{image:t.patient.profile,name:t.patient.user.full_name,email:t.patient.user.email,patientId:t.patient.patient_unique_id,date:moment(t.date).format("Do MMM, Y"),from_time:t.from_time,from_time_type:t.from_time_type,to_time:t.to_time,to_time_type:t.to_time_type,route:route("doctors.patient.detail",t.patient_id)}];$(document).find("#doctorDailyReport").append(prepareTemplateRender("#doctorDashboardTemplate",a))})):$(document).find("#doctorDailyReport").append('\n                                                <tr>\n                                                    <td colspan="4" class="text-center fw-bold text-muted">'.concat(noData,"</td>\n                                                </tr>")))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#doctorDayData",(function(){$(this).addClass("text-primary"),$("#doctorWeekData ,#doctorMonthData").removeClass("text-primary")})),listenClick("#doctorWeekData",(function(){$(this).addClass("text-primary"),$("#doctorDayData ,#doctorMonthData").removeClass("text-primary")})),listenClick("#doctorMonthData",(function(){$(this).addClass("text-primary"),$("#doctorWeekData ,#doctorDayData").removeClass("text-primary")}))},3751:()=>{document.addEventListener("turbo:load",(function(){m(),p()}));var e,t,a,n,i,s,r,o,d,l=!1,c=null,u={id:"",uId:"",eventName:"",eventDescription:"",eventStatus:"",startDate:"",endDate:"",amount:0,service:"",patientName:""};var m=function(){if("doctor"==usersRole){var t=document.getElementById("doctorAppointmentCalendar");if($(t).length){var a=$(".currentLanguage").val();(e=new FullCalendar.Calendar(t,{locale:a,themeSystem:"bootstrap5",height:750,buttonText:{today:Lang.get("messages.datepicker.today"),day:Lang.get("messages.admin_dashboard.day"),month:Lang.get("messages.admin_dashboard.month")},headerToolbar:{left:"title",center:"prev,next today",right:"dayGridDay,dayGridMonth"},initialDate:new Date,timeZone:"UTC",dayMaxEvents:!0,events:function(e,t,a){$.ajax({url:route("doctors.appointments.calendar"),type:"GET",data:e,success:function(e){e.success&&t(e.data)},error:function(e){displayErrorMessage(e.responseJSON.message),a()}})},eventMouseEnter:function(e){h({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,description:e.event.extendedProps.description,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,patientName:e.event.extendedProps.patientName}),g(e.el)},eventMouseLeave:function(){f()},eventClick:function(e){f(),c=e.event.id,h({id:e.event.id,title:e.event.title,startStr:e.event.startStr,endStr:e.event.endStr,description:e.event.extendedProps.description,status:e.event.extendedProps.status,amount:e.event.extendedProps.amount,uId:e.event.extendedProps.uId,service:e.event.extendedProps.service,patientName:e.event.extendedProps.patientName}),v()}})).render()}}},p=function(){if($("#doctorAppointmentCalendarModal").length){var e=document.getElementById("doctorAppointmentCalendarModal");s=new bootstrap.Modal(e),t=e.querySelector('[data-calendar="event_name"]'),e.querySelector('[data-calendar="event_description"]'),a=e.querySelector('[data-calendar="event_status"]'),d=e.querySelector('[data-calendar="event_amount"]'),o=e.querySelector('[data-calendar="event_uId"]'),r=e.querySelector('[data-calendar="event_service"]'),n=e.querySelector('[data-calendar="event_start_date"]'),i=e.querySelector('[data-calendar="event_end_date"]')}},h=function(e){u.id=e.id,u.eventName=e.title,u.eventStatus=e.status,u.startDate=e.startStr,u.endDate=e.endStr,u.amount=e.amount,u.uId=e.uId,u.service=e.service,u.patientName=e.patientName},g=function(e){f();var t=u.allDay?moment(u.startDate).format("Do MMM, YYYY"):moment(u.startDate).format("Do MMM, YYYY - h:mm a"),a=u.allDay?moment(u.endDate).format("Do MMM, YYYY"):moment(u.endDate).format("Do MMM, YYYY - h:mm a");u.patientName},f=function(){l&&(undefined.dispose(),l=!1)},v=function(){var e,l;$(".fc-popover").addClass("hide"),s.show();var c=$("#bookCalenderConst").val(),m=$("#checkInCalenderConst").val(),p=$("#checkOutCalenderConst").val(),h=$("#cancelCalenderConst").val();e=moment(u.startDate).utc().format("Do MMM, YYYY - h:mm A"),l=moment(u.endDate).utc().format("Do MMM, YYYY - h:mm A"),i.innerText=": "+l,n.innerText=": "+e,t.innerText="Patient: "+u.patientName,$(a).empty(),$(a).append('\n<option class="booked" disabled value="'.concat(c,'" ').concat(u.eventStatus==c?"selected":"",">").concat(Lang.get("messages.appointment.booked"),'</option>\n<option value="').concat(m,'" ').concat(u.eventStatus==m?"selected":""," ").concat(u.eventStatus==m?"selected":"","\n    ").concat(u.eventStatus==h||u.eventStatus==p?"disabled":"",">").concat(Lang.get("messages.appointment.check_in"),'</option>\n<option value="').concat(p,'" ').concat(u.eventStatus==p?"selected":"","\n    ").concat(u.eventStatus==h||u.eventStatus==c?"disabled":"",">").concat(Lang.get("messages.appointment.check_out"),'</option>\n<option value="').concat(h,'" ').concat(u.eventStatus==h?"selected":""," ").concat(u.eventStatus==m?"disabled":"","\n   ").concat(u.eventStatus==p?"disabled":"",">").concat(Lang.get("messages.appointment.cancelled"),"</option>\n")),$(a).val(u.eventStatus).trigger("change"),d.innerText=addCommas(u.amount),o.innerText=u.uId,r.innerText=u.service};listenChange(".doctor-apptnt-calendar-status-change",(function(){if(!$(this).val())return!1;var t=$(this).val(),a=c;if(parseInt(t)===u.eventStatus)return!1;$.ajax({url:route("doctors.change-status",a),type:"POST",data:{appointmentId:a,appointmentStatus:t},success:function(t){displaySuccessMessage(t.message),$("#doctorAppointmentCalendarModal").modal("hide"),e.refetchEvents()}})}))},2425:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}document.addEventListener("turbo:load",(function(){var a;if(!$(t).length)return;var n=$("#doctorPanelAppointmentDate"),i=moment().startOf("week"),s=moment().endOf("week");function r(e,t){$("#doctorPanelAppointmentDate").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}n.daterangepicker({startDate:i,endDate:s,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(a={},e(a,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(a,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(a,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(a,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(a,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(a,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),a)},r),r(i,s)}));var t="#doctorPanelAppointmentDate";listenChange(".doctor-appointment-status-change",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a=$(this);$.ajax({url:route("doctors.change-status",t),type:"POST",data:{appointmentId:t,appointmentStatus:e},success:function(e){$(a).children("option.booked").addClass("hide"),livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenChange(".doctor-apptment-change-payment-status",(function(){var e=$(this).val(),t=$(this).attr("data-id");$("#doctorAppointmentPaymentStatusModal").modal("show").appendTo("body"),$("#doctorAppointmentPaymentStatus").val(e),$("#doctorAppointmentId").val(t)})),listenSubmit("#doctorAppointmentPaymentStatusForm",(function(e){e.preventDefault();var t=$("#doctorAppointmentPaymentStatus").val(),a=$("#doctorAppointmentId").val(),n=$("#doctorPaymentType").val();$.ajax({url:route("doctors.change-payment-status",a),type:"POST",data:{appointmentId:a,paymentStatus:t,paymentMethod:n,loginUserId:currentLoginUserId},success:function(e){e.success&&(displaySuccessMessage(e.message),$("#doctorAppointmentPaymentStatusModal").modal("hide"),location.reload())},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenChange("#doctorPanelAppointmentDate",(function(){window.livewire.emit("changeDateFilter",$(this).val())})),listenChange("#doctorPanelPaymentType",(function(){window.livewire.emit("changeDateFilter",$("#doctorPanelAppointmentDate").val()),window.livewire.emit("changePaymentTypeFilter",$(this).val())})),listenChange("#doctorPanelAppointmentStatus",(function(){window.livewire.emit("changeDateFilter",$("#doctorPanelAppointmentDate").val()),window.livewire.emit("changeStatusFilter",$(this).val())})),listenClick("#doctorPanelApptmentResetFilter",(function(){$("#doctorPanelPaymentType").val(0).trigger("change"),$("#doctorPanelAppointmentStatus").val(1).trigger("change"),t.data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),t.data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#doctorPanelApptFilterBtn"),$(".dropdown-menu"))})),listenClick("#doctorPanelApptResetFilter",(function(){$("#doctorPanelPaymentType").val(0).trigger("change"),$("#doctorPanelAppointmentStatus").val(1).trigger("change"),$("#doctorPanelAppointmentDate").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#doctorPanelAppointmentDate").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#doctorPanelApptFilterBtn"),$(".dropdown-menu"))})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$("#doctorPanelPaymentType").length&&$("#doctorPanelPaymentType").select2(),$("#doctorPanelAppointmentStatus").length&&$("#doctorPanelAppointmentStatus").select2(),$(".appointment-status").length&&$(".appointment-status").select2(),$(".payment-status").length&&$(".payment-status").select2()}))}))},6345:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}document.addEventListener("turbo:load",(function(){var t;!function(){var t;if(!$("#holidayDateFilter").length)return;var a=moment().startOf("week"),n=moment().endOf("week");function i(e,t){$("#holidayDateFilter").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#holidayDateFilter").daterangepicker({startDate:a,endDate:n,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},i),i(a,n)}();var a=$(".currentLanguage").val();if($("#doctorHolidayDate").flatpickr({locale:a,minDate:(new Date).fp_incr(1),disableMobile:!0}),listenClick(".doctor-holiday-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("holidays.destroy",t),Lang.get("messages.holiday.holiday"))})),!$("#doctorHolidayDateFilter").length)return;var n=moment().startOf("week"),i=moment().endOf("week");function s(e,t){$("#doctorHolidayDateFilter").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#doctorHolidayDateFilter").daterangepicker({startDate:n,endDate:i,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},s),s(n,i)})),listenChange("#doctorHolidayStatus",(function(){$("#doctorHolidayStatus").val($(this).val()),window.livewire.emit("changeStatusFilter",$(this).val())})),listenChange("#holidayDateFilter,#doctorHolidayDateFilter",(function(){window.livewire.emit("changeDateFilter",$(this).val())})),listenClick(".holiday-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("doctors.holiday-destroy",t),Lang.get("messages.holiday.holiday"))})),listenClick("#holidayDateResetFilter",(function(){$("#holidayDateFilter").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#holidayDateFilter").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#holidayFilterBtn"),$(".dropdown-menu"))})),listenClick("#doctorHolidayResetFilter",(function(){$("#doctorHolidayDateFilter").data("daterangepicker").setStartDate(moment().startOf("week").format("MM/DD/YYYY")),$("#doctorHolidayDateFilter").data("daterangepicker").setEndDate(moment().endOf("week").format("MM/DD/YYYY")),hideDropdownManually($("#doctorHolidayFilterBtn"),$(".dropdown-menu"))}))},8847:()=>{document.addEventListener("turbo:load",(function(){1==!$("#doctorSessionIsEdit").val()&&($(".startTimeSlot").prop("disabled",!0),$(".endTimeSlot").prop("disabled",!0));var e=$(".currentLanguage").val();$("#addHolidayBtn").flatpickr({locale:e,disableMobile:!0,minDate:new Date}),$('select[name^="startTimes"]').each((function(){var e=$(this)[0].selectedIndex,t=$(this).closest(".add-slot").find('select[name^="endTimes"] option:selected')[0].index,a=$(this).closest(".add-slot").find('select[name^="endTimes"] option');e>=t&&a.eq(e+1).prop("selected",!0).trigger("change"),a.each((function(t){t<=e?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))})),$('select[name^="endTimes"]').each((function(){var e=$(this)[0].selectedIndex;$(this).closest(".timeSlot").next().find('select[name^="startTimes"] option').each((function(t){t<=e?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))}))})),listenChange("#selGap",(function(){$(".startTimeSlot").prop("disabled",!1),$(".endTimeSlot").prop("disabled",!1)})),listenClick(".add-session-time",(function(){if(1==!$("#doctorSessionIsEdit").val()&&""==$("#selGap").val())return!1;var e=0;$(this).parent().prev().children(".session-times").find(".timeSlot:last-child").length>0&&(e=$(this).parent().prev().children(".session-times").find(".timeSlot:last-child").children(".add-slot").find('select[name^="endTimes"] option:selected')[0].index);var t=$(this).closest(".weekly-content").attr("data-day"),a=$(this),n=$(this).closest(".weekly-content"),i=$("#selGap").val(),s=$("#getSlotByGapUrl").val();$.ajax({url:s,data:{gap:i,day:t},success:function(t){n.find(".unavailable-time").html(""),n.find('input[name="checked_week_days[]"').prop("checked",!0).prop("disabled",!1),a.closest(".weekly-content").find(".session-times").append(t.data),n.find('select[data-control="select2"]').select2(),$(".add-session-time").parent().prev().children(".session-times").find(".timeSlot:last-child").children(".add-slot").find('select[name^="startTimes"] option').each((function(t){t<=e?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))}})})),listenClick(".copy-btn",(function(){$(this).closest(".copy-card").removeClass("show"),$(".copy-dropdown").removeClass("show");var e=$(this).closest(".weekly-content").find(".session-times").find("select");if(0==e.length)$(this).closest(".menu-content").find(".copy-label .form-check-input:checked").each((function(){var e=$('.weekly-content[data-day="'.concat($(this).val(),'"]'));$(e).find(".session-times").html(""),e.find(".weekly-row").find(".unavailable-time").remove(),e.find(".weekly-row").append('<div class="unavailable-time">'+Lang.get("messages.doctor_session.unavailable")+"</div>"),$(e).find(".weekly-row").find('input[name="checked_week_days[]"').prop("checked",!1).prop("disabled",!0)}));else{e.each((function(){$(this).select2("destroy")}));var t=$(this).closest(".weekly-content").find(".session-times").find("select"),a=$(this).closest(".weekly-content").find(".session-times").clone();$(this).closest(".menu-content").find(".copy-label .form-check-input:checked").each((function(){var e=a,n=$(this).val(),i='.weekly-content[data-day="'.concat(n,'"]');e.find('select[name^="startTimes"]').attr("name","startTimes[".concat(n,"][]")),e.find('select[name^="endTimes"]').attr("name","endTimes[".concat(n,"][]")),$(i).find(".unavailable-time").html(""),e.find(".error-msg").html(""),$(i).find(".session-times").html(e.html()),$(i).find(".session-times select").select2(),$(i).find('input[name="checked_week_days[]"').prop("disabled",!1).prop("checked",!0),$(t).each((function(e){$(i).find(".session-times").find("select").eq(e).val($(this).val()).trigger("change")}))})),$(this).closest(".weekly-content").find(".session-times").find("select").each((function(){$(this).select2()})),$(".copy-check-input").prop("checked",!1)}})),listenClick(".deleteBtn",(function(){var e=0;($(this).closest(".timeSlot").prev().length>0&&(e=$(this).closest(".timeSlot").prev().children(".add-slot").find('select[name^="endTimes"] option:selected')[0].index),2==$(this).closest(".weekly-row").find(".session-times").find("select").length)&&($(this).closest(".weekly-row").find('input[name="checked_week_days[]"').prop("checked",!1).prop("disabled",!0),$(this).closest(".weekly-row").append('<div class="unavailable-time">'+Lang.get("messages.doctor_session.unavailable")+"</div>"));$(this).closest(".timeSlot").next().children(".add-slot").find('select[name^="startTimes"] option').each((function(t){t<=e?$(this).attr("disabled",!0):$(this).attr("disabled",!1)})),$(this).parent().siblings(".error-msg").remove(),$(this).parent().closest(".timeSlot").remove(),$(this).parent().remove()})),listenSubmit("#saveFormDoctor",(function(e){if(e.preventDefault(),!$('input[name="checked_week_days[]"]:checked').length)return displayErrorMessage("Please select any one day"),!1;$(".weekly-content").find(".error-msg").text(""),$.ajax({url:$(this).attr("action"),type:"POST",data:new FormData($(this)[0]),processData:!1,contentType:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){location.href=$("#btnBack").attr("href")}),2e3))},error:function(e){var t=e.responseJSON.message,a=t.day,n=t.key;$('.weekly-content[data-day="'.concat(a,'"]')).find(".error-msg").text(""),$('.weekly-content[data-day="'.concat(a,'"]')).find(".error-msg").eq(n).text("Slot timing is overlap with other slot timing")},complete:function(){}})})),listenChange('select[name^="startTimes"]',(function(e){var t=$(this)[0].selectedIndex,a=$(this).closest(".add-slot").find('select[name^="endTimes"] option'),n=$(this).closest(".add-slot").find('select[name^="endTimes"] option:selected')[0].index;t>=n&&a.eq(t+1).prop("selected",!0).trigger("change"),a.each((function(e){e<=t?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))})),listenChange('select[name^="endTimes"]',(function(e){var t=$(this)[0].selectedIndex;$(this).closest(".timeSlot").next().find('select[name^="startTimes"] option').each((function(e){e<=t?$(this).attr("disabled",!0):$(this).attr("disabled",!1)}))})),listenClick("#addHolidayBtn",(function(){$("#doctorSessionIsEdit").val()}))},4381:()=>{listenClick(".doctor-session-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id"),a=$("#doctorSessionUrl").val();deleteItem(a+"/"+t,Lang.get("messages.doctor_session.doctor_session"))}))},3949:(e,t,a)=>{"use strict";a(7908);document.addEventListener("turbo:load",(function(){!function(){var e=".doctor-dob",t=$(".currentLanguage").val();if($(".showQualification").slideUp(),!$(e).length)return;if($(e).flatpickr({locale:t,maxDate:new Date,disableMobile:!0}),!$("#doctorCountryId").val())return;$("#editDoctorCountryId").val($("#doctorCountryId").val()).trigger("change"),setTimeout((function(){$("#editDoctorStateId").val($("#doctorStateId").val()).trigger("change")}),400),setTimeout((function(){$("#editDoctorCityId").val($("#doctorCityId").val()).trigger("change")}),7e3)}()}));var n,i,s,r,o,d=!1,l=[],c=[],u=1;$(".showQualification").hide(),listenClick("#addQualification",(function(){d=!1,$(".degree").val(""),$(".university").val(""),$(".year").val("").trigger("change"),$(".showQualification").slideToggle(500)})),listenClick("#cancelQualification",(function(){$(".showQualification").slideUp(500)})),listenClick("#ResetForm",(function(){window.location.href=route("doctors.index")})),listenClick("#saveQualification",(function(e){e.preventDefault(),n=$(".degree").val(),i=$(".university").val(),s=$(".year").val();var t=$("#doctorQualificationTbl tr:last-child td:first-child").data("value");++t&&(u=t);var a={id:o,degree:n,year:s,university:i},l={id:u,degree:n,year:s,university:i},m=""===$(".degree").val().trim().replace(/ \r\n\t/g,""),p=""===$(".university").val().trim().replace(/ \r\n\t/g,""),h=""===$(".year").val().trim().replace(/ \r\n\t/g,"");if(m)return displayErrorMessage(Lang.get("messages.flash.degree_required")),!1;if(p)return displayErrorMessage(Lang.get("messages.flash.university_required")),!1;if(h)return displayErrorMessage(Lang.get("messages.flash.year_required")),!1;null==r?c.push(a):c[r-1]=a;var g=prepareTemplateRender("#qualificationTemplateData",l);if(0==d)$("tbody").append(g),u++;else if(1==d){var f=prepareTemplateRender("#qualificationTemplateData",{id:r,degree:n,year:s,university:i}),v=$("table tbody");$(v).find("tr").each((function(e,t){(e+=1)==r&&$("tbody").find(t).replaceWith(f)}))}$(".showQualification").slideUp(500),$(".degree").val(""),$(".university").val(""),$(".year").val("")})),listenClick(".delete-btn-qualification",(function(e){$(".degree").val(""),$(".university").val(""),$(".year").val("").trigger("change"),c.pop([0]),$(".showQualification").slideUp(500);var t=$(this),a=$(this).attr("data-id"),n=Lang.get("messages.doctor.qualification");swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure")+' "'+n+'" ?',buttons:{confirm:Lang.get("messages.common.yes"),cancel:Lang.get("messages.common.no")},reverseButtons:!0,icon:"warning"}).then((function(e){1==e&&(l.push(a),$("#deletedQualifications").val(l),t.closest("tr")[0].remove(),swal({icon:"success",title:Lang.get("messages.common.deleted"),text:n+Lang.get("messages.common.has_been"),timer:2e3}))}))})),listenClick(".edit-btn-qualification",(function(){$(".degree").val(""),$(".university").val(""),$(".year").val(""),r=$(this).attr("data-id"),o=$(this).data("primary-id");var e=$(this).closest("tr"),t=e.find("td:eq(1)").text(),a=e.find("td:eq(2)").text(),n=e.find("td:eq(3)").text();$(".degree").val(t),$(".university").val(a),$(".year").val(n).trigger("change"),d=!0,$(".showQualification").slideToggle(500)})),listenSubmit("#editDoctorForm",(function(e){var t=$("#twitterUrl").val(),a=$("#linkedinUrl").val(),n=$("#instagramUrl").val(),i=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)twitter.[a-z]{2,3}\/?.*/i),s=new RegExp(/^(https?:\/\/)?((w{2,3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i),r=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)instagram.[a-z]{2,3}\/?.*/i);if(!(""==t||!!t.match(i)))return displayErrorMessage(Lang.get("messages.flash.valid_twitter")),!1;if(!(""==a||!!a.match(s)))return displayErrorMessage(Lang.get("messages.flash.valid_linkedin")),!1;if(!(""==n||!!n.match(r)))return displayErrorMessage(Lang.get("messages.flash.valid_instagram")),!1;if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1;e.preventDefault();var o=new FormData($(this)[0]),d=$("#editDoctorId").val();o.append("qualifications",JSON.stringify(c)),$.ajax({url:route("doctors.update",d),type:"POST",data:o,contentType:!1,processData:!1,success:function(e){e.success&&(window.location.href=route("doctors.index"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenChange("input[type=radio][name=gender]",(function(){var e=$("#profilePicture").val();isEmpty(e)&&(1==this.value?$(".image-input-wrapper").attr("style","background-image:url("+manAvatar+")"):2==this.value&&$(".image-input-wrapper").attr("style","background-image:url("+womanAvatar+")"))})),listenChange("#editDoctorCountryId",(function(){var e=$("#doctorIsEdit").val();$.ajax({url:route("get-state"),type:"get",dataType:"json",data:{data:$(this).val()},success:function(t){$("#editDoctorStateId").empty(),$("#editDoctorCityId").empty(),$("#editDoctorStateId").append($('<option value=""></option>').text(Lang.get("messages.common.select_state"))),$("#editDoctorCityId").append($('<option value=""></option>').text(Lang.get("messages.common.select_city"))),$.each(t.data,(function(e,t){$("#editDoctorStateId").append($("<option></option>").attr("value",e).text(t))})),e&&$("#doctorStateId").val()&&$("#stateId").val($("#doctorStateId").val()).trigger("change")}})})),listenChange("#editDoctorStateId",(function(){var e=$("#doctorIsEdit").val();$.ajax({url:route("get-city"),type:"get",dataType:"json",data:{state:$(this).val(),country:$("#editDoctorCountryId").val()},success:function(t){$("#editDoctorCityId").empty(),$("#editDoctorCityId").append($('<option value=""></option>').text(Lang.get("messages.common.select_city"))),$.each(t.data,(function(e,t){$("#editDoctorCityId").append($("<option ></option>").attr("value",e).text(t))})),e&&$("#doctorCityId").val()&&$("#cityId").val($("#doctorCityId").val()).trigger("change")}})})),$("#doctorIsEdit").val()&&$("#doctorCountryId").val()&&$("#editDoctorCountryId").val($("#doctorCountryId").val()).trigger("change"),listenKeyup("#twitterUrl",(function(){this.value=this.value.toLowerCase()})),listenKeyup("#linkedinUrl",(function(){this.value=this.value.toLowerCase()})),listenKeyup("#instagramUrl",(function(){this.value=this.value.toLowerCase()})),listenSubmit("#createDoctorForm",(function(){var e=$("#twitterUrl").val(),t=$("#linkedinUrl").val(),a=$("#instagramUrl").val(),n=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)twitter.[a-z]{2,3}\/?.*/i),i=new RegExp(/^(https?:\/\/)?((w{2,3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i),s=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)instagram.[a-z]{2,3}\/?.*/i);return""!=e&&!e.match(n)?(displayErrorMessage(Lang.get("messages.flash.valid_twitter")),!1):""!=t&&!t.match(i)?(displayErrorMessage(Lang.get("messages.flash.valid_linkedin")),!1):""==a||!!a.match(s)?""!==$("#error-msg").text()?($("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1):void 0:(displayErrorMessage(Lang.get("messages.flash.valid_instagram")),!1)})),listenClick(".removeAvatarIcon",(function(){$("#bgImage").css("background-image",""),$("#bgImage").css("background-image","url("+backgroundImg+")"),$("#removeAvatar").remove()}))},1832:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}document.addEventListener("turbo:load",(function(){var t;if(!$("#doctorShowAppointmentDateFilter").length)return;var a=moment().startOf("week"),n=moment().endOf("week");function i(e,t){$("#doctorShowAppointmentDateFilter").html(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#doctorShowAppointmentDateFilter").daterangepicker({startDate:a,endDate:n,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},i),i(a,n)}));$("#doctorShowAppointmentDateFilter");listenClick(".doctor-show-apptment-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id"),a=isEmpty($("#patientRoleDoctorDetail").val())?route("appointments.destroy",t):route("patients.appointments.destroy",t);deleteItem(a,"Appointment")})),listenChange(".doctor-show-apptment-status",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a=$(this);$.ajax({url:route("change-status",t),type:"POST",data:{appointmentId:t,appointmentStatus:e},success:function(e){$(a).children("option.booked").addClass("hide"),livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenChange("#doctorShowAppointmentDateFilter",(function(){window.livewire.emit("changeDateFilter",$(this).val())})),listenChange("#doctorShowAppointmentStatus",(function(){window.livewire.emit("changeDateFilter",$("#doctorShowAppointmentDateFilter").val()),window.livewire.emit("changeStatusFilter",$(this).val())})),listenClick("#doctorShowApptmentResetFilter",(function(){$("#doctorShowAppointmentStatus").val(1).trigger("change"),$("#doctorShowAppointmentDateFilter").val(moment().startOf("week").format("MM/DD/YYYY")+" - "+moment().endOf("week").format("MM/DD/YYYY")).trigger("change"),livewire.emit("refresh")})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$("#doctorShowAppointmentStatus").length&&$("#doctorShowAppointmentStatus").select2(),$(".doctor-show-apptment-status").length&&$(".doctor-show-apptment-status").select2()}))}))},3737:()=>{listenClick("#doctorResetFilter",(function(){var e=moment(moment().startOf("week"),"MM/DD/YYYY").day(0).format("MM/DD/YYYY"),t=moment(moment().endOf("week"),"MM/DD/YYYY").day(6).format("MM/DD/YYYY");$("#doctorPanelAppointmentDate").val(e+" - "+t).trigger("change"),$("#doctorPanelPaymentType").val(0).trigger("change"),$("#doctorPanelAppointmentStatus").val(3).trigger("change"),$("#doctorStatus").val(2).trigger("change"),hideDropdownManually($("#doctorFilterBtn"),$(".dropdown-menu"))})),listenChange("#doctorStatus",(function(){$("#doctorStatus").val($(this).val()),window.livewire.emit("changeStatusFilter",$(this).val())})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$("#doctorStatus").length&&$("#doctorStatus").select2()}))})),listenClick(".doctor-delete-btn",(function(){var e=$(this).attr("data-id"),t=route("doctors.destroy",e);deleteItem(t,Lang.get("messages.doctor_session.doctor"))})),listenClick(".add-qualification",(function(){var e=$(this).attr("data-id");$("#qualificationID").val(e),$("#qualificationModal").modal("show")})),listenSubmit("#qualificationForm",(function(e){e.preventDefault(),$.ajax({url:route("add.qualification"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#year").val(null).trigger("change"),$("#qualificationModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listen("hidden.bs.modal","#qualificationModal",(function(){resetModalForm("#qualificationForm"),$("#year").val(null).trigger("change")})),listenClick(".doctor-status",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({type:"PUT",url:route("doctor.status"),data:{id:t},success:function(e){livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenClick(".doctor-email-verification",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({type:"POST",url:route("resend.email.verification",t),success:function(e){displaySuccessMessage(e.message),setTimeout((function(){Turbo.visit(window.location.href)}),5e3)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#qualificationSaveBtn",(function(){$("#qualificationForm").trigger("submit")})),listenChange(".doctor-email-verified",(function(e){var t=$(e.currentTarget).attr("data-id"),a=$(this).is(":checked")?1:0;$.ajax({type:"POST",url:route("emailVerified"),data:{id:t,value:a},success:function(e){livewire.emit("refresh"),displaySuccessMessage(e.message)}})}))},9411:()=>{document.addEventListener("turbo:load",(function(){if(!$("#templateAppointmentDate").length)return;!function(){if(!$("#templateAppointmentDate").length)return;$("#templateAppointmentDate").datepicker({language:"es-es",format:"yyyy-mm-dd",minDate:new Date,startDate:new Date,todayHighlight:!0})}();var e=$("#templateAppointmentDate").val();""!=$("#appointmentDoctorId").val()&&($(n).removeAttr("disabled"),$.ajax({url:route("get-service"),type:"GET",data:{appointmentDoctorId:$("#appointmentDoctorId").val()},success:function(e){e.success&&($(n).removeAttr("disabled"),$("#FrontAppointmentServiceId").empty(),$("#FrontAppointmentServiceId").append($('<option value=""></option>').text(Lang.get("messages.common.select_service"))),$.each(e.data,(function(e,t){$("#FrontAppointmentServiceId").append($("<option></option>").attr("value",t.id).text(t.name))})))}}));""!=$("#FrontAppointmentServiceId").val()&&$("#FrontAppointmentServiceId").length&&$.ajax({url:route("get-charge"),type:"GET",data:{chargeId:$("#FrontAppointmentServiceId").val()},success:function(e){e.success&&($("#payableAmountText").removeClass("d-none"),$("#payableAmount").text(currencyIcon+" "+getFormattedPrice(e.data.charges)),a=e.data.charges,e.data.charges)}});if(!e)return!1;$.ajax({url:route("doctor-session-time"),type:"GET",data:{adminAppointmentDoctorId:$("#appointmentDoctorId").val(),date:e,timezone_offset_minutes:t},success:function(e){e.success&&($(".appointment-slot-data").html(""),$.each(e.data.slots,(function(t,a){$(".no-time-slot").addClass("d-none"),null==e.data.bookedSlot?$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot" data-id="'+a+'">'+a+"</span>"):-1!==$.inArray(a,e.data.bookedSlot)?$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot bookedSlot" data-id="'+a+'">'+a+"</span>"):$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot" data-id="'+a+'">'+a+"</span>")})))},error:function(e){$(".appointment-slot-data").html(""),$(".book-appointment-message").css("display","block");var t='<div class="gen alert alert-danger">'+e.responseJSON.message+"</div>";$(".book-appointment-message").html(t).delay(5e3).hide("slow")}})}));var e,t=(new Date).getTimezoneOffset();t=0===t?0:-t;var a="",n="#templateAppointmentDate";listenChange("#isPatientAccount",(function(){this.checked?($(".name-details").addClass("d-none"),$(".registered-patient").removeClass("d-none"),$("#template-medical-email").keyup((function(){$("#patientName").val("");var e=$("#template-medical-email").val();$.ajax({url:route("get-patient-name"),type:"GET",data:{email:e},success:function(e){e.data&&$("#patientName").val(e.data)}})}))):($(".name-details").removeClass("d-none"),$(".registered-patient").addClass("d-none"))})),$(".no-time-slot").removeClass("d-none"),listenChange(n,(function(){e=$(this).val(),$.ajax({url:route("doctor-session-time"),type:"GET",data:{adminAppointmentDoctorId:$("#appointmentDoctorId").val(),date:e,timezone_offset_minutes:t},success:function(e){e.success&&($(".appointment-slot-data").html(""),$.each(e.data.slots,(function(t,a){$(".no-time-slot").addClass("d-none"),null==e.data.bookedSlot?$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot" data-id="'+a+'">'+a+"</span>"):-1!==$.inArray(a,e.data.bookedSlot)?$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot bookedSlot" data-id="'+a+'">'+a+"</span>"):$(".appointment-slot-data").append('<span class="badge badge-lg slots-item bg-success time-slot" data-id="'+a+'">'+a+"</span>")})))},error:function(e){$(".appointment-slot-data").html(""),$(".book-appointment-message").css("display","block");var t='<div class="gen alert alert-danger">'+e.responseJSON.message+"</div>";$(".book-appointment-message").html(t).delay(5e3).hide("slow"),$(".no-time-slot").hasClass("d-none")&&$(".no-time-slot").removeClass("d-none")}})})),listenClick(".time-slot",(function(){$(".time-slot").hasClass("activeSlot")?($(".time-slot").removeClass("activeSlot"),$(this).addClass("activeSlot")):$(this).addClass("activeSlot");var e=$(this).attr("data-id").split("-"),t=e[0],a=e[1];$("#timeSlot").val(""),$("#toTime").val(""),$("#timeSlot").val(t),$("#toTime").val(a)}));var i=$("#FrontAppointmentServiceId").val();function s(e){$.ajax({type:"POST",url:route("razorpay.failed"),data:{data:e},success:function(e){e.success&&displaySuccessMessage(e.message)},error:function(){}})}listenChange("#appointmentDoctorId",(function(e){e.preventDefault(),$("#payableAmountText").addClass("d-none"),$("#chargeId").val(""),$("#payableAmount").val(""),$("#templateAppointmentDate").val(""),$("#addFees").val(""),$(".appointment-slot-data").html(""),$(".no-time-slot").removeClass("d-none"),$(n).removeAttr("disabled"),$.ajax({url:route("get-service"),type:"GET",data:{appointmentDoctorId:$(this).val()},success:function(e){e.success&&(console.log(Lang.get("messages.common.select_service")),$(n).removeAttr("disabled"),$("#FrontAppointmentServiceId").empty(),$("#FrontAppointmentServiceId").append($('<option value=""></option>').text(Lang.get("messages.common.select_service"))),$.each(e.data,(function(e,t){$("#FrontAppointmentServiceId").append($("<option></option>").attr("value",t.id).attr("selected",t.id==i).text(t.name))})),i&&$("#FrontAppointmentServiceId").val()&&$("#payableAmountText").removeClass("d-none"))}})})),listenChange("#FrontAppointmentServiceId",(function(){""!=$(this).val()?$.ajax({url:route("get-charge"),type:"GET",data:{chargeId:$(this).val()},success:function(e){e.success&&($("#payableAmountText").removeClass("d-none"),$("#payableAmount").text(currencyIcon+" "+getFormattedPrice(e.data.charges)),a=e.data.charges,e.data.charges)}}):$("#payableAmountText").addClass("d-none")})),listenSubmit("#frontAppointmentBook",(function(e){e.preventDefault();var t=$("#template-medical-first_name").val().trim(),n=$("#template-medical-last_name").val().trim(),i=$("#template-medical-email").val().trim(),r=$("#appointmentDoctorId").val().trim(),o=$("#FrontAppointmentServiceId").val().trim(),d=$("#templateAppointmentDate").val().trim(),l=$("#paymentMethod").val().trim();if($(".book-appointment-message").css("display","block"),!$("#isPatientAccount").is(":checked")){if(""==t)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.first_name_required")+"</div>",$(window).scrollTop($(".appointment-form").offset().top),$(".book-appointment-message").html(m).delay(5e3).hide("slow"),!1;if(""==n)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.last_name_required")+"</div>",$(window).scrollTop($(".appointment-form").offset().top),$(".book-appointment-message").html(m).delay(5e3).hide("slow"),!1}if(""==i)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.email_required")+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),!1;if(""==r)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.doctor_required")+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),!1;if(""==o)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.service_required")+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),!1;if(""==d)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.appointment_date_required")+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),!1;if(""==l)return m='<div class="gen alert alert-danger">'+Lang.get("messages.common.payment_type_required")+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),!1;var c=$(this).find("#saveBtn");setFrontBtnLoader(c);var u=new FormData($(this)[0]);u.append("payable_amount",a);var m='<div class="alert alert-warning alert-dismissable"> '+Lang.get("messages.common.processing")+"</div>";jQuery(this).find(".book-appointment-message").html(m).show("slow"),$.ajax({url:$(this).attr("action"),type:"POST",data:u,processData:!1,contentType:!1,success:function(e){if(e.success){var t=e.data.appointmentId;if(m='<div class="gen alert alert-success">'+e.message+"</div>",$(".book-appointment-message").html(m).delay(5e3).hide("slow"),$(window).scrollTop($(".appointment-form").offset().top),$("#frontAppointmentBook")[0].reset(),e.data.payment_type==manually&&Turbo.visit(route("manually-payment",{appointmentId:t})),e.data.payment_type==paystack)return location.href=e.data.redirect_url;if(e.data.payment_type==authorizeMethod&&window.location.replace(route("authorize.init",{appointmentId:t})),e.data.payment_type==paytmMethod&&window.location.replace(route("paytm.init",{appointmentId:t})),e.data.payment_type==paypal&&$.ajax({type:"GET",url:route("paypal.init"),data:{appointmentId:t},success:function(e){if(200==e.status){var t="";location.href=e.link,$.each(e.result.links,(function(e,a){"approve"==a.rel&&(t=a.href)})),location.href=t}},error:function(e){},complete:function(){}}),e.data.payment_type==razorpayMethod&&$.ajax({type:"POST",url:route("razorpay.init"),data:{_token:csrfToken,appointmentId:t},success:function(e){if(e.success){var a=e.data,n=a.id,i=a.amount,r=a.name,o=a.email,d=a.contact,l=a.region_code;options.amount=i,options.order_id=n,options.prefill.name=r,options.prefill.email=o,options.prefill.contact=d,options.prefill.contact=l,options.prefill.appointmentID=t;var c=new Razorpay(options);c.open(),c.on("payment.failed",s)}},error:function(e){},complete:function(){}}),e.data.payment_type==stripeMethod){var a=e.data[0].sessionId;stripe.redirectToCheckout({sessionId:a}).then((function(e){manageAjaxErrors(e)}))}e.data===manually&&setTimeout((function(){location.reload()}),1200)}},error:function(e){$(".book-appointment-message").css("display","block"),m='<div class="gen alert alert-danger">'+e.responseJSON.message+"</div>",$(window).scrollTop($(".appointment-form").offset().top),$(".book-appointment-message").html(m).delay(5e3).hide("slow")},complete:function(){setFrontBtnLoader(c)}})})),listenClick(".show-more-btn",(function(){$(".question").hasClass("d-none")?($(".question").removeClass("d-none"),$(".show-more-btn").html("show less")):($(".show-content").addClass("d-none"),$(".show-more-btn").html("show more"))})),window.setFrontBtnLoader=function(e){if(e.attr("data-old-text"))return e.html(e.attr("data-old-text")).prop("disabled",!1),void e.removeAttr("data-old-text");e.attr("data-old-text",e.text()),e.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>').prop("disabled",!0)}},7447:()=>{document.addEventListener("turbo:load",(function(){if($("#cmsShortDescription").on("keyup",(function(){$("#cmsShortDescription").attr("maxlength",800)})),$("#cmsShortDescription").attr("maxlength",800),!$("#cmsTermConditionId").length)return;var e=new Quill("#cmsTermConditionId",{modules:{toolbar:[[{header:[1,2,!1]}],["bold","italic","underline"],["image","code-block"]]},placeholder:Lang.get("messages.cms.terms_conditions"),theme:"snow"});if(e.on("text-change",(function(t,a,n){0===e.getText().trim().length&&e.setContents([{insert:""}])})),!$("#cmsPrivacyPolicyId").length)return;var t=new Quill("#cmsPrivacyPolicyId",{modules:{toolbar:[[{header:[1,2,!1]}],["bold","italic","underline"],["image","code-block"]]},placeholder:Lang.get("messages.cms.privacy_policy"),theme:"snow"});t.on("text-change",(function(e,a,n){0===t.getText().trim().length&&t.setContents([{insert:""}])}));var a=document.createElement("textarea");a.innerHTML=$("#cmsTermConditionData").val(),e.root.innerHTML=a.value,a.innerHTML=$("#cmsPrivacyPolicyData").val(),t.root.innerHTML=a.value,listenSubmit("#addCMSForm",(function(){var a=""===$("#aboutTitleId").val().trim().replace(/ \r\n\t/g,""),n=""===$("#cmsShortDescription").val().trim().replace(/ \r\n\t/g,"");if(a)return displayErrorMessage("About Title field is not contain only white space"),!1;if(n)return displayErrorMessage("About Short Description field is not contain only white space"),!1;if(""===$("#aboutExperience").val())return displayErrorMessage("About Experience field is required."),!1;var i=document.createElement("textarea"),s=e.root.innerHTML;i.innerHTML=s;var r=t.root.innerHTML;return 0===e.getText().trim().length?(displayErrorMessage("The Terms & Conditions is required."),!1):0===t.getText().trim().length?(displayErrorMessage("The Privacy Policy is required."),!1):($("#termData").val(JSON.stringify(s)),void $("#privacyData").val(JSON.stringify(r)))}))}))},5954:()=>{listenClick("#enquiryResetFilter",(function(){var e=$("#allEnquiry").val();$("#enquiriesStatus").val(e).trigger("change"),hideDropdownManually($("#enquiryFilterBtn"),$(".dropdown-menu"))})),listenChange("#enquiriesStatus",(function(){window.livewire.emit("changeStatusFilter",$(this).val())})),listenClick(".enquiry-delete-btn",(function(){var e=$(this).attr("data-id");deleteItem(route("enquiries.destroy",e),Lang.get("messages.web.enquiry"))}))},3980:()=>{listenClick(".faq-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("faqs.destroy",t),Lang.get("messages.faqs"))})),listenClick(".accordion-button",(function(e){var t=$(this).attr("data-bs-target");$(this).hasClass("custom-class")?($(this).attr("aria-expanded","false"),$(this).addClass("collapsed"),$(t).removeClass("show"),$(t).addClass("hide"),$(this).removeClass("custom-class"),$(this).css("box-shadow","none")):($(this).addClass("custom-class"),$(t).addClass("show"),$(t).removeClass("hide"),$(this).attr("aria-expanded","true"))}))},6095:()=>{document.addEventListener("turbo:load",(function(){var e="#frontAppointmentDate";if(!$(e).length)return;$(e).datepicker({format:"yyyy-mm-dd",startDate:new Date,todayHighlight:!0})}))},5595:()=>{document.addEventListener("turbo:load",(function(){if(!$("#shortDescription").length)return;$("#shortDescription").on("keyup",(function(){$("#shortDescription").attr("maxlength",111)}))}))},8421:()=>{listenClick(".front-testimonial-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("front-patient-testimonials.destroy",t),Lang.get("messages.front_patient_testimonials"))}))},3305:()=>{},9044:()=>{document.addEventListener("turbo:load",(function(){if(!$("#shortDescription").length)return;if(listenKeyup("#shortDescription",(function(){$("#sliderShortDescription").attr("maxlength",55)})),!$("#sliderShortDescription").length)return;$("#sliderShortDescription").attr("maxlength",55)}))},4212:()=>{},3713:()=>{listenSubmit("#subscribeForm",(function(e){e.preventDefault(),$.ajax({url:route("subscribe.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&($(".subscribeForm-message").append('<div class="gen alert alert-success">'+Lang.get("messages.flash.subscriber_creat")+"</div>").delay(5e3),setTimeout((function(){$(".subscribeForm-message").empty(),$("#subscribeForm")[0].reset()}),3e3))},error:function(e){$(".subscribeForm-message").append('<div class="err alert alert-danger">'+Lang.get("messages.common.email_already_exist")+"</div>").delay(5e3),setTimeout((function(){$(".subscribeForm-message").empty(),$("#subscribeForm")[0].reset()}),3e3)},complete:function(){}})}))},3273:()=>{listenClick(".subscriber-delete-btn",(function(){var e=$(this).attr("data-id");deleteItem(route("subscribers.destroy",e),Lang.get("messages.subscribers"))}))},9704:()=>{listenClick("#syncGoogleCalendar",(function(){var e=$(this);setAdminBtnLoader(e),$.ajax({url:route("syncGoogleCalendarList"),type:"GET",success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),1200))},complete:function(){setAdminBtnLoader(e)}})})),listenSubmit("#googleCalendarForm",(function(e){if(e.preventDefault(),$(".google-calendar").is(":checked")){var t="";isEmpty($("#googleCalendarDoctorRole").val())?isEmpty($("#googleCalendarPatientRole").val())||(t=route("patients.appointmentGoogleCalendar.store")):t=route("doctors.appointmentGoogleCalendar.store"),$.ajax({url:t,type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),1200))},error:function(e){displayErrorMessage(e.responseJSON.message)}})}else displayErrorMessage("Please select a calendar.")}))},8283:()=>{document.addEventListener("turbo:load",(function(){if(!$("#consultationDate").length)return;var e=$(".currentLanguage").val();if($("#consultationDate").flatpickr({locale:e,enableTime:!0,minDate:new Date,dateFormat:"Y-m-d H:i"}),!$(".edit-consultation-date").length)return;$(".edit-consultation-date").flatpickr({locale:e,enableTime:!0,minDate:new Date,dateFormat:"Y-m-d H:i"})}));listenClick("#addLiveConsultationBtn",(function(){resetModalForm("#addNewForm"),$("#addDoctorID").trigger("change");var e=$(".currentLanguage").val();$("#patientName").trigger("change"),$("#consultationDate").flatpickr({locale:e,enableTime:!0,minDate:new Date,dateFormat:"Y-m-d H:i",disableMobile:"true"}),$("#addModal").modal("show").appendTo("body")})),listenSubmit("#addNewForm",(function(e){e.preventDefault();var t=jQuery(this).find("#btnSave");t.button("loading"),setAdminBtnLoader(t),$.ajax({url:route("doctors.live-consultations.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addModal").modal("hide"),livewire.emit("refresh"),setTimeout((function(){t.button("reset")}),2500))},error:function(e){displayErrorMessage(e.responseJSON.message),setTimeout((function(){t.button("reset")}),2e3)},complete:function(){setAdminBtnLoader(t)}})})),listenClick("#liveConsultationResetFilter",(function(){$("#statusArr").val(3).trigger("change")})),listenChange(".doctorLiveConsultantStatus",(function(){window.livewire.emit("changeStatusFilter",$(this).val())})),listenSubmit("#editForm",(function(e){e.preventDefault();var t=jQuery(this).find("#btnEditSave");t.button("loading"),setAdminBtnLoader(t);var a=$("#liveConsultationId").val();$.ajax({url:route("doctors.live-consultations.destroy",a),type:"PUT",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){setAdminBtnLoader(t),t.button("reset")}})})),listenChange(".consultation-change-status",(function(e){e.preventDefault();var t=$(this).val();$.ajax({url:route("doctors.live.consultation.change.status"),type:"POST",data:{statusId:t,id:$(this).attr("data-id")},success:function(e){e.success&&(displaySuccessMessage(e.message),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".start-btn",(function(e){var t=$(e.currentTarget).attr("data-id");startRenderData(t)})),listenClick(".live-consultation-edit-btn",(function(e){var t=$(e.currentTarget).attr("data-id");editRenderData(t)})),window.editRenderData=function(e){$.ajax({url:route("doctors.live-consultations.edit",e),type:"GET",success:function(e){if(e.success){var t=e.data;$("#liveConsultationId").val(t.id),$(".edit-consultation-title").val(t.consultation_title),$(".edit-consultation-date").val(moment(t.consultation_date).format("YYYY-MM-DD H:mm")),$(".edit-consultation-duration-minutes").val(t.consultation_duration_minutes),$(".edit-patient-name").val(t.patient_id).trigger("change"),$(".edit-doctor-name").val(t.doctor_id).trigger("change"),$(".host-enable,.host-disabled").prop("checked",!1),1==t.host_video?$(".host-enable").prop("checked",!0).val(1):$(".host-disabled").prop("checked",!0).val(1),$(".client-enable,.client-disabled").prop("checked",!1),1==t.participant_video?$(".client-enable").prop("checked",!0).val(1):$(".client-disabled").prop("checked",!0).val(1),$(".edit-consultation-type").val(t.type).trigger("change"),$(".edit-consultation-type-number").val(t.type_number).trigger("change"),$(".edit-description").val(t.description),$("#editModal").appendTo("body").modal("show")}},error:function(e){manageAjaxErrors(e)}})},window.startRenderData=function(e){$.ajax({url:$("#doctorRole").val()?route("doctors.live.consultation.get.live.status",e):route("patients.live.consultation.get.live.status",e),type:"GET",success:function(e){if(e.success){var t=e.data;$("#startLiveConsultationId").val(t.liveConsultation.id),$(".start-modal-title").text(t.liveConsultation.consultation_title),$(".host-name").text(t.liveConsultation.user.full_name),$(".date").text(moment(t.liveConsultation.consultation_date).format("LT")+", "+moment(t.liveConsultation.consultation_date).format("Do MMM, Y")),$(".minutes").text(t.liveConsultation.consultation_duration_minutes),$("#startModal").find(".status").append("started"===t.zoomLiveData.status?$(".status").text("Started"):$(".status").text("Awaited")),$(".start").attr("href",$("#patientRole").val()?t.liveConsultation.meta.join_url:"started"===t.zoomLiveData.status?$(".start").addClass("disabled"):t.liveConsultation.meta.start_url),$("#startModal").appendTo("body").modal("show")}},error:function(e){displayErrorMessage(e.responseJSON.message)}})},listenClick(".live-consultation-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("doctors.live-consultations.destroy",t),Lang.get("messages.live_consultations"))})),listenClick(".consultation-show-data",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({url:$("#doctorRole").val()?route("doctors.live-consultations.show",t):route("patients.live-consultations.show",t),type:"GET",success:function(e){if(e.success){var t=e.data.liveConsultation,a=$("#showModal");$("#startLiveConsultationId").val(t.id),$("#consultationTitle").text(t.consultation_title),$("#consultationDates").text(moment(t.consultation_date).format("LT")+", "+moment(t.consultation_date).format("Do MMM, Y")),$("#consultationDurationMinutes").text(t.consultation_duration_minutes),$("#consultationPatient").text(t.patient.user.full_name),$("#consultationDoctor").text(t.doctor.user.full_name),0===t.host_video?$("#consultationHostVideo").text("Disable"):$("#consultationHostVideo").text("Enable"),0===t.participant_video?$("#consultationParticipantVideo").text("Disable"):$("#consultationParticipantVideo").text("Enable"),isEmpty(t.description)?$("#consultationDescription").text("N/A"):$("#consultationDescription").text(t.description),a.modal("show").appendTo("body")}},error:function(e){manageAjaxErrors(e)}})})),listenClick("#doctorLiveConsultantResetFilter",(function(){$("#doctorLiveConsultantStatus").val(3).trigger("change"),hideDropdownManually($("#doctorLiveConsultantFilterBtn"),$(".dropdown-menu"))})),listenClick(".add-credential",(function(){if(!$(".ajaxCallIsRunning").val()){ajaxCallInProgress();var e,t=$("#zoomUserId").val();e=t,$.ajax({url:"user-zoom-credential/"+e+"/fetch",type:"GET",success:function(e){if(e.success){var t=e.data;isEmpty(t)||($("#zoomApiKey").val(t.zoom_api_key),$("#zoomApiSecret").val(t.zoom_api_secret)),$("#addCredential").modal("show"),ajaxCallCompleted()}},error:function(e){manageAjaxErrors(e)}})}})),listenSubmit("#addZoomForm",(function(e){e.preventDefault();var t=jQuery(this).find("#btnZoomSave");t.button("loading"),$.ajax({url:$("#zoomCredentialCreateUrl").val(),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addCredential").modal("hide"),setTimeout((function(){t.button("reset")}),2500),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},5908:()=>{document.addEventListener("turbo:load",(function(){if(!$("#medicineUniqueId").length)return;$(".medicine_bill_date").flatpickr({enableTime:!0,defaultDate:new Date,dateFormat:"Y-m-d H:i"}),$(".edit_medicine_bill_date").flatpickr({enableTime:!0,dateFormat:"Y-m-d H:i"}),$(".medicineBillExpiryDate").flatpickr({minDate:new Date,dateFormat:"Y-m-d"}),$(".medicine-payment-mode").select2({width:"100%"}),$(".medicineBillCategoriesId").select2({width:"100%"})}));var e="";listenChange(".medicineBillCategoriesId",(function(){var e=$(this).val(),t=$(this).closest("tr").find(".purchaseMedicineId");if(""==e)return $(t).find("option").remove(),$(t).append($("<option></option>").attr("placeholder","").text(Lang.get("messages.medicine_bills.select_medicine"))),!1;$.ajax({type:"get",url:route("get-medicine-category",e),success:function(e){var a=e.data.medicine;$(t).find("option").remove(),$(t).attr("required",!0),$(t).append($('<option value="">Select Medicine</option>')),$.each(a,(function(e,a){$(t).append($("<option></option>").attr("value",e).text(a))}))}})})),listenChange(".medicinePurchaseId",(function(){var e=$(this).closest("tr"),t=$(this).val(),a="#medicine_sale_price"+$(this).attr("data-id");if(""==t||t==Lang.get("messages.medicine_bills.select_medicine"))return $(a).val("0.00"),!1;$.ajax({type:"get",url:route("get-medicine",t),success:function(t){$(a).val(t.data.selling_price.toFixed(2));var n=e.find(".medicineBill-quantity").val(),i=e.find(".medicineBill-sale-price").val(),s=parseFloat(i*n);e.find(".medicine-bill-amount").val(s.toFixed(2));for(var r=$(".medicineBill-tax"),o=$(".medicine-bill-amount"),d=0,l=0,c=0,u=0,m=0;m<o.length;m++)d+=parseFloat(o[m].value),u=$(".medicineBill-discount").val(),0!=r[m].value&&""!=r[m].value?l+=o[m].value*r[m].value/100:parseFloat(o[m].value);if(u=""==u?0:u,c=parseFloat(d)+parseFloat(l),c=parseFloat(c)-parseFloat(u),u>d&&$(this).hasClass("medicineBill-discount"))return u=u.slice(0,-1),displayErrorMessage(Lang.get("messages.medicine_bills.the_discount_shoul")),$("#discountAmount").val(u),!1;u>d&&(c=0),$("#total").val(d.toFixed(2)),$("#medicineTotalTaxId").val(l.toFixed(2)),$("#netAmount").val(c.toFixed(2))}})})),listenClick(".add-medicine-btn-medicine-bill",(function(){e=$("#medicineUniqueId").val();var i={medicinesCategories:JSON.parse($("#showMedicineCategoriesMedicineBill").val()),medicines:JSON.parse($(".associatePurchaseMedicines").val()),uniqueId:e},s=prepareTemplateRender("#medicineBillTemplate",i);$(".medicine-bill-container").append(s),t(".medicinePurchaseId"),a(".medicinebillCategories"),n(".medicinebillCategories"),$(".purchaseMedicineExpiryDate").flatpickr({minDate:new Date,dateFormat:"Y-m-d"}),e++,$("#medicineUniqueId").val(e)}));var t=function(e){$(e).select2({placeholder:Lang.get("messages.medicine_bills.select_medicine"),width:"100%"})},a=function(e){$(e).select2({placeholder:Lang.get("messages.common.select_category"),width:"100%"})},n=function(e){$(".medicineBillExpiryDate").flatpickr({minDate:new Date,dateFormat:"Y-m-d"})};listenKeyup(".medicineBill-quantity,.medicineBill-price,.medicineBill-tax,.medicineBill-discount,.medicineBill-sale-price",(function(){var e=$(this).val();$(this).val(e.replace(/[^0-9\.]/g,""));var t=$(this).closest("tr"),a=t.find(".medicineBill-quantity").val(),n=t.find(".medicineBill-sale-price").val(),i=parseFloat(n*a);t.find(".medicine-bill-amount").val(i.toFixed(2));for(var s=$(".medicineBill-tax"),r=$(".medicine-bill-amount"),o=0,d=0,l=0,c=0,u=$(".medicineBill-quantity"),m=$(".previous-quantity"),p=0;p<r.length;p++){if(o+=parseFloat(r[p].value),c=$(".medicineBill-discount").val(),1==$("#medicineBillStatus").val()&&parseInt(u[p].value)>parseInt(m[p].value)){var h=u[p].value.slice(0,-1);return t.find(".medicineBill-quantity").val(h),a=t.find(".medicineBill-quantity").val(),n=t.find(".medicineBill-sale-price").val(),i=parseFloat(n*a),t.find(".medicine-bill-amount").val(i.toFixed(2)),displayErrorMessage(Lang.get("messages.medicine_bills.update_quantity")),!1}if(0!=s[p].value&&""!=s[p].value){if(s[p].value>99){var g=s[p].value.slice(0,-1);return t.find(".medicineBill-tax").val(g),displayErrorMessage(Lang.get("messages.medicine_bills.tax_should_be")),$("#discountAmount").val(c),!1}d+=r[p].value*s[p].value/100}else parseFloat(r[p].value)}if(c=""==c?0:c,l=parseFloat(o)+parseFloat(d),l=parseFloat(l)-parseFloat(c),c>o&&$(this).hasClass("medicineBill-discount"))return c=c.slice(0,-1),displayErrorMessage(Lang.get("messages.medicine_bills.the_discount_shoul")),$("#discountAmount").val(c),!1;c>o&&(l=0),$("#total").val(o.toFixed(2)),$("#medicineTotalTaxId").val(d.toFixed(2)),$("#netAmount").val(l.toFixed(2))})),listenSubmit("#CreateMedicineBillForm",(function(e){e.preventDefault();var t="#netAmount";return $("#total").val()<$("#discountAmount").val()?(displayErrorMessage(Lang.get("messages.medicine_bills.the_discount_shoul")),!1):null==$(t).val()||""==$(t).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_empty")),!1):0==$(t).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_zero")),!1):0==$(".medicineBill-quantity").val()||null==$(".medicineBill-quantity").val()||""==$(".medicineBill-quantity").val()?(displayErrorMessage(Lang.get("messages.meidicine_bills.quantity_should")),!1):void $(this)[0].submit()})),listenClick(".add-patient-modal",(function(){$("#addPatientModal").appendTo("body").modal("show")})),listenSubmit("#addPatientForm",(function(e){e.preventDefault(),processingBtn("#addPatientForm","#patientBtnSave","loading"),$("#patientBtnSave").attr("disabled",!0),$.ajax({url:route("store.patient"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&($("#prescriptionPatientId").find("option").remove(),$("#prescriptionPatientId").append($("<option></option>").attr("placeholder","").text(Lang.get("messages.document.select_patient"))),$.each(e.data,(function(e,t){$("#prescriptionPatientId").append($("<option></option>").attr("value",e).text(t))})),displaySuccessMessage(e.message),$("#addPatientModal").modal("hide"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){$("#patientBtnSave").attr("disabled",!1),processingBtn("#addPatientForm","#patientBtnSave")}})})),listen("hidden.bs.modal","#addPatientModal",(function(){resetModalForm("#addPatientForm","#patientErrorsBox")})),listenClick(".medicine-bill-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("medicine-bills.destroy",t),Lang.get("messages.medicine_bills.medicine_bill"))})),listenSubmit("#MedicinebillForm",(function(e){e.preventDefault();var t="#netAmount";return parseFloat($("#total").val())<parseFloat($("#discountAmount").val())?(displayErrorMessage(Lang.get("messages.medicine_bills.the_discount_shoul")),!1):null==$(t).val()||""==$(t).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_empty")),!1):0==$(t).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_zero")),!1):0==$(".medicineBill-quantity").val()||null==$(".medicineBill-quantity").val()||""==$(".medicineBill-quantity").val()?(displayErrorMessage(Lang.get("messages.medicine_bills.quantity_should")),!1):($medicineBillId=$("#medicineBillId").val(),void $.ajax({url:route("medicine-bills.update",$medicineBillId),type:"post",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),setTimeout((function(){Turbo.visit(route("medicine-bills.index"))}),2e3))},error:function(e){displayErrorMessage(e.responseJSON.message)}}))})),listenClick(".delete-medicine-bill-item",(function(){var e=$(this).closest("tr"),t=e.find(".medicine-bill-amount").val(),a=e.find(".medicineBill-tax").val(),n=parseFloat(t)*parseFloat(a/100),i=parseFloat($("#medicineTotalTaxId").val())-parseFloat(n);$("#medicineTotalTaxId").val(i.toFixed(2));var s=parseFloat($("#total").val())-parseFloat(t);$("#total").val(s.toFixed(2));var r=parseFloat(n)+parseFloat(t),o=parseFloat($("#netAmount").val())-parseFloat(r);$("#netAmount").val(o.toFixed(2)),$(this).parents("tr").remove()}))},4117:()=>{function loadMedicineCreateData(){$("#medicineCategoryId,#medicineBrandId").select2({width:"100%"}),listenClick(".showMedicineBtn",(function(e){e.preventDefault();var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("medicines.show.modal",t),type:"GET",success:function(e){if(e.success){$("#showMedicineName").text(e.data.name),$("#showMedicineBrand").text(e.data.brand_name),$("#showMedicineCategory").text(e.data.category_name),$("#showMedicineSaltComposition").text(e.data.salt_composition),$("#showMedicineSellingPrice").text(e.data.selling_price),$("#showMedicineBuyingPrice").text(e.data.buying_price),$("#showMedicineQuanity").text(addCommas(e.data.quantity)),$("#showMedicineAvailableQuanity").text(addCommas(e.data.available_quantity)),$("#showMedicineSideEffects").text(e.data.side_effects),moment.locale($("#medicineLanguage").val());var t=moment(e.data.created_at);$("#showMedicineCreatedOn").text(t.fromNow()),$("#showMedicineUpdatedOn").text(moment(e.data.updated_at).fromNow()),$("#showMedicineDescription").text(e.data.description),setValueOfEmptySpan(),$("#showMedicine").appendTo("body").modal("show")}},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))}function deleteMedicineAjax(url){var tableId=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,header=arguments.length>2?arguments[2]:void 0,callFunction=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;$.ajax({url,type:"DELETE",dataType:"json",success:function success(obj){obj.success&&obj.data&&swal({title:obj.message,text:Lang.get("messages.common.are_you_sure")+' "'+header+'"?',icon:sweetAlertIcon,timer:3e3,buttons:{confirm:Lang.get("messages.common.yes"),cancel:Lang.get("messages.common.no")}}).then((function(e){e&&$.ajax({url,type:"DELETE",dataType:"json",data:{canDeleteCheck:"yes"},success:function(e){},error:function(e){swal({title:"",text:e.responseJSON.message,confirmButtonColor:"#009ef7",icon:"error",timer:5e3,buttons:{confirm:Lang.get("messages.prescription.ok")}})}})})),obj.success&&!obj.data&&(Livewire.emit("resetPage"),swal({icon:"success",title:Lang.get("messages.common.deleted"),confirmButtonColor:"#f62947",text:header+" "+Lang.get("messages.common.has_been"),timer:2e3,buttons:{confirm:Lang.get("messages.prescription.ok")}}),callFunction&&eval(callFunction))},error:function(e){swal({title:"",text:e.responseJSON.message,confirmButtonColor:"#009ef7",icon:"error",timer:5e3,buttons:{confirm:Lang.get("messages.prescription.ok")}})}})}document.addEventListener("turbo:load",loadMedicineCreateData),listenClick(".deleteMedicineBtn",(function(e){var t=$(e.currentTarget).attr("data-id");medicineDeleteItem(route("check.use.medicine",t),Lang.get("messages.medicine.medicine"))})),window.medicineDeleteItem=function(e,t){$.ajax({url:e,type:"GET",success:function(e){if(e.success){var a=1==e.data.result?Lang.get("messages.medicine_bills.the_medicine_already_in_use"):Lang.get("messages.common.are_you_sure")+' "'+t+'"?';swal({title:Lang.get("messages.common.deleted"),text:a,icon:"warning",buttons:{confirm:Lang.get("messages.common.yes"),cancel:Lang.get("messages.common.no")}}).then((function(a){a&&deleteMedicineAjax($("#indexMedicineUrl").val()+"/"+e.data.id,null,t,null)}))}},error:function(e){displayErrorMessage(e.responseJSON.message)}})}},1381:()=>{},7138:(e,t,a)=>{"use strict";a(7908);document.addEventListener("turbo:load",(function(){(function(){var e=".patient-dob",t=$(".currentLanguage").val();if(!$(e).length)return;$(e).flatpickr({locale:t,maxDate:new Date,disableMobile:!0})})(),function(){if(!$("#editPatientCountryId").length)return;$("#patientCountryId").val($("#editPatientCountryId").val()).trigger("change"),setTimeout((function(){$("#patientStateId").val($("#editPatientStateId").val()).trigger("change")}),400),setTimeout((function(){$("#patientCityId").val($("#editPatientCityId").val()).trigger("change")}),700)}()})),listenChange("input[type=radio][name=gender]",(function(){var e=$("#profilePicture").val();isEmpty(e)&&(1==this.value?$(".image-input-wrapper").attr("style","background-image:url("+manAvatar+")"):2==this.value&&$(".image-input-wrapper").attr("style","background-image:url("+womanAvatar+")"))})),listenChange("#patientCountryId",(function(){$("#patientStateId").empty(),$("#patientCityId").empty(),$.ajax({url:route("get-state"),type:"get",dataType:"json",data:{data:$(this).val()},success:function(e){$("#patientStateId").empty(),$("#patientCityId").empty(),$("#patientStateId").append($('<option value=""></option>').text("Select State")),$("#patientCityId").append($('<option value=""></option>').text("Select City")),$.each(e.data,(function(e,t){$("#patientStateId").append($("<option></option>").attr("value",e).text(t))}))}})})),listenChange("#patientStateId",(function(){$("#patientCityId").empty(),$.ajax({url:route("get-city"),type:"get",dataType:"json",data:{state:$(this).val()},success:function(e){$("#patientCityId").empty(),$("#patientCityId").append($('<option value=""></option>').text("Select City")),$.each(e.data,(function(e,t){$("#patientCityId").append($("<option></option>").attr("value",e).text(t))})),$("#patientIsEdit").val()&&$("#editPatientCityId").val()&&$("#patientCityId").val($("#editPatientCityId").val()).trigger("change")}})})),listenSubmit("#createPatientForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1})),listenSubmit("#editPatientForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1})),listenClick(".removeAvatarIcon",(function(){var e=$("#patientBackgroundImg").val();$("#bgImage").css("background-image",""),$("#bgImage").css("background-image","url("+e+")"),$("#removeAvatar").addClass("hide"),$("#tooltip287851").addClass("hide")}))},3747:()=>{function e(e,t,a){return t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a,e}document.addEventListener("turbo:load",(function(){var t;if(!$("#patientShowPageAppointmentDate").length)return;var a=moment().startOf("week"),n=moment().endOf("week");function i(e,t){$("#patientShowPageAppointmentDate").val(e.format("YYYY-MM-DD")+" - "+t.format("YYYY-MM-DD"))}$("#patientShowPageAppointmentDate").daterangepicker({startDate:a,endDate:n,opens:"left",showDropdowns:!0,locale:{customRangeLabel:Lang.get("messages.common.custom"),applyLabel:Lang.get("messages.common.apply"),cancelLabel:Lang.get("messages.common.cancel"),fromLabel:Lang.get("messages.common.from"),toLabel:Lang.get("messages.common.to"),monthNames:[Lang.get("messages.months.jan"),Lang.get("messages.months.feb"),Lang.get("messages.months.mar"),Lang.get("messages.months.apr"),Lang.get("messages.months.may"),Lang.get("messages.months.jun"),Lang.get("messages.months.jul"),Lang.get("messages.months.aug"),Lang.get("messages.months.sep"),Lang.get("messages.months.oct"),Lang.get("messages.months.nov"),Lang.get("messages.months.dec")],daysOfWeek:[Lang.get("messages.weekdays.sun"),Lang.get("messages.weekdays.mon"),Lang.get("messages.weekdays.tue"),Lang.get("messages.weekdays.wed"),Lang.get("messages.weekdays.thu"),Lang.get("messages.weekdays.fri"),Lang.get("messages.weekdays.sat")]},ranges:(t={},e(t,Lang.get("messages.datepicker.today"),[moment(),moment()]),e(t,Lang.get("messages.datepicker.yesterday"),[moment().subtract(1,"days"),moment().subtract(1,"days")]),e(t,Lang.get("messages.datepicker.this_week"),[moment().startOf("week"),moment().endOf("week")]),e(t,Lang.get("messages.datepicker.last_30_days"),[moment().subtract(29,"days"),moment()]),e(t,Lang.get("messages.datepicker.this_month"),[moment().startOf("month"),moment().endOf("month")]),e(t,Lang.get("messages.datepicker.last_month"),[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]),t)},i),i(a,n)}));$("#patientShowPageAppointmentDate");listenClick(".patient-show-apptment-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id"),a=isEmpty($("#patientRolePatientDetail").val())?route("appointments.destroy",t):route("patients.appointments.destroy",t);deleteItem(a,"Appointment")})),listenChange(".patient-show-apptment-status-change",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a=$(this);$.ajax({url:route("change-status",t),type:"POST",data:{appointmentId:t,appointmentStatus:e},success:function(e){$(a).children("option.booked").addClass("hide"),livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenClick("#patientAppointmentResetFilter",(function(){$("#patientShowPageAppointmentStatus").val(1).trigger("change"),$("#patientShowPageAppointmentDate").val(moment().startOf("week").format("MM/DD/YYYY")+" - "+moment().endOf("week").format("MM/DD/YYYY")).trigger("change")})),listenChange("#patientShowPageAppointmentDate",(function(){window.livewire.emit("changeDateFilter",$(this).val())})),listenChange("#patientShowPageAppointmentStatus",(function(){window.livewire.emit("changeDateFilter",$("#patientShowPageAppointmentDate").val()),window.livewire.emit("changeStatusFilter",$(this).val())})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$("#patientShowPageAppointmentStatus").length&&$("#patientShowPageAppointmentStatus").select2(),$(".patient-show-apptment-status-change").length&&$(".patient-show-apptment-status-change").select2()}))}))},3021:()=>{document.addEventListener("turbo:load",(function(){if(!e.length)return;var t=moment().startOf("week"),a=moment().endOf("week");function n(t,a){e.html(t.format("YYYY-MM-DD")+" - "+a.format("YYYY-MM-DD"))}e.daterangepicker({startDate:t,endDate:a,ranges:{Today:[moment(),moment()],Yesterday:[moment().subtract(1,"days"),moment().subtract(1,"days")],"This Week":[moment().startOf("week"),moment().endOf("week")],"Last 30 Days":[moment().subtract(29,"days"),moment()],"This Month":[moment().startOf("month"),moment().endOf("month")],"Last Month":[moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]}},n),n(t,a)}));var e=$("#doctorAppointmentDateFilter");listenClick(".doctor-panel-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("patients.appointments.destroy",t),"Appointment")})),listenChange(".doctor-panel-status-change",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a=$(this);$.ajax({url:route("doctors.change-status",t),type:"POST",data:{appointmentId:t,appointmentStatus:e},success:function(e){$(a).children("option.booked").addClass("hide"),livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenClick("#doctorPanelResetFilter",(function(){$("#appointmentStatus").val(book).trigger("change"),$("#doctorAppointmentDateFilter").val(moment().format("MM/DD/YYYY")+" - "+moment().format("MM/DD/YYYY")).trigger("change")}))},6117:()=>{listenClick(".patient-delete-btn",(function(){var e=$(this).attr("data-id");deleteItem(route("patients.destroy",e),Lang.get("messages.appointment.patient"))})),listenChange(".patient-email-verified",(function(e){var t=$(e.currentTarget).attr("data-id"),a=$(this).is(":checked")?1:0;$.ajax({type:"POST",url:route("emailVerified"),data:{id:t,value:a},success:function(e){livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenClick(".patient-email-verification",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({type:"POST",url:route("resend.email.verification",t),success:function(e){displaySuccessMessage(e.message),setTimeout((function(){Turbo.visit(window.location.href)}),5e3)},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},9425:()=>{document.addEventListener("turbo:load",(function(){if(!$("#prescriptionPatientId").length&&!$("#editPrescriptionPatientId").length)return;$("#prescriptionPatientId,#editPrescriptionPatientId,#filter_status,#prescriptionDoctorId,#editPrescriptionDoctorId,#prescriptionTime,#prescriptionMedicineCategoryId,#prescriptionMedicineBrandId,.prescriptionMedicineId,.prescriptionMedicineMealId,#editPrescriptionTime").select2({width:"100%"}),$("#prescriptionMedicineBrandId, #prescriptionMedicineBrandId").select2({width:"100%",dropdownParent:$("#add_new_medicine")}),$("#prescriptionPatientId,#editPrescriptionPatientId").first().focus()})),uniquePrescriptionId=$("#prescriptionUniqueId").val(),listenSubmit("#createPrescription, #editPrescription",(function(){$(".btnPrescriptionSave").attr("disabled",!0)})),listenClick(".add-medicine",(function(){$("#add_new_medicine").appendTo("body").modal("show")})),listenSubmit("#createMedicineFromPrescription",(function(e){e.preventDefault(),$.ajax({url:route("prescription.medicine.store"),method:"POST",data:$(this).serialize(),success:function(e){displaySuccessMessage(e.message),$("#add_new_medicine").modal("hide"),$(".medicineTable").load(location.href+" .medicineTable")},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listen("hidden.bs.modal","#add_new_medicine",(function(){resetModalForm("#createMedicineFromPrescription","#medicinePrescriptionErrorBox")}));var e=function(e){$(e).select2({placeholder:Lang.get("messages.medicine_bills.select_medicine"),width:"100%"})},t=function(e){$(e).select2({placeholder:"Select Duration",width:"100%"})},a=function(e){$(e).select2({placeholder:"Select Dose Interval",width:"100%"})};listenClick(".delete-prescription-medicine-item",(function(){$(this).parents("tr").remove()})),listenClick(".add-medicine-btn",(function(){var n={medicines:JSON.parse($(".associatePrescriptionMedicines").val()),meals:JSON.parse($(".associatePrescriptionMeals").val()),doseDuration:JSON.parse($(".DoseDurationId").val()),doseInterVal:JSON.parse($(".DoseInterValId").val()),uniqueId:uniquePrescriptionId},i=prepareTemplateRender("#prescriptionMedicineTemplate",n);$(".prescription-medicine-container").append(i),e(".prescriptionMedicineId"),e(".prescriptionMedicineMealId"),t(".DoseDurationIdTemplate"),a(".DoseInterValIdTemplate"),uniquePrescriptionId++,$("#prescriptionUniqueId").val(uniquePrescriptionId)}))},5462:()=>{listenClick(".delete-prescription-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("prescriptions.destroy",t),Lang.get("messages.prescription.prescription"))})),listenChange(".prescriptionStatus",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route(prescriptionStatusRoute,t),method:"post",cache:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),hideDropdownManually($("#prescriptionFilterBtn"),$("#prescriptionFilter")))}})})),listenClick("#prescriptionResetFilter",(function(){$("#prescriptionHead").val("2").trigger("change"),hideDropdownManually($("#prescriptionFilterBtn"),$(".dropdown-menu"))})),listenChange("#prescriptionHead",(function(){window.livewire.emit("changeFilter","statusFilter",$(this).val())})),listenChange("#prescriptionHead",(function(){window.livewire.emit("changeFilter","statusFilter",$(this).val())}))},8174:()=>{listenSubmit("#profileForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1})),listenClick(".removeAvatarIcon",(function(){$("#bgImage").css("background-image",""),$("#bgImage").css("background-image","url("+backgroundImg+")"),$("#removeAvatar").addClass("hide"),$("#tooltip287851").addClass("hide")}))},5919:()=>{document.addEventListener("turbo:load",(function(){if(!$("#purchaseUniqueId").length)return;$(".purchaseMedicineExpiryDate").flatpickr({minDate:new Date,dateFormat:"Y-m-d"}),$("#paymentMode,#paymentMode2").select2({width:"100%"})}));var e="";listenClick(".add-medicine-btn-purchase",(function(){e=$("#purchaseUniqueId").val();var a={medicines:JSON.parse($(".associatePurchaseMedicines").val()),uniqueId:e},n=prepareTemplateRender("#purchaseMedicineTemplate",a);$(".prescription-medicine-container").append(n),t(".purchaseMedicineId"),$(".purchaseMedicineExpiryDate").flatpickr({minDate:new Date,dateFormat:"Y-m-d"}),e++,$("#purchaseUniqueId").val(e)}));var t=function(e){$(e).select2({placeholder:Lang.get("messages.medicines_bills.select_medicine"),width:"100%"})};listenChange(".purchaseMedicineId",(function(){var e=$(this).val(),t=$(this).attr("data-id"),a="#sale_price"+t,n="#purchase_price"+t;if(""==e)return $(a).val("0.00"),$(n).val("0.00"),!1;$.ajax({type:"get",url:route("get-medicine",e),success:function(e){$(a).val(e.data.selling_price.toFixed(2)),$(n).val(e.data.buying_price.toFixed(2))}})})),listenKeyup(".purchase-quantity,.purchase-price,purchase-quantity,.purchase-tax,.purchase-discount",(function(){var e=$(this).val();$(this).val(e.replace(/[^0-9\.]/g,""));var t=$(this).closest("tr"),a=t.find(".purchase-quantity").val(),n=t.find(".purchase-price").val(),i=parseFloat(n*a);t.find(".purchase-amount").val(i.toFixed(2));for(var s=$(".purchase-tax"),r=$(".purchase-amount"),o=0,d=0,l=0,c=0,u=0;u<r.length;u++)if(o+=parseFloat(r[u].value),c=$(".purchase-discount").val(),0!=s[u].value&&""!=s[u].value){if(s[u].value>99){var m=s[u].value.slice(0,-1);return t.find(".purchase-tax").val(m),displayErrorMessage(Lang.get("messages.medicine_bills.tax_should_be")),$("#discountAmount").val(c),!1}d+=r[u].value*s[u].value/100}else parseFloat(r[u].value);if(c=""==c?0:c,l=parseFloat(o)+parseFloat(d),l=parseFloat(l)-parseFloat(c),c>o&&$(this).hasClass("purchase-discount"))return c=c.slice(0,-1),displayErrorMessage(Lang.get("messages.medicine_bills.the_discount_shoul")),$("#discountAmount").val(c),!1;c>o&&(l=0),$("#total").val(o.toFixed(2)),$("#purchaseTaxId").val(d.toFixed(2)),$("#netAmount").val(l.toFixed(2))})),listenClick(".delete-purchase-medicine-item",(function(){var e=$(this).closest("tr"),t=e.find(".purchase-amount").val(),a=e.find(".purchase-tax").val(),n=parseFloat(t)*parseFloat(a/100),i=parseFloat($("#purchaseTaxId").val())-parseFloat(n);$("#purchaseTaxId").val(i.toFixed(2));var s=parseFloat($("#total").val())-parseFloat(t);$("#total").val(s.toFixed(2));var r=parseFloat(n)+parseFloat(t),o=parseFloat($("#netAmount").val())-parseFloat(r);$("#netAmount").val(o.toFixed(2)),$(this).parents("tr").remove()})),listenSubmit("#purchaseMedicineFormId",(function(e){e.preventDefault();for(var t=$("#purchaseUniqueId").val()-1,a=1,n=1;n<=t;n++){var i="#medicineChooseId"+n,s="tax"+n;if(void 0!==$(s).val()&&(null!=$(s).val()&&""!=$(s).val()||(a=0)),void 0!==$(i).val()&&(null==$(i).val()||""==$(i).val()))return displayErrorMessage(Lang.get("messages.medicines_bill.enter_lot_number")),!1;var r="#lot_no"+n;if(void 0!==$(r).val()&&(null==$(r).val()||""==$(r).val()))return displayErrorMessage(Lang.get("messages.medicines_bill.enter_lot_number")),!1;var o="#sale_price"+n;if(void 0!==$(o).val()&&(null==$(o).val()||""==$(o).val()))return displayErrorMessage(Lang.get("messages.medicines_bill.enter_sale_price")),!1;var d="#purchase_price"+n;if(void 0!==$(d).val()){if(null==$(d).val()||""==$(d).val())return displayErrorMessage("Enter purchase price."),!1;if(0==$(d).val())return displayErrorMessage(Lang.get("messages.medicine_bills.quantity_should")),!1}var l="#quantity"+n;if(void 0!==$(l).val()){if(null==$(l).val()||""==$(l).val())return displayErrorMessage("Enter quantity."),!1;if(0==$(l).val())return displayErrorMessage(Lang.get("messages.medicine_bills.quantity_should")),!1}}var c="#netAmount";return null==$(c).val()||""==$(c).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_empty")),!1):0==$(c).val()?(displayErrorMessage(Lang.get("messages.medicine_bills.net_amount_not_zero")),!1):0!=a||null!=$("#purchaseTaxId").val()&&""!=$("#purchaseTaxId").val()?void $(this)[0].submit():(displayErrorMessage(Lang.get("messages.medicine_bills.tax_cannot_be_zero_empty")),!1)})),listenClick(".purchaseMedicineDelete",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("medicine-purchase.destroy",t),Lang.get("messages.purchase_medicine.purchase_medicine"))}))},397:()=>{document.addEventListener("turbo:load",(function(){var e=$(".fill-ratings span").width();$(".star-ratings").width(e)})),listenClick(".addReviewBtn",(function(){var e=$(this).attr("data-id");$("#reviewDoctorId").val(e)})),listenSubmit("#addReviewForm",(function(e){e.preventDefault(),$.ajax({url:route("patients.reviews.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addReviewModal").modal("hide"),setTimeout((function(){location.reload()}),1200))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".editReviewBtn",(function(){var e=$(this).attr("data-id");$.ajax({url:route("patients.reviews.edit",e),type:"GET",success:function(e){$("#editReviewModal").modal("show").appendTo("body"),$("#editDoctorId").val(e.data.doctor_id),$("#editReviewId").val(e.data.id),$("#editReview").val(e.data.review),$("#editRating-"+e.data.rating).attr("checked",!0)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editReviewForm",(function(e){e.preventDefault();var t=$("#editReviewId").val();$.ajax({url:route("patients.reviews.update",t),type:"PUT",data:$(this).serialize(),success:function(e){displaySuccessMessage(e.message),$("#editReviewModal").modal("hide"),setTimeout((function(){location.reload()}),1200)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".addReviewBtn",(function(){$("#addReviewModal").modal("show").appendTo("body")})),listen("hidden.bs.modal","#addReviewModal",(function(){$("#reviewDoctorId").val(""),resetModalForm("#addReviewForm")})),listen("hidden.bs.modal","#editReviewModal",(function(){$("#editDoctorId").val(""),resetModalForm("#editReviewForm")}))},8089:()=>{document.addEventListener("turbo:load",(function(){var e=parseInt($("#totalPermissions").val()-1),t=$(".permission:checked").length;1==$("#roleIsEdit").val()&&(t===e?$("#checkAllPermission").prop("checked",!0):$("#checkAllPermission").prop("checked",!1))})),listenClick("#checkAllPermission",(function(){$("#checkAllPermission").is(":checked")?$(".permission").each((function(){$(this).prop("checked",!0)})):$(".permission").each((function(){$(this).prop("checked",!1)}))})),listenClick(".permission",(function(){$(".permission:checked").length===parseInt($("#totalPermissions").val()-1)?$("#checkAllPermission").prop("checked",!0):$("#checkAllPermission").prop("checked",!1)}))},2708:()=>{listenClick(".role-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("roles.destroy",t),Lang.get("messages.role.role"))}))},2642:()=>{listenClick("#createServiceCategory",(function(){$("#createServiceCategoryPageModal").modal("show").appendTo("body")})),listen("hidden.bs.modal","#createServiceCategoryPageModal",(function(){resetModalForm("#createServiceCategoryForm","#createServiceCategoryValidationErrorsBox")})),listen("hidden.bs.modal","#editServiceCategoryModal",(function(){resetModalForm("#editServiceCategoryForm","#editServiceCategoryValidationErrorsBox")})),listenClick(".service-category-edit-btn",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("service-categories.edit",t),type:"GET",success:function(e){$("#serviceCategoryID").val(e.data.id),$("#editServiceCategoryName").val(e.data.name),$("#editServiceCategoryModal").modal("show")}})})),listenSubmit("#createServiceCategoryForm",(function(e){e.preventDefault(),$.ajax({url:route("service-categories.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),livewire.emit("refresh"),$("#createServiceCategoryPageModal").modal("hide"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editServiceCategoryForm",(function(e){e.preventDefault();var t=$("#serviceCategoryID").val();$.ajax({url:route("service-categories.update",t),type:"PUT",data:$(this).serialize(),success:function(e){$("#editServiceCategoryModal").modal("hide"),displaySuccessMessage(e.message),livewire.emit("refresh")},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".service-category-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("service-categories.destroy",t),Lang.get("messages.service_category.service_category"))}))},3950:()=>{document.addEventListener("turbo:load",(function(){if(!$(".price-input").length)return;var e=$(".price-input").val();if(""===e)$(".price-input").val("");else{if(/[0-9]+(,[0-9]+)*$/.test(e))return $(".price-input").val(getFormattedPrice(e)),!0;$(".price-input").val(e.replace(/[^0-9 \,]/,""))}})),listenClick("#createServiceCategory",(function(){$("#serviceCreateServiceCategoryModal").modal("show").appendTo("body")})),listenSubmit("#serviceCreateServiceCategoryForm",(function(e){e.preventDefault(),$.ajax({url:route("service-categories.store"),type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#serviceCreateServiceCategoryModal").modal("hide");var t={id:e.data.id,name:e.data.name},a=new Option(t.name,t.id,!1,!0);$("#serviceCategory").append(a).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#serviceCreateServiceCategoryForm","#btnSave")}})})),listen("hidden.bs.modal","#serviceCreateServiceCategoryModal",(function(){resetModalForm("#serviceCreateServiceCategoryForm","#createServiceCategoryValidationErrorsBox")}))},9946:()=>{listenClick("#serviceResetFilter",(function(){$("#servicesStatus").val($("#allServices").val()).trigger("change")})),listenChange("#servicesStatus",(function(){window.livewire.emit("changeStatusFilter",$(this).val())})),listenClick(".service-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("services.destroy",t),Lang.get("messages.common.service"))})),listenClick(".service-statusbar",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({type:"PUT",url:route("service.status"),data:{id:t},success:function(e){displaySuccessMessage(e.message)}})}))},6610:()=>{document.addEventListener("turbo:load",(function(){var t=$("#settingCountryId").val(),a=$("#settingStateId").val(),n=$("#settingCityId").val();""!=t&&($("#settingCountryId").val(t).trigger("change"),setTimeout((function(){$("#settingStateId").val(a).trigger("change")}),800),setTimeout((function(){$("#settingCityId").val(n).trigger("change")}),400),e=!0);if(!$("#generalSettingForm").length)return;document.getElementById("generalSettingForm"),document.getElementById("phoneNumber").value,document.getElementById("prefix_code").value;var i=document.querySelector("#defaultCountryData"),s=window.intlTelInput(i,{initialCountry:defaultCountryCodeValue,separateDialCode:!0,geoIpLookup:function(e,t){$.get("https://ipinfo.io",(function(){}),"jsonp").always((function(t){var a=t&&t.country?t.country:"";e(a)}))},utilsScript:"../../public/assets/js/inttel/js/utils.min.js"}),r=s.selectedCountryData.name+" +"+s.selectedCountryData.dialCode;$("#defaultCountryData").val(r)}));var e=!1;listenKeyup("#defaultCountryData",(function(){var e=$(this).val().slice(0,-1)+"";return $(this).val(e)})),listenClick(".iti__standard",(function(){var e=$(this).parent().parent().parent().next();$(this).attr("data-country-code"),e.has("#defaultCountryCode")&&$("#defaultCountryCode").val($(this).attr("data-country-code"));var t=$(this).children(".iti__country-name").text()+" "+$(this).children(".iti__dial-code").text();$("#defaultCountryData").val(t)})),listenChange("#settingCountryId",(function(){$.ajax({url:route("states-list"),type:"get",dataType:"json",data:{settingCountryId:$(this).val()},success:function(t){$("#settingStateId").empty(),$("#settingCityId").empty(),$("#settingStateId").append($('<option value=""></option>').text("Select State")),$("#settingCityId").append($('<option value=""></option>').text("Select City")),$.each(t.data.states,(function(a,n){$("#settingStateId").append($("<option ".concat(e||a!=t.data.state_id?"":"selected","></option>")).attr("value",a).text(n))}))}})})),listenChange("#settingStateId",(function(){$("#settingCityId").empty(),$.ajax({url:route("cities-list"),type:"get",dataType:"json",data:{stateId:$(this).val()},success:function(t){$("#settingCityId").empty(),$("#settingCityId").append($('<option value=""></option>').text("Select City")),$.each(t.data.cities,(function(a,n){$("#settingCityId").append($("<option ".concat(e&&a==t.data.city_id?"selected":"","></option>")).attr("value",a).text(n))}))}})})),listenClick("#settingSubmitBtn",(function(){return $('input[name="payment_gateway[]"]:checked').length?""!==$("#error-msg").text()?($("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1):void $("#generalSettingForm")[0].submit():(displayErrorMessage(Lang.get("messages.flash.select_payment")),!1)}))},4898:()=>{listenClick("#createSpecialization",(function(){$("#createSpecializationModal").modal("show").appendTo("body")})),listen("hidden.bs.modal","#createSpecializationModal",(function(){resetModalForm("#createSpecializationForm","#createSpecializationValidationErrorsBox")})),listen("hidden.bs.modal","#editSpecializationModal",(function(){resetModalForm("#editSpecializationForm","#editSpecializationValidationErrorsBox")})),listenClick(".specialization-edit-btn",(function(e){var t,a=$(e.currentTarget).attr("data-id");t=a,$.ajax({url:route("specializations.edit",t),type:"GET",success:function(e){$("#specializationID").val(e.data.id),$("#editName").val(e.data.name),$("#editSpecializationModal").modal("show")}})})),listenSubmit("#createSpecializationForm",(function(e){e.preventDefault(),$.ajax({url:route("specializations.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#createSpecializationModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editSpecializationForm",(function(e){e.preventDefault();var t=$("#specializationID").val();$.ajax({url:route("specializations.update",t),type:"PUT",data:$(this).serialize(),success:function(e){$("#editSpecializationModal").modal("hide"),displaySuccessMessage(e.message),livewire.emit("refresh")},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".specialization-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("specializations.destroy",t),Lang.get("messages.specializations"))}))},9474:()=>{listenChange("input[type=radio][name=gender]",(function(){var e=$("#profilePicture").val();isEmpty(e)&&(1==this.value?$(".image-input-wrapper").attr("style","background-image:url("+manAvatar+")"):2==this.value&&$(".image-input-wrapper").attr("style","background-image:url("+womanAvatar+")"))})),listenSubmit("#createStaffForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1})),listenSubmit("#editStaffForm",(function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),displayErrorMessage(Lang.get("messages.common.contact_number")+$("#error-msg").text()),!1})),listenClick(".removeAvatarIcon",(function(){$("#bgImage").css("background-image",""),$("#bgImage").css("background-image","url("+backgroundImg+")"),$("#removeAvatar").addClass("hide"),$("#tooltip287851").addClass("hide")}))},350:()=>{listenClick(".staff-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("staffs.destroy",t),Lang.get("messages.staff.staff"))})),listenChange(".staff-email-verified",(function(e){var t=$(e.currentTarget).attr("data-id"),a=$(this).is(":checked")?1:0;$.ajax({type:"POST",url:route("emailVerified"),data:{id:t,value:a},success:function(e){livewire.emit("refresh"),displaySuccessMessage(e.message)}})})),listenClick(".staff-email-verification",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({type:"POST",url:route("resend.email.verification",t),success:function(e){livewire.emit("refresh"),displaySuccessMessage(e.message)},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},2509:()=>{listenClick("#addState",(function(){$("#addStateModal").modal("show").appendTo("body"),$("#countryState").select2({dropdownParent:$("#addStateModal")})})),listenSubmit("#addStateForm",(function(e){e.preventDefault(),$.ajax({url:route("states.store"),type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addStateModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".state-edit-btn",(function(e){$("#editStateModal").modal("show").appendTo("body"),$("#selectCountry").select2({dropdownParent:$("#editStateModal")});var t=$(e.currentTarget).attr("data-id");$("#editStateId").val(t),$.ajax({url:route("states.edit",t),type:"GET",success:function(e){e.success&&($("#editStateName").val(e.data.name),$("#selectCountry").val(e.data.country_id).trigger("change"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenSubmit("#editStateForm",(function(e){e.preventDefault();var t=$("#editStateId").val();$.ajax({url:route("states.update",t),type:"PUT",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editStateModal").modal("hide"),livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listen("hidden.bs.modal","#addStateModal",(function(e){$("#addStateForm")[0].reset(),$("#countryState").val(null).trigger("change")})),listenClick(".state-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("states.destroy",t),Lang.get("messages.common.state"))}))},4304:()=>{document.addEventListener("turbo:load",(function(){if(!$(e).length)return;var t=$(e).DataTable({processing:!0,serverSide:!0,searchDelay:500,language:{lengthMenu:"Show _MENU_"},order:[[0,"desc"]],ajax:{url:route("patients.transactions")},columnDefs:[{targets:[0],width:"50%"},{targets:[1],width:"18%"},{targets:[3],orderable:!1,searchable:!1,className:"text-center",width:"8%"}],columns:[{data:function(e){return'<span class="badge badge-light-info">'.concat(moment.parseZone(e.created_at).format("Do MMM, Y h:mm A"),"</span>")},name:"created_at"},{data:function(e){return e.type==manuallyMethod?manually:e.type==stripeMethod?stripe:e.type==paystckMethod?paystck:e.type==paypalMethod?paypal:e.type==razorpayMethod?razorpay:e.type==authorizeMethod?authorize:e.type==paytmMethod?paytm:""},name:"type"},{data:function(e){return currencyIcon+" "+getFormattedPrice(e.amount)},name:"amount"},{data:function(e){var t=[{id:e.id,showUrl:route("patients.transactions.show",e.id)}];return prepareTemplateRender("#transactionsTemplate",t)},name:"id"}]});handleSearchDatatable(t)}));var e="#patientTransactionsTable";listenClick(".transaction-statusbar",(function(e){var t=$(e.currentTarget).attr("data-id"),a=currentLoginUserId;$.ajax({type:"PUT",url:route("transaction.status"),data:{id:t,acceptPaymentUserId:a},success:function(e){e.success&&(livewire.emit("refresh"),displaySuccessMessage(Lang.get("messages.flash.status_update")))},error:function(e){livewire.emit("refresh"),displayErrorMessage(e.responseJSON.message)}})}))},874:()=>{},3878:(e,t,a)=>{"use strict";var n={};a.r(n),a.d(n,{PageRenderer:()=>ce,PageSnapshot:()=>V,clearCache:()=>ke,connectStreamSource:()=>be,disconnectStreamSource:()=>$e,navigator:()=>fe,registerAdapter:()=>we,renderStreamMessage:()=>_e,session:()=>ge,setConfirmMethod:()=>Ce,setProgressBarDelay:()=>Se,start:()=>ve,visit:()=>ye}),function(){if(void 0===window.Reflect||void 0===window.customElements||window.customElements.polyfillWrapFlushCallback)return;const e=HTMLElement,t=function(){return Reflect.construct(e,[],this.constructor)};window.HTMLElement=t,HTMLElement.prototype=e.prototype,HTMLElement.prototype.constructor=HTMLElement,Object.setPrototypeOf(HTMLElement,e)}(),function(e){function t(e,t,a){throw new e("Failed to execute 'requestSubmit' on 'HTMLFormElement': "+t+".",a)}"function"!=typeof e.requestSubmit&&(e.requestSubmit=function(e){e?(!function(e,a){e instanceof HTMLElement||t(TypeError,"parameter 1 is not of type 'HTMLElement'"),"submit"==e.type||t(TypeError,"The specified element is not a submit button"),e.form==a||t(DOMException,"The specified element is not owned by this form element","NotFoundError")}(e,this),e.click()):((e=document.createElement("input")).type="submit",e.hidden=!0,this.appendChild(e),e.click(),this.removeChild(e))})}(HTMLFormElement.prototype);const i=new WeakMap;function s(e){const t=function(e){const t=e instanceof Element?e:e instanceof Node?e.parentElement:null,a=t?t.closest("input, button"):null;return"submit"==(null==a?void 0:a.type)?a:null}(e.target);t&&t.form&&i.set(t.form,t)}var r,o,d,l,c,u;!function(){if("submitter"in Event.prototype)return;let e;if("SubmitEvent"in window&&/Apple Computer/.test(navigator.vendor))e=window.SubmitEvent.prototype;else{if("SubmitEvent"in window)return;e=window.Event.prototype}addEventListener("click",s,!0),Object.defineProperty(e,"submitter",{get(){if("submit"==this.type&&this.target instanceof HTMLFormElement)return i.get(this.target)}})}(),function(e){e.eager="eager",e.lazy="lazy"}(r||(r={}));class m extends HTMLElement{constructor(){super(),this.loaded=Promise.resolve(),this.delegate=new m.delegateConstructor(this)}static get observedAttributes(){return["disabled","loading","src"]}connectedCallback(){this.delegate.connect()}disconnectedCallback(){this.delegate.disconnect()}reload(){const{src:e}=this;this.src=null,this.src=e}attributeChangedCallback(e){"loading"==e?this.delegate.loadingStyleChanged():"src"==e?this.delegate.sourceURLChanged():this.delegate.disabledChanged()}get src(){return this.getAttribute("src")}set src(e){e?this.setAttribute("src",e):this.removeAttribute("src")}get loading(){return function(e){switch(e.toLowerCase()){case"lazy":return r.lazy;default:return r.eager}}(this.getAttribute("loading")||"")}set loading(e){e?this.setAttribute("loading",e):this.removeAttribute("loading")}get disabled(){return this.hasAttribute("disabled")}set disabled(e){e?this.setAttribute("disabled",""):this.removeAttribute("disabled")}get autoscroll(){return this.hasAttribute("autoscroll")}set autoscroll(e){e?this.setAttribute("autoscroll",""):this.removeAttribute("autoscroll")}get complete(){return!this.delegate.isLoading}get isActive(){return this.ownerDocument===document&&!this.isPreview}get isPreview(){var e,t;return null===(t=null===(e=this.ownerDocument)||void 0===e?void 0:e.documentElement)||void 0===t?void 0:t.hasAttribute("data-turbo-preview")}}function p(e){return new URL(e.toString(),document.baseURI)}function h(e){let t;return e.hash?e.hash.slice(1):(t=e.href.match(/#(.*)$/))?t[1]:void 0}function g(e,t){return p((null==t?void 0:t.getAttribute("formaction"))||e.getAttribute("action")||e.action)}function f(e){return(function(e){return function(e){return e.pathname.split("/").slice(1)}(e).slice(-1)[0]}(e).match(/\.[^.]*$/)||[])[0]||""}function v(e,t){const a=function(e){return t=e.origin+e.pathname,t.endsWith("/")?t:t+"/";var t}(t);return e.href===p(a).href||e.href.startsWith(a)}function w(e,t){return v(e,t)&&!!f(e).match(/^(?:|\.(?:htm|html|xhtml))$/)}function y(e){const t=h(e);return null!=t?e.href.slice(0,-(t.length+1)):e.href}function b(e){return y(e)}class ${constructor(e){this.response=e}get succeeded(){return this.response.ok}get failed(){return!this.succeeded}get clientError(){return this.statusCode>=400&&this.statusCode<=499}get serverError(){return this.statusCode>=500&&this.statusCode<=599}get redirected(){return this.response.redirected}get location(){return p(this.response.url)}get isHTML(){return this.contentType&&this.contentType.match(/^(?:text\/([^\s;,]+\b)?html|application\/xhtml\+xml)\b/)}get statusCode(){return this.response.status}get contentType(){return this.header("Content-Type")}get responseText(){return this.response.clone().text()}get responseHTML(){return this.isHTML?this.response.clone().text():Promise.resolve(void 0)}header(e){return this.response.headers.get(e)}}function _(e,{target:t,cancelable:a,detail:n}={}){const i=new CustomEvent(e,{cancelable:a,bubbles:!0,detail:n});return t&&t.isConnected?t.dispatchEvent(i):document.documentElement.dispatchEvent(i),i}function k(){return new Promise((e=>requestAnimationFrame((()=>e()))))}function S(e=""){return(new DOMParser).parseFromString(e,"text/html")}function C(e,...t){const a=function(e,t){return e.reduce(((e,a,n)=>e+a+(null==t[n]?"":t[n])),"")}(e,t).replace(/^\n/,"").split("\n"),n=a[0].match(/^\s+/),i=n?n[0].length:0;return a.map((e=>e.slice(i))).join("\n")}function M(){return Array.apply(null,{length:36}).map(((e,t)=>8==t||13==t||18==t||23==t?"-":14==t?"4":19==t?(Math.floor(4*Math.random())+8).toString(16):Math.floor(15*Math.random()).toString(16))).join("")}function L(e,...t){for(const a of t.map((t=>null==t?void 0:t.getAttribute(e))))if("string"==typeof a)return a;return null}function D(...e){for(const t of e)"turbo-frame"==t.localName&&t.setAttribute("busy",""),t.setAttribute("aria-busy","true")}function T(...e){for(const t of e)"turbo-frame"==t.localName&&t.removeAttribute("busy"),t.removeAttribute("aria-busy")}!function(e){e[e.get=0]="get",e[e.post=1]="post",e[e.put=2]="put",e[e.patch=3]="patch",e[e.delete=4]="delete"}(o||(o={}));class x{constructor(e,t,a,n=new URLSearchParams,i=null){this.abortController=new AbortController,this.resolveRequestPromise=e=>{},this.delegate=e,this.method=t,this.headers=this.defaultHeaders,this.body=n,this.url=a,this.target=i}get location(){return this.url}get params(){return this.url.searchParams}get entries(){return this.body?Array.from(this.body.entries()):[]}cancel(){this.abortController.abort()}async perform(){var e,t;const{fetchOptions:a}=this;null===(t=(e=this.delegate).prepareHeadersForRequest)||void 0===t||t.call(e,this.headers,this),await this.allowRequestToBeIntercepted(a);try{this.delegate.requestStarted(this);const e=await fetch(this.url.href,a);return await this.receive(e)}catch(e){if("AbortError"!==e.name)throw this.delegate.requestErrored(this,e),e}finally{this.delegate.requestFinished(this)}}async receive(e){const t=new $(e);return _("turbo:before-fetch-response",{cancelable:!0,detail:{fetchResponse:t},target:this.target}).defaultPrevented?this.delegate.requestPreventedHandlingResponse(this,t):t.succeeded?this.delegate.requestSucceededWithResponse(this,t):this.delegate.requestFailedWithResponse(this,t),t}get fetchOptions(){var e;return{method:o[this.method].toUpperCase(),credentials:"same-origin",headers:this.headers,redirect:"follow",body:this.isIdempotent?null:this.body,signal:this.abortSignal,referrer:null===(e=this.delegate.referrer)||void 0===e?void 0:e.href}}get defaultHeaders(){return{Accept:"text/html, application/xhtml+xml"}}get isIdempotent(){return this.method==o.get}get abortSignal(){return this.abortController.signal}async allowRequestToBeIntercepted(e){const t=new Promise((e=>this.resolveRequestPromise=e));_("turbo:before-fetch-request",{cancelable:!0,detail:{fetchOptions:e,url:this.url,resume:this.resolveRequestPromise},target:this.target}).defaultPrevented&&await t}}class E{constructor(e,t){this.started=!1,this.intersect=e=>{const t=e.slice(-1)[0];(null==t?void 0:t.isIntersecting)&&this.delegate.elementAppearedInViewport(this.element)},this.delegate=e,this.element=t,this.intersectionObserver=new IntersectionObserver(this.intersect)}start(){this.started||(this.started=!0,this.intersectionObserver.observe(this.element))}stop(){this.started&&(this.started=!1,this.intersectionObserver.unobserve(this.element))}}class A{constructor(e){this.templateElement=document.createElement("template"),this.templateElement.innerHTML=e}static wrap(e){return"string"==typeof e?new this(e):e}get fragment(){const e=document.createDocumentFragment();for(const t of this.foreignElements)e.appendChild(document.importNode(t,!0));return e}get foreignElements(){return this.templateChildren.reduce(((e,t)=>"turbo-stream"==t.tagName.toLowerCase()?[...e,t]:e),[])}get templateChildren(){return Array.from(this.templateElement.content.children)}}A.contentType="text/vnd.turbo-stream.html",function(e){e[e.initialized=0]="initialized",e[e.requesting=1]="requesting",e[e.waiting=2]="waiting",e[e.receiving=3]="receiving",e[e.stopping=4]="stopping",e[e.stopped=5]="stopped"}(d||(d={})),function(e){e.urlEncoded="application/x-www-form-urlencoded",e.multipart="multipart/form-data",e.plain="text/plain"}(l||(l={}));class I{constructor(e,t,a,n=!1){this.state=d.initialized,this.delegate=e,this.formElement=t,this.submitter=a,this.formData=function(e,t){const a=new FormData(e),n=null==t?void 0:t.getAttribute("name"),i=null==t?void 0:t.getAttribute("value");n&&null!=i&&a.get(n)!=i&&a.append(n,i);return a}(t,a),this.location=p(this.action),this.method==o.get&&function(e,t){const a=new URLSearchParams;for(const[e,n]of t)n instanceof File||a.append(e,n);e.search=a.toString()}(this.location,[...this.body.entries()]),this.fetchRequest=new x(this,this.method,this.location,this.body,this.formElement),this.mustRedirect=n}static confirmMethod(e,t){return confirm(e)}get method(){var e;return function(e){switch(e.toLowerCase()){case"get":return o.get;case"post":return o.post;case"put":return o.put;case"patch":return o.patch;case"delete":return o.delete}}(((null===(e=this.submitter)||void 0===e?void 0:e.getAttribute("formmethod"))||this.formElement.getAttribute("method")||"").toLowerCase())||o.get}get action(){var e;const t="string"==typeof this.formElement.action?this.formElement.action:null;return(null===(e=this.submitter)||void 0===e?void 0:e.getAttribute("formaction"))||this.formElement.getAttribute("action")||t||""}get body(){return this.enctype==l.urlEncoded||this.method==o.get?new URLSearchParams(this.stringFormData):this.formData}get enctype(){var e;return function(e){switch(e.toLowerCase()){case l.multipart:return l.multipart;case l.plain:return l.plain;default:return l.urlEncoded}}((null===(e=this.submitter)||void 0===e?void 0:e.getAttribute("formenctype"))||this.formElement.enctype)}get isIdempotent(){return this.fetchRequest.isIdempotent}get stringFormData(){return[...this.formData].reduce(((e,[t,a])=>e.concat("string"==typeof a?[[t,a]]:[])),[])}get confirmationMessage(){return this.formElement.getAttribute("data-turbo-confirm")}get needsConfirmation(){return null!==this.confirmationMessage}async start(){const{initialized:e,requesting:t}=d;if(this.needsConfirmation){if(!I.confirmMethod(this.confirmationMessage,this.formElement))return}if(this.state==e)return this.state=t,this.fetchRequest.perform()}stop(){const{stopping:e,stopped:t}=d;if(this.state!=e&&this.state!=t)return this.state=e,this.fetchRequest.cancel(),!0}prepareHeadersForRequest(e,t){if(!t.isIdempotent){const t=function(e){if(null!=e){const t=(document.cookie?document.cookie.split("; "):[]).find((t=>t.startsWith(e)));if(t){const e=t.split("=").slice(1).join("=");return e?decodeURIComponent(e):void 0}}}(P("csrf-param"))||P("csrf-token");t&&(e["X-CSRF-Token"]=t),e.Accept=[A.contentType,e.Accept].join(", ")}}requestStarted(e){var t;this.state=d.waiting,null===(t=this.submitter)||void 0===t||t.setAttribute("disabled",""),_("turbo:submit-start",{target:this.formElement,detail:{formSubmission:this}}),this.delegate.formSubmissionStarted(this)}requestPreventedHandlingResponse(e,t){this.result={success:t.succeeded,fetchResponse:t}}requestSucceededWithResponse(e,t){if(t.clientError||t.serverError)this.delegate.formSubmissionFailedWithResponse(this,t);else if(this.requestMustRedirect(e)&&function(e){return 200==e.statusCode&&!e.redirected}(t)){const e=new Error("Form responses must redirect to another location");this.delegate.formSubmissionErrored(this,e)}else this.state=d.receiving,this.result={success:!0,fetchResponse:t},this.delegate.formSubmissionSucceededWithResponse(this,t)}requestFailedWithResponse(e,t){this.result={success:!1,fetchResponse:t},this.delegate.formSubmissionFailedWithResponse(this,t)}requestErrored(e,t){this.result={success:!1,error:t},this.delegate.formSubmissionErrored(this,t)}requestFinished(e){var t;this.state=d.stopped,null===(t=this.submitter)||void 0===t||t.removeAttribute("disabled"),_("turbo:submit-end",{target:this.formElement,detail:Object.assign({formSubmission:this},this.result)}),this.delegate.formSubmissionFinished(this)}requestMustRedirect(e){return!e.isIdempotent&&this.mustRedirect}}function P(e){const t=document.querySelector(`meta[name="${e}"]`);return t&&t.content}class F{constructor(e){this.element=e}get children(){return[...this.element.children]}hasAnchor(e){return null!=this.getElementForAnchor(e)}getElementForAnchor(e){return e?this.element.querySelector(`[id='${e}'], a[name='${e}']`):null}get isConnected(){return this.element.isConnected}get firstAutofocusableElement(){return this.element.querySelector("[autofocus]")}get permanentElements(){return[...this.element.querySelectorAll("[id][data-turbo-permanent]")]}getPermanentElementById(e){return this.element.querySelector(`#${e}[data-turbo-permanent]`)}getPermanentElementMapForSnapshot(e){const t={};for(const a of this.permanentElements){const{id:n}=a,i=e.getPermanentElementById(n);i&&(t[n]=[a,i])}return t}}class O{constructor(e,t){this.submitBubbled=e=>{const t=e.target;if(!e.defaultPrevented&&t instanceof HTMLFormElement&&t.closest("turbo-frame, html")==this.element){const a=e.submitter||void 0;"dialog"!=((null==a?void 0:a.getAttribute("formmethod"))||t.method)&&this.delegate.shouldInterceptFormSubmission(t,a)&&(e.preventDefault(),e.stopImmediatePropagation(),this.delegate.formSubmissionIntercepted(t,a))}},this.delegate=e,this.element=t}start(){this.element.addEventListener("submit",this.submitBubbled)}stop(){this.element.removeEventListener("submit",this.submitBubbled)}}class q{constructor(e,t){this.resolveRenderPromise=e=>{},this.resolveInterceptionPromise=e=>{},this.delegate=e,this.element=t}scrollToAnchor(e){const t=this.snapshot.getElementForAnchor(e);t?(this.scrollToElement(t),this.focusElement(t)):this.scrollToPosition({x:0,y:0})}scrollToAnchorFromLocation(e){this.scrollToAnchor(h(e))}scrollToElement(e){e.scrollIntoView()}focusElement(e){e instanceof HTMLElement&&(e.hasAttribute("tabindex")?e.focus():(e.setAttribute("tabindex","-1"),e.focus(),e.removeAttribute("tabindex")))}scrollToPosition({x:e,y:t}){this.scrollRoot.scrollTo(e,t)}scrollToTop(){this.scrollToPosition({x:0,y:0})}get scrollRoot(){return window}async render(e){const{isPreview:t,shouldRender:a,newSnapshot:n}=e;if(a)try{this.renderPromise=new Promise((e=>this.resolveRenderPromise=e)),this.renderer=e,this.prepareToRenderSnapshot(e);const a=new Promise((e=>this.resolveInterceptionPromise=e));this.delegate.allowsImmediateRender(n,this.resolveInterceptionPromise)||await a,await this.renderSnapshot(e),this.delegate.viewRenderedSnapshot(n,t),this.finishRenderingSnapshot(e)}finally{delete this.renderer,this.resolveRenderPromise(void 0),delete this.renderPromise}else this.invalidate()}invalidate(){this.delegate.viewInvalidated()}prepareToRenderSnapshot(e){this.markAsPreview(e.isPreview),e.prepareToRender()}markAsPreview(e){e?this.element.setAttribute("data-turbo-preview",""):this.element.removeAttribute("data-turbo-preview")}async renderSnapshot(e){await e.render()}finishRenderingSnapshot(e){e.finishRendering()}}class j extends q{invalidate(){this.element.innerHTML=""}get snapshot(){return new F(this.element)}}class R{constructor(e,t){this.clickBubbled=e=>{this.respondsToEventTarget(e.target)?this.clickEvent=e:delete this.clickEvent},this.linkClicked=e=>{this.clickEvent&&this.respondsToEventTarget(e.target)&&e.target instanceof Element&&this.delegate.shouldInterceptLinkClick(e.target,e.detail.url)&&(this.clickEvent.preventDefault(),e.preventDefault(),this.delegate.linkClickIntercepted(e.target,e.detail.url)),delete this.clickEvent},this.willVisit=()=>{delete this.clickEvent},this.delegate=e,this.element=t}start(){this.element.addEventListener("click",this.clickBubbled),document.addEventListener("turbo:click",this.linkClicked),document.addEventListener("turbo:before-visit",this.willVisit)}stop(){this.element.removeEventListener("click",this.clickBubbled),document.removeEventListener("turbo:click",this.linkClicked),document.removeEventListener("turbo:before-visit",this.willVisit)}respondsToEventTarget(e){const t=e instanceof Element?e:e instanceof Node?e.parentElement:null;return t&&t.closest("turbo-frame, html")==this.element}}class N{constructor(e,t,a,n=!0){this.currentSnapshot=e,this.newSnapshot=t,this.isPreview=a,this.willRender=n,this.promise=new Promise(((e,t)=>this.resolvingFunctions={resolve:e,reject:t}))}get shouldRender(){return!0}prepareToRender(){}finishRendering(){this.resolvingFunctions&&(this.resolvingFunctions.resolve(),delete this.resolvingFunctions)}createScriptElement(e){if("false"==e.getAttribute("data-turbo-eval"))return e;{const t=document.createElement("script");return this.cspNonce&&(t.nonce=this.cspNonce),t.textContent=e.textContent,t.async=!1,function(e,t){for(const{name:a,value:n}of[...t.attributes])e.setAttribute(a,n)}(t,e),t}}preservingPermanentElements(e){(class{constructor(e){this.permanentElementMap=e}static preservingPermanentElements(e,t){const a=new this(e);a.enter(),t(),a.leave()}enter(){for(const e in this.permanentElementMap){const[,t]=this.permanentElementMap[e];this.replaceNewPermanentElementWithPlaceholder(t)}}leave(){for(const e in this.permanentElementMap){const[t]=this.permanentElementMap[e];this.replaceCurrentPermanentElementWithClone(t),this.replacePlaceholderWithPermanentElement(t)}}replaceNewPermanentElementWithPlaceholder(e){const t=function(e){const t=document.createElement("meta");return t.setAttribute("name","turbo-permanent-placeholder"),t.setAttribute("content",e.id),t}(e);e.replaceWith(t)}replaceCurrentPermanentElementWithClone(e){const t=e.cloneNode(!0);e.replaceWith(t)}replacePlaceholderWithPermanentElement(e){const t=this.getPlaceholderById(e.id);null==t||t.replaceWith(e)}getPlaceholderById(e){return this.placeholders.find((t=>t.content==e))}get placeholders(){return[...document.querySelectorAll("meta[name=turbo-permanent-placeholder][content]")]}}).preservingPermanentElements(this.permanentElementMap,e)}focusFirstAutofocusableElement(){const e=this.connectedSnapshot.firstAutofocusableElement;(function(e){return e&&"function"==typeof e.focus})(e)&&e.focus()}get connectedSnapshot(){return this.newSnapshot.isConnected?this.newSnapshot:this.currentSnapshot}get currentElement(){return this.currentSnapshot.element}get newElement(){return this.newSnapshot.element}get permanentElementMap(){return this.currentSnapshot.getPermanentElementMapForSnapshot(this.newSnapshot)}get cspNonce(){var e;return null===(e=document.head.querySelector('meta[name="csp-nonce"]'))||void 0===e?void 0:e.getAttribute("content")}}class B extends N{get shouldRender(){return!0}async render(){await k(),this.preservingPermanentElements((()=>{this.loadFrameElement()})),this.scrollFrameIntoView(),await k(),this.focusFirstAutofocusableElement(),await k(),this.activateScriptElements()}loadFrameElement(){var e;const t=document.createRange();t.selectNodeContents(this.currentElement),t.deleteContents();const a=this.newElement,n=null===(e=a.ownerDocument)||void 0===e?void 0:e.createRange();n&&(n.selectNodeContents(a),this.currentElement.appendChild(n.extractContents()))}scrollFrameIntoView(){if(this.currentElement.autoscroll||this.newElement.autoscroll){const a=this.currentElement.firstElementChild,n=(e=this.currentElement.getAttribute("data-autoscroll-block"),t="end","end"==e||"start"==e||"center"==e||"nearest"==e?e:t);if(a)return a.scrollIntoView({block:n}),!0}var e,t;return!1}activateScriptElements(){for(const e of this.newScriptElements){const t=this.createScriptElement(e);e.replaceWith(t)}}get newScriptElements(){return this.currentElement.querySelectorAll("script")}}class Y{constructor(){this.hiding=!1,this.value=0,this.visible=!1,this.trickle=()=>{this.setValue(this.value+Math.random()/100)},this.stylesheetElement=this.createStylesheetElement(),this.progressElement=this.createProgressElement(),this.installStylesheetElement(),this.setValue(0)}static get defaultCSS(){return C`
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PageRenderer": () => (/* binding */ PageRenderer),
+/* harmony export */   "PageSnapshot": () => (/* binding */ PageSnapshot),
+/* harmony export */   "clearCache": () => (/* binding */ clearCache),
+/* harmony export */   "connectStreamSource": () => (/* binding */ connectStreamSource),
+/* harmony export */   "disconnectStreamSource": () => (/* binding */ disconnectStreamSource),
+/* harmony export */   "navigator": () => (/* binding */ navigator$1),
+/* harmony export */   "registerAdapter": () => (/* binding */ registerAdapter),
+/* harmony export */   "renderStreamMessage": () => (/* binding */ renderStreamMessage),
+/* harmony export */   "session": () => (/* binding */ session),
+/* harmony export */   "setConfirmMethod": () => (/* binding */ setConfirmMethod),
+/* harmony export */   "setProgressBarDelay": () => (/* binding */ setProgressBarDelay),
+/* harmony export */   "start": () => (/* binding */ start),
+/* harmony export */   "visit": () => (/* binding */ visit)
+/* harmony export */ });
+/*
+Turbo 7.1.0
+Copyright © 2021 Basecamp, LLC
+ */
+(function () {
+    if (window.Reflect === undefined || window.customElements === undefined ||
+        window.customElements.polyfillWrapFlushCallback) {
+        return;
+    }
+    const BuiltInHTMLElement = HTMLElement;
+    const wrapperForTheName = {
+        'HTMLElement': function HTMLElement() {
+            return Reflect.construct(BuiltInHTMLElement, [], this.constructor);
+        }
+    };
+    window.HTMLElement =
+        wrapperForTheName['HTMLElement'];
+    HTMLElement.prototype = BuiltInHTMLElement.prototype;
+    HTMLElement.prototype.constructor = HTMLElement;
+    Object.setPrototypeOf(HTMLElement, BuiltInHTMLElement);
+})();
+
+/**
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2019 Javan Makhmali
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+(function(prototype) {
+  if (typeof prototype.requestSubmit == "function") return
+
+  prototype.requestSubmit = function(submitter) {
+    if (submitter) {
+      validateSubmitter(submitter, this);
+      submitter.click();
+    } else {
+      submitter = document.createElement("input");
+      submitter.type = "submit";
+      submitter.hidden = true;
+      this.appendChild(submitter);
+      submitter.click();
+      this.removeChild(submitter);
+    }
+  };
+
+  function validateSubmitter(submitter, form) {
+    submitter instanceof HTMLElement || raise(TypeError, "parameter 1 is not of type 'HTMLElement'");
+    submitter.type == "submit" || raise(TypeError, "The specified element is not a submit button");
+    submitter.form == form || raise(DOMException, "The specified element is not owned by this form element", "NotFoundError");
+  }
+
+  function raise(errorConstructor, message, name) {
+    throw new errorConstructor("Failed to execute 'requestSubmit' on 'HTMLFormElement': " + message + ".", name)
+  }
+})(HTMLFormElement.prototype);
+
+const submittersByForm = new WeakMap;
+function findSubmitterFromClickTarget(target) {
+    const element = target instanceof Element ? target : target instanceof Node ? target.parentElement : null;
+    const candidate = element ? element.closest("input, button") : null;
+    return (candidate === null || candidate === void 0 ? void 0 : candidate.type) == "submit" ? candidate : null;
+}
+function clickCaptured(event) {
+    const submitter = findSubmitterFromClickTarget(event.target);
+    if (submitter && submitter.form) {
+        submittersByForm.set(submitter.form, submitter);
+    }
+}
+(function () {
+    if ("submitter" in Event.prototype)
+        return;
+    let prototype;
+    if ("SubmitEvent" in window && /Apple Computer/.test(navigator.vendor)) {
+        prototype = window.SubmitEvent.prototype;
+    }
+    else if ("SubmitEvent" in window) {
+        return;
+    }
+    else {
+        prototype = window.Event.prototype;
+    }
+    addEventListener("click", clickCaptured, true);
+    Object.defineProperty(prototype, "submitter", {
+        get() {
+            if (this.type == "submit" && this.target instanceof HTMLFormElement) {
+                return submittersByForm.get(this.target);
+            }
+        }
+    });
+})();
+
+var FrameLoadingStyle;
+(function (FrameLoadingStyle) {
+    FrameLoadingStyle["eager"] = "eager";
+    FrameLoadingStyle["lazy"] = "lazy";
+})(FrameLoadingStyle || (FrameLoadingStyle = {}));
+class FrameElement extends HTMLElement {
+    constructor() {
+        super();
+        this.loaded = Promise.resolve();
+        this.delegate = new FrameElement.delegateConstructor(this);
+    }
+    static get observedAttributes() {
+        return ["disabled", "loading", "src"];
+    }
+    connectedCallback() {
+        this.delegate.connect();
+    }
+    disconnectedCallback() {
+        this.delegate.disconnect();
+    }
+    reload() {
+        const { src } = this;
+        this.src = null;
+        this.src = src;
+    }
+    attributeChangedCallback(name) {
+        if (name == "loading") {
+            this.delegate.loadingStyleChanged();
+        }
+        else if (name == "src") {
+            this.delegate.sourceURLChanged();
+        }
+        else {
+            this.delegate.disabledChanged();
+        }
+    }
+    get src() {
+        return this.getAttribute("src");
+    }
+    set src(value) {
+        if (value) {
+            this.setAttribute("src", value);
+        }
+        else {
+            this.removeAttribute("src");
+        }
+    }
+    get loading() {
+        return frameLoadingStyleFromString(this.getAttribute("loading") || "");
+    }
+    set loading(value) {
+        if (value) {
+            this.setAttribute("loading", value);
+        }
+        else {
+            this.removeAttribute("loading");
+        }
+    }
+    get disabled() {
+        return this.hasAttribute("disabled");
+    }
+    set disabled(value) {
+        if (value) {
+            this.setAttribute("disabled", "");
+        }
+        else {
+            this.removeAttribute("disabled");
+        }
+    }
+    get autoscroll() {
+        return this.hasAttribute("autoscroll");
+    }
+    set autoscroll(value) {
+        if (value) {
+            this.setAttribute("autoscroll", "");
+        }
+        else {
+            this.removeAttribute("autoscroll");
+        }
+    }
+    get complete() {
+        return !this.delegate.isLoading;
+    }
+    get isActive() {
+        return this.ownerDocument === document && !this.isPreview;
+    }
+    get isPreview() {
+        var _a, _b;
+        return (_b = (_a = this.ownerDocument) === null || _a === void 0 ? void 0 : _a.documentElement) === null || _b === void 0 ? void 0 : _b.hasAttribute("data-turbo-preview");
+    }
+}
+function frameLoadingStyleFromString(style) {
+    switch (style.toLowerCase()) {
+        case "lazy": return FrameLoadingStyle.lazy;
+        default: return FrameLoadingStyle.eager;
+    }
+}
+
+function expandURL(locatable) {
+    return new URL(locatable.toString(), document.baseURI);
+}
+function getAnchor(url) {
+    let anchorMatch;
+    if (url.hash) {
+        return url.hash.slice(1);
+    }
+    else if (anchorMatch = url.href.match(/#(.*)$/)) {
+        return anchorMatch[1];
+    }
+}
+function getAction(form, submitter) {
+    const action = (submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("formaction")) || form.getAttribute("action") || form.action;
+    return expandURL(action);
+}
+function getExtension(url) {
+    return (getLastPathComponent(url).match(/\.[^.]*$/) || [])[0] || "";
+}
+function isHTML(url) {
+    return !!getExtension(url).match(/^(?:|\.(?:htm|html|xhtml))$/);
+}
+function isPrefixedBy(baseURL, url) {
+    const prefix = getPrefix(url);
+    return baseURL.href === expandURL(prefix).href || baseURL.href.startsWith(prefix);
+}
+function locationIsVisitable(location, rootLocation) {
+    return isPrefixedBy(location, rootLocation) && isHTML(location);
+}
+function getRequestURL(url) {
+    const anchor = getAnchor(url);
+    return anchor != null
+        ? url.href.slice(0, -(anchor.length + 1))
+        : url.href;
+}
+function toCacheKey(url) {
+    return getRequestURL(url);
+}
+function urlsAreEqual(left, right) {
+    return expandURL(left).href == expandURL(right).href;
+}
+function getPathComponents(url) {
+    return url.pathname.split("/").slice(1);
+}
+function getLastPathComponent(url) {
+    return getPathComponents(url).slice(-1)[0];
+}
+function getPrefix(url) {
+    return addTrailingSlash(url.origin + url.pathname);
+}
+function addTrailingSlash(value) {
+    return value.endsWith("/") ? value : value + "/";
+}
+
+class FetchResponse {
+    constructor(response) {
+        this.response = response;
+    }
+    get succeeded() {
+        return this.response.ok;
+    }
+    get failed() {
+        return !this.succeeded;
+    }
+    get clientError() {
+        return this.statusCode >= 400 && this.statusCode <= 499;
+    }
+    get serverError() {
+        return this.statusCode >= 500 && this.statusCode <= 599;
+    }
+    get redirected() {
+        return this.response.redirected;
+    }
+    get location() {
+        return expandURL(this.response.url);
+    }
+    get isHTML() {
+        return this.contentType && this.contentType.match(/^(?:text\/([^\s;,]+\b)?html|application\/xhtml\+xml)\b/);
+    }
+    get statusCode() {
+        return this.response.status;
+    }
+    get contentType() {
+        return this.header("Content-Type");
+    }
+    get responseText() {
+        return this.response.clone().text();
+    }
+    get responseHTML() {
+        if (this.isHTML) {
+            return this.response.clone().text();
+        }
+        else {
+            return Promise.resolve(undefined);
+        }
+    }
+    header(name) {
+        return this.response.headers.get(name);
+    }
+}
+
+function dispatch(eventName, { target, cancelable, detail } = {}) {
+    const event = new CustomEvent(eventName, { cancelable, bubbles: true, detail });
+    if (target && target.isConnected) {
+        target.dispatchEvent(event);
+    }
+    else {
+        document.documentElement.dispatchEvent(event);
+    }
+    return event;
+}
+function nextAnimationFrame() {
+    return new Promise(resolve => requestAnimationFrame(() => resolve()));
+}
+function nextEventLoopTick() {
+    return new Promise(resolve => setTimeout(() => resolve(), 0));
+}
+function nextMicrotask() {
+    return Promise.resolve();
+}
+function parseHTMLDocument(html = "") {
+    return new DOMParser().parseFromString(html, "text/html");
+}
+function unindent(strings, ...values) {
+    const lines = interpolate(strings, values).replace(/^\n/, "").split("\n");
+    const match = lines[0].match(/^\s+/);
+    const indent = match ? match[0].length : 0;
+    return lines.map(line => line.slice(indent)).join("\n");
+}
+function interpolate(strings, values) {
+    return strings.reduce((result, string, i) => {
+        const value = values[i] == undefined ? "" : values[i];
+        return result + string + value;
+    }, "");
+}
+function uuid() {
+    return Array.apply(null, { length: 36 }).map((_, i) => {
+        if (i == 8 || i == 13 || i == 18 || i == 23) {
+            return "-";
+        }
+        else if (i == 14) {
+            return "4";
+        }
+        else if (i == 19) {
+            return (Math.floor(Math.random() * 4) + 8).toString(16);
+        }
+        else {
+            return Math.floor(Math.random() * 15).toString(16);
+        }
+    }).join("");
+}
+function getAttribute(attributeName, ...elements) {
+    for (const value of elements.map(element => element === null || element === void 0 ? void 0 : element.getAttribute(attributeName))) {
+        if (typeof value == "string")
+            return value;
+    }
+    return null;
+}
+function markAsBusy(...elements) {
+    for (const element of elements) {
+        if (element.localName == "turbo-frame") {
+            element.setAttribute("busy", "");
+        }
+        element.setAttribute("aria-busy", "true");
+    }
+}
+function clearBusyState(...elements) {
+    for (const element of elements) {
+        if (element.localName == "turbo-frame") {
+            element.removeAttribute("busy");
+        }
+        element.removeAttribute("aria-busy");
+    }
+}
+
+var FetchMethod;
+(function (FetchMethod) {
+    FetchMethod[FetchMethod["get"] = 0] = "get";
+    FetchMethod[FetchMethod["post"] = 1] = "post";
+    FetchMethod[FetchMethod["put"] = 2] = "put";
+    FetchMethod[FetchMethod["patch"] = 3] = "patch";
+    FetchMethod[FetchMethod["delete"] = 4] = "delete";
+})(FetchMethod || (FetchMethod = {}));
+function fetchMethodFromString(method) {
+    switch (method.toLowerCase()) {
+        case "get": return FetchMethod.get;
+        case "post": return FetchMethod.post;
+        case "put": return FetchMethod.put;
+        case "patch": return FetchMethod.patch;
+        case "delete": return FetchMethod.delete;
+    }
+}
+class FetchRequest {
+    constructor(delegate, method, location, body = new URLSearchParams, target = null) {
+        this.abortController = new AbortController;
+        this.resolveRequestPromise = (value) => { };
+        this.delegate = delegate;
+        this.method = method;
+        this.headers = this.defaultHeaders;
+        this.body = body;
+        this.url = location;
+        this.target = target;
+    }
+    get location() {
+        return this.url;
+    }
+    get params() {
+        return this.url.searchParams;
+    }
+    get entries() {
+        return this.body ? Array.from(this.body.entries()) : [];
+    }
+    cancel() {
+        this.abortController.abort();
+    }
+    async perform() {
+        var _a, _b;
+        const { fetchOptions } = this;
+        (_b = (_a = this.delegate).prepareHeadersForRequest) === null || _b === void 0 ? void 0 : _b.call(_a, this.headers, this);
+        await this.allowRequestToBeIntercepted(fetchOptions);
+        try {
+            this.delegate.requestStarted(this);
+            const response = await fetch(this.url.href, fetchOptions);
+            return await this.receive(response);
+        }
+        catch (error) {
+            if (error.name !== 'AbortError') {
+                this.delegate.requestErrored(this, error);
+                throw error;
+            }
+        }
+        finally {
+            this.delegate.requestFinished(this);
+        }
+    }
+    async receive(response) {
+        const fetchResponse = new FetchResponse(response);
+        const event = dispatch("turbo:before-fetch-response", { cancelable: true, detail: { fetchResponse }, target: this.target });
+        if (event.defaultPrevented) {
+            this.delegate.requestPreventedHandlingResponse(this, fetchResponse);
+        }
+        else if (fetchResponse.succeeded) {
+            this.delegate.requestSucceededWithResponse(this, fetchResponse);
+        }
+        else {
+            this.delegate.requestFailedWithResponse(this, fetchResponse);
+        }
+        return fetchResponse;
+    }
+    get fetchOptions() {
+        var _a;
+        return {
+            method: FetchMethod[this.method].toUpperCase(),
+            credentials: "same-origin",
+            headers: this.headers,
+            redirect: "follow",
+            body: this.isIdempotent ? null : this.body,
+            signal: this.abortSignal,
+            referrer: (_a = this.delegate.referrer) === null || _a === void 0 ? void 0 : _a.href
+        };
+    }
+    get defaultHeaders() {
+        return {
+            "Accept": "text/html, application/xhtml+xml"
+        };
+    }
+    get isIdempotent() {
+        return this.method == FetchMethod.get;
+    }
+    get abortSignal() {
+        return this.abortController.signal;
+    }
+    async allowRequestToBeIntercepted(fetchOptions) {
+        const requestInterception = new Promise(resolve => this.resolveRequestPromise = resolve);
+        const event = dispatch("turbo:before-fetch-request", {
+            cancelable: true,
+            detail: {
+                fetchOptions,
+                url: this.url,
+                resume: this.resolveRequestPromise
+            },
+            target: this.target
+        });
+        if (event.defaultPrevented)
+            await requestInterception;
+    }
+}
+
+class AppearanceObserver {
+    constructor(delegate, element) {
+        this.started = false;
+        this.intersect = entries => {
+            const lastEntry = entries.slice(-1)[0];
+            if (lastEntry === null || lastEntry === void 0 ? void 0 : lastEntry.isIntersecting) {
+                this.delegate.elementAppearedInViewport(this.element);
+            }
+        };
+        this.delegate = delegate;
+        this.element = element;
+        this.intersectionObserver = new IntersectionObserver(this.intersect);
+    }
+    start() {
+        if (!this.started) {
+            this.started = true;
+            this.intersectionObserver.observe(this.element);
+        }
+    }
+    stop() {
+        if (this.started) {
+            this.started = false;
+            this.intersectionObserver.unobserve(this.element);
+        }
+    }
+}
+
+class StreamMessage {
+    constructor(html) {
+        this.templateElement = document.createElement("template");
+        this.templateElement.innerHTML = html;
+    }
+    static wrap(message) {
+        if (typeof message == "string") {
+            return new this(message);
+        }
+        else {
+            return message;
+        }
+    }
+    get fragment() {
+        const fragment = document.createDocumentFragment();
+        for (const element of this.foreignElements) {
+            fragment.appendChild(document.importNode(element, true));
+        }
+        return fragment;
+    }
+    get foreignElements() {
+        return this.templateChildren.reduce((streamElements, child) => {
+            if (child.tagName.toLowerCase() == "turbo-stream") {
+                return [...streamElements, child];
+            }
+            else {
+                return streamElements;
+            }
+        }, []);
+    }
+    get templateChildren() {
+        return Array.from(this.templateElement.content.children);
+    }
+}
+StreamMessage.contentType = "text/vnd.turbo-stream.html";
+
+var FormSubmissionState;
+(function (FormSubmissionState) {
+    FormSubmissionState[FormSubmissionState["initialized"] = 0] = "initialized";
+    FormSubmissionState[FormSubmissionState["requesting"] = 1] = "requesting";
+    FormSubmissionState[FormSubmissionState["waiting"] = 2] = "waiting";
+    FormSubmissionState[FormSubmissionState["receiving"] = 3] = "receiving";
+    FormSubmissionState[FormSubmissionState["stopping"] = 4] = "stopping";
+    FormSubmissionState[FormSubmissionState["stopped"] = 5] = "stopped";
+})(FormSubmissionState || (FormSubmissionState = {}));
+var FormEnctype;
+(function (FormEnctype) {
+    FormEnctype["urlEncoded"] = "application/x-www-form-urlencoded";
+    FormEnctype["multipart"] = "multipart/form-data";
+    FormEnctype["plain"] = "text/plain";
+})(FormEnctype || (FormEnctype = {}));
+function formEnctypeFromString(encoding) {
+    switch (encoding.toLowerCase()) {
+        case FormEnctype.multipart: return FormEnctype.multipart;
+        case FormEnctype.plain: return FormEnctype.plain;
+        default: return FormEnctype.urlEncoded;
+    }
+}
+class FormSubmission {
+    constructor(delegate, formElement, submitter, mustRedirect = false) {
+        this.state = FormSubmissionState.initialized;
+        this.delegate = delegate;
+        this.formElement = formElement;
+        this.submitter = submitter;
+        this.formData = buildFormData(formElement, submitter);
+        this.location = expandURL(this.action);
+        if (this.method == FetchMethod.get) {
+            mergeFormDataEntries(this.location, [...this.body.entries()]);
+        }
+        this.fetchRequest = new FetchRequest(this, this.method, this.location, this.body, this.formElement);
+        this.mustRedirect = mustRedirect;
+    }
+    static confirmMethod(message, element) {
+        return confirm(message);
+    }
+    get method() {
+        var _a;
+        const method = ((_a = this.submitter) === null || _a === void 0 ? void 0 : _a.getAttribute("formmethod")) || this.formElement.getAttribute("method") || "";
+        return fetchMethodFromString(method.toLowerCase()) || FetchMethod.get;
+    }
+    get action() {
+        var _a;
+        const formElementAction = typeof this.formElement.action === 'string' ? this.formElement.action : null;
+        return ((_a = this.submitter) === null || _a === void 0 ? void 0 : _a.getAttribute("formaction")) || this.formElement.getAttribute("action") || formElementAction || "";
+    }
+    get body() {
+        if (this.enctype == FormEnctype.urlEncoded || this.method == FetchMethod.get) {
+            return new URLSearchParams(this.stringFormData);
+        }
+        else {
+            return this.formData;
+        }
+    }
+    get enctype() {
+        var _a;
+        return formEnctypeFromString(((_a = this.submitter) === null || _a === void 0 ? void 0 : _a.getAttribute("formenctype")) || this.formElement.enctype);
+    }
+    get isIdempotent() {
+        return this.fetchRequest.isIdempotent;
+    }
+    get stringFormData() {
+        return [...this.formData].reduce((entries, [name, value]) => {
+            return entries.concat(typeof value == "string" ? [[name, value]] : []);
+        }, []);
+    }
+    get confirmationMessage() {
+        return this.formElement.getAttribute("data-turbo-confirm");
+    }
+    get needsConfirmation() {
+        return this.confirmationMessage !== null;
+    }
+    async start() {
+        const { initialized, requesting } = FormSubmissionState;
+        if (this.needsConfirmation) {
+            const answer = FormSubmission.confirmMethod(this.confirmationMessage, this.formElement);
+            if (!answer) {
+                return;
+            }
+        }
+        if (this.state == initialized) {
+            this.state = requesting;
+            return this.fetchRequest.perform();
+        }
+    }
+    stop() {
+        const { stopping, stopped } = FormSubmissionState;
+        if (this.state != stopping && this.state != stopped) {
+            this.state = stopping;
+            this.fetchRequest.cancel();
+            return true;
+        }
+    }
+    prepareHeadersForRequest(headers, request) {
+        if (!request.isIdempotent) {
+            const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token");
+            if (token) {
+                headers["X-CSRF-Token"] = token;
+            }
+            headers["Accept"] = [StreamMessage.contentType, headers["Accept"]].join(", ");
+        }
+    }
+    requestStarted(request) {
+        var _a;
+        this.state = FormSubmissionState.waiting;
+        (_a = this.submitter) === null || _a === void 0 ? void 0 : _a.setAttribute("disabled", "");
+        dispatch("turbo:submit-start", { target: this.formElement, detail: { formSubmission: this } });
+        this.delegate.formSubmissionStarted(this);
+    }
+    requestPreventedHandlingResponse(request, response) {
+        this.result = { success: response.succeeded, fetchResponse: response };
+    }
+    requestSucceededWithResponse(request, response) {
+        if (response.clientError || response.serverError) {
+            this.delegate.formSubmissionFailedWithResponse(this, response);
+        }
+        else if (this.requestMustRedirect(request) && responseSucceededWithoutRedirect(response)) {
+            const error = new Error("Form responses must redirect to another location");
+            this.delegate.formSubmissionErrored(this, error);
+        }
+        else {
+            this.state = FormSubmissionState.receiving;
+            this.result = { success: true, fetchResponse: response };
+            this.delegate.formSubmissionSucceededWithResponse(this, response);
+        }
+    }
+    requestFailedWithResponse(request, response) {
+        this.result = { success: false, fetchResponse: response };
+        this.delegate.formSubmissionFailedWithResponse(this, response);
+    }
+    requestErrored(request, error) {
+        this.result = { success: false, error };
+        this.delegate.formSubmissionErrored(this, error);
+    }
+    requestFinished(request) {
+        var _a;
+        this.state = FormSubmissionState.stopped;
+        (_a = this.submitter) === null || _a === void 0 ? void 0 : _a.removeAttribute("disabled");
+        dispatch("turbo:submit-end", { target: this.formElement, detail: Object.assign({ formSubmission: this }, this.result) });
+        this.delegate.formSubmissionFinished(this);
+    }
+    requestMustRedirect(request) {
+        return !request.isIdempotent && this.mustRedirect;
+    }
+}
+function buildFormData(formElement, submitter) {
+    const formData = new FormData(formElement);
+    const name = submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("name");
+    const value = submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("value");
+    if (name && value != null && formData.get(name) != value) {
+        formData.append(name, value);
+    }
+    return formData;
+}
+function getCookieValue(cookieName) {
+    if (cookieName != null) {
+        const cookies = document.cookie ? document.cookie.split("; ") : [];
+        const cookie = cookies.find((cookie) => cookie.startsWith(cookieName));
+        if (cookie) {
+            const value = cookie.split("=").slice(1).join("=");
+            return value ? decodeURIComponent(value) : undefined;
+        }
+    }
+}
+function getMetaContent(name) {
+    const element = document.querySelector(`meta[name="${name}"]`);
+    return element && element.content;
+}
+function responseSucceededWithoutRedirect(response) {
+    return response.statusCode == 200 && !response.redirected;
+}
+function mergeFormDataEntries(url, entries) {
+    const searchParams = new URLSearchParams;
+    for (const [name, value] of entries) {
+        if (value instanceof File)
+            continue;
+        searchParams.append(name, value);
+    }
+    url.search = searchParams.toString();
+    return url;
+}
+
+class Snapshot {
+    constructor(element) {
+        this.element = element;
+    }
+    get children() {
+        return [...this.element.children];
+    }
+    hasAnchor(anchor) {
+        return this.getElementForAnchor(anchor) != null;
+    }
+    getElementForAnchor(anchor) {
+        return anchor ? this.element.querySelector(`[id='${anchor}'], a[name='${anchor}']`) : null;
+    }
+    get isConnected() {
+        return this.element.isConnected;
+    }
+    get firstAutofocusableElement() {
+        return this.element.querySelector("[autofocus]");
+    }
+    get permanentElements() {
+        return [...this.element.querySelectorAll("[id][data-turbo-permanent]")];
+    }
+    getPermanentElementById(id) {
+        return this.element.querySelector(`#${id}[data-turbo-permanent]`);
+    }
+    getPermanentElementMapForSnapshot(snapshot) {
+        const permanentElementMap = {};
+        for (const currentPermanentElement of this.permanentElements) {
+            const { id } = currentPermanentElement;
+            const newPermanentElement = snapshot.getPermanentElementById(id);
+            if (newPermanentElement) {
+                permanentElementMap[id] = [currentPermanentElement, newPermanentElement];
+            }
+        }
+        return permanentElementMap;
+    }
+}
+
+class FormInterceptor {
+    constructor(delegate, element) {
+        this.submitBubbled = ((event) => {
+            const form = event.target;
+            if (!event.defaultPrevented && form instanceof HTMLFormElement && form.closest("turbo-frame, html") == this.element) {
+                const submitter = event.submitter || undefined;
+                const method = (submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("formmethod")) || form.method;
+                if (method != "dialog" && this.delegate.shouldInterceptFormSubmission(form, submitter)) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    this.delegate.formSubmissionIntercepted(form, submitter);
+                }
+            }
+        });
+        this.delegate = delegate;
+        this.element = element;
+    }
+    start() {
+        this.element.addEventListener("submit", this.submitBubbled);
+    }
+    stop() {
+        this.element.removeEventListener("submit", this.submitBubbled);
+    }
+}
+
+class View {
+    constructor(delegate, element) {
+        this.resolveRenderPromise = (value) => { };
+        this.resolveInterceptionPromise = (value) => { };
+        this.delegate = delegate;
+        this.element = element;
+    }
+    scrollToAnchor(anchor) {
+        const element = this.snapshot.getElementForAnchor(anchor);
+        if (element) {
+            this.scrollToElement(element);
+            this.focusElement(element);
+        }
+        else {
+            this.scrollToPosition({ x: 0, y: 0 });
+        }
+    }
+    scrollToAnchorFromLocation(location) {
+        this.scrollToAnchor(getAnchor(location));
+    }
+    scrollToElement(element) {
+        element.scrollIntoView();
+    }
+    focusElement(element) {
+        if (element instanceof HTMLElement) {
+            if (element.hasAttribute("tabindex")) {
+                element.focus();
+            }
+            else {
+                element.setAttribute("tabindex", "-1");
+                element.focus();
+                element.removeAttribute("tabindex");
+            }
+        }
+    }
+    scrollToPosition({ x, y }) {
+        this.scrollRoot.scrollTo(x, y);
+    }
+    scrollToTop() {
+        this.scrollToPosition({ x: 0, y: 0 });
+    }
+    get scrollRoot() {
+        return window;
+    }
+    async render(renderer) {
+        const { isPreview, shouldRender, newSnapshot: snapshot } = renderer;
+        if (shouldRender) {
+            try {
+                this.renderPromise = new Promise(resolve => this.resolveRenderPromise = resolve);
+                this.renderer = renderer;
+                this.prepareToRenderSnapshot(renderer);
+                const renderInterception = new Promise(resolve => this.resolveInterceptionPromise = resolve);
+                const immediateRender = this.delegate.allowsImmediateRender(snapshot, this.resolveInterceptionPromise);
+                if (!immediateRender)
+                    await renderInterception;
+                await this.renderSnapshot(renderer);
+                this.delegate.viewRenderedSnapshot(snapshot, isPreview);
+                this.finishRenderingSnapshot(renderer);
+            }
+            finally {
+                delete this.renderer;
+                this.resolveRenderPromise(undefined);
+                delete this.renderPromise;
+            }
+        }
+        else {
+            this.invalidate();
+        }
+    }
+    invalidate() {
+        this.delegate.viewInvalidated();
+    }
+    prepareToRenderSnapshot(renderer) {
+        this.markAsPreview(renderer.isPreview);
+        renderer.prepareToRender();
+    }
+    markAsPreview(isPreview) {
+        if (isPreview) {
+            this.element.setAttribute("data-turbo-preview", "");
+        }
+        else {
+            this.element.removeAttribute("data-turbo-preview");
+        }
+    }
+    async renderSnapshot(renderer) {
+        await renderer.render();
+    }
+    finishRenderingSnapshot(renderer) {
+        renderer.finishRendering();
+    }
+}
+
+class FrameView extends View {
+    invalidate() {
+        this.element.innerHTML = "";
+    }
+    get snapshot() {
+        return new Snapshot(this.element);
+    }
+}
+
+class LinkInterceptor {
+    constructor(delegate, element) {
+        this.clickBubbled = (event) => {
+            if (this.respondsToEventTarget(event.target)) {
+                this.clickEvent = event;
+            }
+            else {
+                delete this.clickEvent;
+            }
+        };
+        this.linkClicked = ((event) => {
+            if (this.clickEvent && this.respondsToEventTarget(event.target) && event.target instanceof Element) {
+                if (this.delegate.shouldInterceptLinkClick(event.target, event.detail.url)) {
+                    this.clickEvent.preventDefault();
+                    event.preventDefault();
+                    this.delegate.linkClickIntercepted(event.target, event.detail.url);
+                }
+            }
+            delete this.clickEvent;
+        });
+        this.willVisit = () => {
+            delete this.clickEvent;
+        };
+        this.delegate = delegate;
+        this.element = element;
+    }
+    start() {
+        this.element.addEventListener("click", this.clickBubbled);
+        document.addEventListener("turbo:click", this.linkClicked);
+        document.addEventListener("turbo:before-visit", this.willVisit);
+    }
+    stop() {
+        this.element.removeEventListener("click", this.clickBubbled);
+        document.removeEventListener("turbo:click", this.linkClicked);
+        document.removeEventListener("turbo:before-visit", this.willVisit);
+    }
+    respondsToEventTarget(target) {
+        const element = target instanceof Element
+            ? target
+            : target instanceof Node
+                ? target.parentElement
+                : null;
+        return element && element.closest("turbo-frame, html") == this.element;
+    }
+}
+
+class Bardo {
+    constructor(permanentElementMap) {
+        this.permanentElementMap = permanentElementMap;
+    }
+    static preservingPermanentElements(permanentElementMap, callback) {
+        const bardo = new this(permanentElementMap);
+        bardo.enter();
+        callback();
+        bardo.leave();
+    }
+    enter() {
+        for (const id in this.permanentElementMap) {
+            const [, newPermanentElement] = this.permanentElementMap[id];
+            this.replaceNewPermanentElementWithPlaceholder(newPermanentElement);
+        }
+    }
+    leave() {
+        for (const id in this.permanentElementMap) {
+            const [currentPermanentElement] = this.permanentElementMap[id];
+            this.replaceCurrentPermanentElementWithClone(currentPermanentElement);
+            this.replacePlaceholderWithPermanentElement(currentPermanentElement);
+        }
+    }
+    replaceNewPermanentElementWithPlaceholder(permanentElement) {
+        const placeholder = createPlaceholderForPermanentElement(permanentElement);
+        permanentElement.replaceWith(placeholder);
+    }
+    replaceCurrentPermanentElementWithClone(permanentElement) {
+        const clone = permanentElement.cloneNode(true);
+        permanentElement.replaceWith(clone);
+    }
+    replacePlaceholderWithPermanentElement(permanentElement) {
+        const placeholder = this.getPlaceholderById(permanentElement.id);
+        placeholder === null || placeholder === void 0 ? void 0 : placeholder.replaceWith(permanentElement);
+    }
+    getPlaceholderById(id) {
+        return this.placeholders.find(element => element.content == id);
+    }
+    get placeholders() {
+        return [...document.querySelectorAll("meta[name=turbo-permanent-placeholder][content]")];
+    }
+}
+function createPlaceholderForPermanentElement(permanentElement) {
+    const element = document.createElement("meta");
+    element.setAttribute("name", "turbo-permanent-placeholder");
+    element.setAttribute("content", permanentElement.id);
+    return element;
+}
+
+class Renderer {
+    constructor(currentSnapshot, newSnapshot, isPreview, willRender = true) {
+        this.currentSnapshot = currentSnapshot;
+        this.newSnapshot = newSnapshot;
+        this.isPreview = isPreview;
+        this.willRender = willRender;
+        this.promise = new Promise((resolve, reject) => this.resolvingFunctions = { resolve, reject });
+    }
+    get shouldRender() {
+        return true;
+    }
+    prepareToRender() {
+        return;
+    }
+    finishRendering() {
+        if (this.resolvingFunctions) {
+            this.resolvingFunctions.resolve();
+            delete this.resolvingFunctions;
+        }
+    }
+    createScriptElement(element) {
+        if (element.getAttribute("data-turbo-eval") == "false") {
+            return element;
+        }
+        else {
+            const createdScriptElement = document.createElement("script");
+            if (this.cspNonce) {
+                createdScriptElement.nonce = this.cspNonce;
+            }
+            createdScriptElement.textContent = element.textContent;
+            createdScriptElement.async = false;
+            copyElementAttributes(createdScriptElement, element);
+            return createdScriptElement;
+        }
+    }
+    preservingPermanentElements(callback) {
+        Bardo.preservingPermanentElements(this.permanentElementMap, callback);
+    }
+    focusFirstAutofocusableElement() {
+        const element = this.connectedSnapshot.firstAutofocusableElement;
+        if (elementIsFocusable(element)) {
+            element.focus();
+        }
+    }
+    get connectedSnapshot() {
+        return this.newSnapshot.isConnected ? this.newSnapshot : this.currentSnapshot;
+    }
+    get currentElement() {
+        return this.currentSnapshot.element;
+    }
+    get newElement() {
+        return this.newSnapshot.element;
+    }
+    get permanentElementMap() {
+        return this.currentSnapshot.getPermanentElementMapForSnapshot(this.newSnapshot);
+    }
+    get cspNonce() {
+        var _a;
+        return (_a = document.head.querySelector('meta[name="csp-nonce"]')) === null || _a === void 0 ? void 0 : _a.getAttribute("content");
+    }
+}
+function copyElementAttributes(destinationElement, sourceElement) {
+    for (const { name, value } of [...sourceElement.attributes]) {
+        destinationElement.setAttribute(name, value);
+    }
+}
+function elementIsFocusable(element) {
+    return element && typeof element.focus == "function";
+}
+
+class FrameRenderer extends Renderer {
+    get shouldRender() {
+        return true;
+    }
+    async render() {
+        await nextAnimationFrame();
+        this.preservingPermanentElements(() => {
+            this.loadFrameElement();
+        });
+        this.scrollFrameIntoView();
+        await nextAnimationFrame();
+        this.focusFirstAutofocusableElement();
+        await nextAnimationFrame();
+        this.activateScriptElements();
+    }
+    loadFrameElement() {
+        var _a;
+        const destinationRange = document.createRange();
+        destinationRange.selectNodeContents(this.currentElement);
+        destinationRange.deleteContents();
+        const frameElement = this.newElement;
+        const sourceRange = (_a = frameElement.ownerDocument) === null || _a === void 0 ? void 0 : _a.createRange();
+        if (sourceRange) {
+            sourceRange.selectNodeContents(frameElement);
+            this.currentElement.appendChild(sourceRange.extractContents());
+        }
+    }
+    scrollFrameIntoView() {
+        if (this.currentElement.autoscroll || this.newElement.autoscroll) {
+            const element = this.currentElement.firstElementChild;
+            const block = readScrollLogicalPosition(this.currentElement.getAttribute("data-autoscroll-block"), "end");
+            if (element) {
+                element.scrollIntoView({ block });
+                return true;
+            }
+        }
+        return false;
+    }
+    activateScriptElements() {
+        for (const inertScriptElement of this.newScriptElements) {
+            const activatedScriptElement = this.createScriptElement(inertScriptElement);
+            inertScriptElement.replaceWith(activatedScriptElement);
+        }
+    }
+    get newScriptElements() {
+        return this.currentElement.querySelectorAll("script");
+    }
+}
+function readScrollLogicalPosition(value, defaultValue) {
+    if (value == "end" || value == "start" || value == "center" || value == "nearest") {
+        return value;
+    }
+    else {
+        return defaultValue;
+    }
+}
+
+class ProgressBar {
+    constructor() {
+        this.hiding = false;
+        this.value = 0;
+        this.visible = false;
+        this.trickle = () => {
+            this.setValue(this.value + Math.random() / 100);
+        };
+        this.stylesheetElement = this.createStylesheetElement();
+        this.progressElement = this.createProgressElement();
+        this.installStylesheetElement();
+        this.setValue(0);
+    }
+    static get defaultCSS() {
+        return unindent `
       .turbo-progress-bar {
         position: fixed;
         display: block;
@@ -9,11 +1177,2176 @@
         background: #0076ff;
         z-index: 9999;
         transition:
-          width ${Y.animationDuration}ms ease-out,
-          opacity ${Y.animationDuration/2}ms ${Y.animationDuration/2}ms ease-in;
+          width ${ProgressBar.animationDuration}ms ease-out,
+          opacity ${ProgressBar.animationDuration / 2}ms ${ProgressBar.animationDuration / 2}ms ease-in;
         transform: translate3d(0, 0, 0);
       }
-    `}show(){this.visible||(this.visible=!0,this.installProgressElement(),this.startTrickling())}hide(){this.visible&&!this.hiding&&(this.hiding=!0,this.fadeProgressElement((()=>{this.uninstallProgressElement(),this.stopTrickling(),this.visible=!1,this.hiding=!1})))}setValue(e){this.value=e,this.refresh()}installStylesheetElement(){document.head.insertBefore(this.stylesheetElement,document.head.firstChild)}installProgressElement(){this.progressElement.style.width="0",this.progressElement.style.opacity="1",document.documentElement.insertBefore(this.progressElement,document.body),this.refresh()}fadeProgressElement(e){this.progressElement.style.opacity="0",setTimeout(e,1.5*Y.animationDuration)}uninstallProgressElement(){this.progressElement.parentNode&&document.documentElement.removeChild(this.progressElement)}startTrickling(){this.trickleInterval||(this.trickleInterval=window.setInterval(this.trickle,Y.animationDuration))}stopTrickling(){window.clearInterval(this.trickleInterval),delete this.trickleInterval}refresh(){requestAnimationFrame((()=>{this.progressElement.style.width=10+90*this.value+"%"}))}createStylesheetElement(){const e=document.createElement("style");return e.type="text/css",e.textContent=Y.defaultCSS,e}createProgressElement(){const e=document.createElement("div");return e.className="turbo-progress-bar",e}}Y.animationDuration=300;class J extends F{constructor(){super(...arguments),this.detailsByOuterHTML=this.children.filter((e=>!function(e){return"noscript"==e.tagName.toLowerCase()}(e))).map((e=>function(e){e.hasAttribute("nonce")&&e.setAttribute("nonce","");return e}(e))).reduce(((e,t)=>{const{outerHTML:a}=t,n=a in e?e[a]:{type:z(t),tracked:H(t),elements:[]};return Object.assign(Object.assign({},e),{[a]:Object.assign(Object.assign({},n),{elements:[...n.elements,t]})})}),{})}get trackedElementSignature(){return Object.keys(this.detailsByOuterHTML).filter((e=>this.detailsByOuterHTML[e].tracked)).join("")}getScriptElementsNotInSnapshot(e){return this.getElementsMatchingTypeNotInSnapshot("script",e)}getStylesheetElementsNotInSnapshot(e){return this.getElementsMatchingTypeNotInSnapshot("stylesheet",e)}getElementsMatchingTypeNotInSnapshot(e,t){return Object.keys(this.detailsByOuterHTML).filter((e=>!(e in t.detailsByOuterHTML))).map((e=>this.detailsByOuterHTML[e])).filter((({type:t})=>t==e)).map((({elements:[e]})=>e))}get provisionalElements(){return Object.keys(this.detailsByOuterHTML).reduce(((e,t)=>{const{type:a,tracked:n,elements:i}=this.detailsByOuterHTML[t];return null!=a||n?i.length>1?[...e,...i.slice(1)]:e:[...e,...i]}),[])}getMetaValue(e){const t=this.findMetaElementByName(e);return t?t.getAttribute("content"):null}findMetaElementByName(e){return Object.keys(this.detailsByOuterHTML).reduce(((t,a)=>{const{elements:[n]}=this.detailsByOuterHTML[a];return function(e,t){return"meta"==e.tagName.toLowerCase()&&e.getAttribute("name")==t}(n,e)?n:t}),void 0)}}function z(e){return function(e){return"script"==e.tagName.toLowerCase()}(e)?"script":function(e){const t=e.tagName.toLowerCase();return"style"==t||"link"==t&&"stylesheet"==e.getAttribute("rel")}(e)?"stylesheet":void 0}function H(e){return"reload"==e.getAttribute("data-turbo-track")}class V extends F{constructor(e,t){super(e),this.headSnapshot=t}static fromHTMLString(e=""){return this.fromDocument(S(e))}static fromElement(e){return this.fromDocument(e.ownerDocument)}static fromDocument({head:e,body:t}){return new this(t,new J(e))}clone(){return new V(this.element.cloneNode(!0),this.headSnapshot)}get headElement(){return this.headSnapshot.element}get rootLocation(){var e;return p(null!==(e=this.getSetting("root"))&&void 0!==e?e:"/")}get cacheControlValue(){return this.getSetting("cache-control")}get isPreviewable(){return"no-preview"!=this.cacheControlValue}get isCacheable(){return"no-cache"!=this.cacheControlValue}get isVisitable(){return"reload"!=this.getSetting("visit-control")}getSetting(e){return this.headSnapshot.getMetaValue(`turbo-${e}`)}}!function(e){e.visitStart="visitStart",e.requestStart="requestStart",e.requestEnd="requestEnd",e.visitEnd="visitEnd"}(c||(c={})),function(e){e.initialized="initialized",e.started="started",e.canceled="canceled",e.failed="failed",e.completed="completed"}(u||(u={}));const W={action:"advance",historyChanged:!1,visitCachedSnapshot:()=>{},willRender:!0};var U,G;!function(e){e[e.networkFailure=0]="networkFailure",e[e.timeoutFailure=-1]="timeoutFailure",e[e.contentTypeMismatch=-2]="contentTypeMismatch"}(U||(U={}));class K{constructor(e,t,a,n={}){this.identifier=M(),this.timingMetrics={},this.followedRedirect=!1,this.historyChanged=!1,this.scrolled=!1,this.snapshotCached=!1,this.state=u.initialized,this.delegate=e,this.location=t,this.restorationIdentifier=a||M();const{action:i,historyChanged:s,referrer:r,snapshotHTML:o,response:d,visitCachedSnapshot:l,willRender:c}=Object.assign(Object.assign({},W),n);this.action=i,this.historyChanged=s,this.referrer=r,this.snapshotHTML=o,this.response=d,this.isSamePage=this.delegate.locationWithActionIsSamePage(this.location,this.action),this.visitCachedSnapshot=l,this.willRender=c,this.scrolled=!c}get adapter(){return this.delegate.adapter}get view(){return this.delegate.view}get history(){return this.delegate.history}get restorationData(){return this.history.getRestorationDataForIdentifier(this.restorationIdentifier)}get silent(){return this.isSamePage}start(){this.state==u.initialized&&(this.recordTimingMetric(c.visitStart),this.state=u.started,this.adapter.visitStarted(this),this.delegate.visitStarted(this))}cancel(){this.state==u.started&&(this.request&&this.request.cancel(),this.cancelRender(),this.state=u.canceled)}complete(){this.state==u.started&&(this.recordTimingMetric(c.visitEnd),this.state=u.completed,this.adapter.visitCompleted(this),this.delegate.visitCompleted(this),this.followRedirect())}fail(){this.state==u.started&&(this.state=u.failed,this.adapter.visitFailed(this))}changeHistory(){var e;if(!this.historyChanged){const t=this.location.href===(null===(e=this.referrer)||void 0===e?void 0:e.href)?"replace":this.action,a=this.getHistoryMethodForAction(t);this.history.update(a,this.location,this.restorationIdentifier),this.historyChanged=!0}}issueRequest(){this.hasPreloadedResponse()?this.simulateRequest():this.shouldIssueRequest()&&!this.request&&(this.request=new x(this,o.get,this.location),this.request.perform())}simulateRequest(){this.response&&(this.startRequest(),this.recordResponse(),this.finishRequest())}startRequest(){this.recordTimingMetric(c.requestStart),this.adapter.visitRequestStarted(this)}recordResponse(e=this.response){if(this.response=e,e){const{statusCode:t}=e;Q(t)?this.adapter.visitRequestCompleted(this):this.adapter.visitRequestFailedWithStatusCode(this,t)}}finishRequest(){this.recordTimingMetric(c.requestEnd),this.adapter.visitRequestFinished(this)}loadResponse(){if(this.response){const{statusCode:e,responseHTML:t}=this.response;this.render((async()=>{this.cacheSnapshot(),this.view.renderPromise&&await this.view.renderPromise,Q(e)&&null!=t?(await this.view.renderPage(V.fromHTMLString(t),!1,this.willRender),this.adapter.visitRendered(this),this.complete()):(await this.view.renderError(V.fromHTMLString(t)),this.adapter.visitRendered(this),this.fail())}))}}getCachedSnapshot(){const e=this.view.getCachedSnapshotForLocation(this.location)||this.getPreloadedSnapshot();if(e&&(!h(this.location)||e.hasAnchor(h(this.location)))&&("restore"==this.action||e.isPreviewable))return e}getPreloadedSnapshot(){if(this.snapshotHTML)return V.fromHTMLString(this.snapshotHTML)}hasCachedSnapshot(){return null!=this.getCachedSnapshot()}loadCachedSnapshot(){const e=this.getCachedSnapshot();if(e){const t=this.shouldIssueRequest();this.render((async()=>{this.cacheSnapshot(),this.isSamePage?this.adapter.visitRendered(this):(this.view.renderPromise&&await this.view.renderPromise,await this.view.renderPage(e,t,this.willRender),this.adapter.visitRendered(this),t||this.complete())}))}}followRedirect(){var e;this.redirectedToLocation&&!this.followedRedirect&&(null===(e=this.response)||void 0===e?void 0:e.redirected)&&(this.adapter.visitProposedToLocation(this.redirectedToLocation,{action:"replace",response:this.response}),this.followedRedirect=!0)}goToSamePageAnchor(){this.isSamePage&&this.render((async()=>{this.cacheSnapshot(),this.adapter.visitRendered(this)}))}requestStarted(){this.startRequest()}requestPreventedHandlingResponse(e,t){}async requestSucceededWithResponse(e,t){const a=await t.responseHTML,{redirected:n,statusCode:i}=t;null==a?this.recordResponse({statusCode:U.contentTypeMismatch,redirected:n}):(this.redirectedToLocation=t.redirected?t.location:void 0,this.recordResponse({statusCode:i,responseHTML:a,redirected:n}))}async requestFailedWithResponse(e,t){const a=await t.responseHTML,{redirected:n,statusCode:i}=t;null==a?this.recordResponse({statusCode:U.contentTypeMismatch,redirected:n}):this.recordResponse({statusCode:i,responseHTML:a,redirected:n})}requestErrored(e,t){this.recordResponse({statusCode:U.networkFailure,redirected:!1})}requestFinished(){this.finishRequest()}performScroll(){this.scrolled||("restore"==this.action?this.scrollToRestoredPosition()||this.scrollToAnchor()||this.view.scrollToTop():this.scrollToAnchor()||this.view.scrollToTop(),this.isSamePage&&this.delegate.visitScrolledToSamePageLocation(this.view.lastRenderedLocation,this.location),this.scrolled=!0)}scrollToRestoredPosition(){const{scrollPosition:e}=this.restorationData;if(e)return this.view.scrollToPosition(e),!0}scrollToAnchor(){const e=h(this.location);if(null!=e)return this.view.scrollToAnchor(e),!0}recordTimingMetric(e){this.timingMetrics[e]=(new Date).getTime()}getTimingMetrics(){return Object.assign({},this.timingMetrics)}getHistoryMethodForAction(e){switch(e){case"replace":return history.replaceState;case"advance":case"restore":return history.pushState}}hasPreloadedResponse(){return"object"==typeof this.response}shouldIssueRequest(){return!this.isSamePage&&("restore"==this.action?!this.hasCachedSnapshot():this.willRender)}cacheSnapshot(){this.snapshotCached||(this.view.cacheSnapshot().then((e=>e&&this.visitCachedSnapshot(e))),this.snapshotCached=!0)}async render(e){this.cancelRender(),await new Promise((e=>{this.frame=requestAnimationFrame((()=>e()))})),await e(),delete this.frame,this.performScroll()}cancelRender(){this.frame&&(cancelAnimationFrame(this.frame),delete this.frame)}}function Q(e){return e>=200&&e<300}class Z{constructor(e){this.progressBar=new Y,this.showProgressBar=()=>{this.progressBar.show()},this.session=e}visitProposedToLocation(e,t){this.navigator.startVisit(e,M(),t)}visitStarted(e){e.loadCachedSnapshot(),e.issueRequest(),e.changeHistory(),e.goToSamePageAnchor()}visitRequestStarted(e){this.progressBar.setValue(0),e.hasCachedSnapshot()||"restore"!=e.action?this.showVisitProgressBarAfterDelay():this.showProgressBar()}visitRequestCompleted(e){e.loadResponse()}visitRequestFailedWithStatusCode(e,t){switch(t){case U.networkFailure:case U.timeoutFailure:case U.contentTypeMismatch:return this.reload();default:return e.loadResponse()}}visitRequestFinished(e){this.progressBar.setValue(1),this.hideVisitProgressBar()}visitCompleted(e){}pageInvalidated(){this.reload()}visitFailed(e){}visitRendered(e){}formSubmissionStarted(e){this.progressBar.setValue(0),this.showFormProgressBarAfterDelay()}formSubmissionFinished(e){this.progressBar.setValue(1),this.hideFormProgressBar()}showVisitProgressBarAfterDelay(){this.visitProgressBarTimeout=window.setTimeout(this.showProgressBar,this.session.progressBarDelay)}hideVisitProgressBar(){this.progressBar.hide(),null!=this.visitProgressBarTimeout&&(window.clearTimeout(this.visitProgressBarTimeout),delete this.visitProgressBarTimeout)}showFormProgressBarAfterDelay(){null==this.formProgressBarTimeout&&(this.formProgressBarTimeout=window.setTimeout(this.showProgressBar,this.session.progressBarDelay))}hideFormProgressBar(){this.progressBar.hide(),null!=this.formProgressBarTimeout&&(window.clearTimeout(this.formProgressBarTimeout),delete this.formProgressBarTimeout)}reload(){window.location.reload()}get navigator(){return this.session.navigator}}class X{constructor(){this.started=!1}start(){this.started||(this.started=!0,addEventListener("turbo:before-cache",this.removeStaleElements,!1))}stop(){this.started&&(this.started=!1,removeEventListener("turbo:before-cache",this.removeStaleElements,!1))}removeStaleElements(){const e=[...document.querySelectorAll('[data-turbo-cache="false"]')];for(const t of e)t.remove()}}class ee{constructor(e){this.started=!1,this.submitCaptured=()=>{removeEventListener("submit",this.submitBubbled,!1),addEventListener("submit",this.submitBubbled,!1)},this.submitBubbled=e=>{if(!e.defaultPrevented){const t=e.target instanceof HTMLFormElement?e.target:void 0,a=e.submitter||void 0;if(t){"dialog"!=((null==a?void 0:a.getAttribute("formmethod"))||t.getAttribute("method"))&&this.delegate.willSubmitForm(t,a)&&(e.preventDefault(),this.delegate.formSubmitted(t,a))}}},this.delegate=e}start(){this.started||(addEventListener("submit",this.submitCaptured,!0),this.started=!0)}stop(){this.started&&(removeEventListener("submit",this.submitCaptured,!0),this.started=!1)}}class te{constructor(e){this.element=e,this.linkInterceptor=new R(this,e),this.formInterceptor=new O(this,e)}start(){this.linkInterceptor.start(),this.formInterceptor.start()}stop(){this.linkInterceptor.stop(),this.formInterceptor.stop()}shouldInterceptLinkClick(e,t){return this.shouldRedirect(e)}linkClickIntercepted(e,t){const a=this.findFrameElement(e);a&&a.delegate.linkClickIntercepted(e,t)}shouldInterceptFormSubmission(e,t){return this.shouldSubmit(e,t)}formSubmissionIntercepted(e,t){const a=this.findFrameElement(e,t);a&&(a.removeAttribute("reloadable"),a.delegate.formSubmissionIntercepted(e,t))}shouldSubmit(e,t){var a;const n=g(e,t),i=this.element.ownerDocument.querySelector('meta[name="turbo-root"]'),s=p(null!==(a=null==i?void 0:i.content)&&void 0!==a?a:"/");return this.shouldRedirect(e,t)&&w(n,s)}shouldRedirect(e,t){const a=this.findFrameElement(e,t);return!!a&&a!=e.closest("turbo-frame")}findFrameElement(e,t){const a=(null==t?void 0:t.getAttribute("data-turbo-frame"))||e.getAttribute("data-turbo-frame");if(a&&"_top"!=a){const e=this.element.querySelector(`#${a}:not([disabled])`);if(e instanceof m)return e}}}class ae{constructor(e){this.restorationIdentifier=M(),this.restorationData={},this.started=!1,this.pageLoaded=!1,this.onPopState=e=>{if(this.shouldHandlePopState()){const{turbo:t}=e.state||{};if(t){this.location=new URL(window.location.href);const{restorationIdentifier:e}=t;this.restorationIdentifier=e,this.delegate.historyPoppedToLocationWithRestorationIdentifier(this.location,e)}}},this.onPageLoad=async e=>{await Promise.resolve(),this.pageLoaded=!0},this.delegate=e}start(){this.started||(addEventListener("popstate",this.onPopState,!1),addEventListener("load",this.onPageLoad,!1),this.started=!0,this.replace(new URL(window.location.href)))}stop(){this.started&&(removeEventListener("popstate",this.onPopState,!1),removeEventListener("load",this.onPageLoad,!1),this.started=!1)}push(e,t){this.update(history.pushState,e,t)}replace(e,t){this.update(history.replaceState,e,t)}update(e,t,a=M()){const n={turbo:{restorationIdentifier:a}};e.call(history,n,"",t.href),this.location=t,this.restorationIdentifier=a}getRestorationDataForIdentifier(e){return this.restorationData[e]||{}}updateRestorationData(e){const{restorationIdentifier:t}=this,a=this.restorationData[t];this.restorationData[t]=Object.assign(Object.assign({},a),e)}assumeControlOfScrollRestoration(){var e;this.previousScrollRestoration||(this.previousScrollRestoration=null!==(e=history.scrollRestoration)&&void 0!==e?e:"auto",history.scrollRestoration="manual")}relinquishControlOfScrollRestoration(){this.previousScrollRestoration&&(history.scrollRestoration=this.previousScrollRestoration,delete this.previousScrollRestoration)}shouldHandlePopState(){return this.pageIsLoaded()}pageIsLoaded(){return this.pageLoaded||"complete"==document.readyState}}class ne{constructor(e){this.started=!1,this.clickCaptured=()=>{removeEventListener("click",this.clickBubbled,!1),addEventListener("click",this.clickBubbled,!1)},this.clickBubbled=e=>{if(this.clickEventIsSignificant(e)){const t=e.composedPath&&e.composedPath()[0]||e.target,a=this.findLinkFromClickTarget(t);if(a){const t=this.getLocationForLink(a);this.delegate.willFollowLinkToLocation(a,t)&&(e.preventDefault(),this.delegate.followedLinkToLocation(a,t))}}},this.delegate=e}start(){this.started||(addEventListener("click",this.clickCaptured,!0),this.started=!0)}stop(){this.started&&(removeEventListener("click",this.clickCaptured,!0),this.started=!1)}clickEventIsSignificant(e){return!(e.target&&e.target.isContentEditable||e.defaultPrevented||e.which>1||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)}findLinkFromClickTarget(e){if(e instanceof Element)return e.closest("a[href]:not([target^=_]):not([download])")}getLocationForLink(e){return p(e.getAttribute("href")||"")}}function ie(e){return"advance"==e||"replace"==e||"restore"==e}class se{constructor(e){this.delegate=e}proposeVisit(e,t={}){this.delegate.allowsVisitingLocationWithAction(e,t.action)&&(w(e,this.view.snapshot.rootLocation)?this.delegate.visitProposedToLocation(e,t):window.location.href=e.toString())}startVisit(e,t,a={}){this.stop(),this.currentVisit=new K(this,p(e),t,Object.assign({referrer:this.location},a)),this.currentVisit.start()}submitForm(e,t){this.stop(),this.formSubmission=new I(this,e,t,!0),this.formSubmission.start()}stop(){this.formSubmission&&(this.formSubmission.stop(),delete this.formSubmission),this.currentVisit&&(this.currentVisit.cancel(),delete this.currentVisit)}get adapter(){return this.delegate.adapter}get view(){return this.delegate.view}get history(){return this.delegate.history}formSubmissionStarted(e){"function"==typeof this.adapter.formSubmissionStarted&&this.adapter.formSubmissionStarted(e)}async formSubmissionSucceededWithResponse(e,t){if(e==this.formSubmission){const a=await t.responseHTML;if(a){e.method!=o.get&&this.view.clearSnapshotCache();const{statusCode:n,redirected:i}=t,s={action:this.getActionForFormSubmission(e),response:{statusCode:n,responseHTML:a,redirected:i}};this.proposeVisit(t.location,s)}}}async formSubmissionFailedWithResponse(e,t){const a=await t.responseHTML;if(a){const e=V.fromHTMLString(a);t.serverError?await this.view.renderError(e):await this.view.renderPage(e),this.view.scrollToTop(),this.view.clearSnapshotCache()}}formSubmissionErrored(e,t){console.error(t)}formSubmissionFinished(e){"function"==typeof this.adapter.formSubmissionFinished&&this.adapter.formSubmissionFinished(e)}visitStarted(e){this.delegate.visitStarted(e)}visitCompleted(e){this.delegate.visitCompleted(e)}locationWithActionIsSamePage(e,t){const a=h(e),n=h(this.view.lastRenderedLocation),i="restore"===t&&void 0===a;return"replace"!==t&&y(e)===y(this.view.lastRenderedLocation)&&(i||null!=a&&a!==n)}visitScrolledToSamePageLocation(e,t){this.delegate.visitScrolledToSamePageLocation(e,t)}get location(){return this.history.location}get restorationIdentifier(){return this.history.restorationIdentifier}getActionForFormSubmission(e){const{formElement:t,submitter:a}=e,n=L("data-turbo-action",a,t);return ie(n)?n:"advance"}}!function(e){e[e.initial=0]="initial",e[e.loading=1]="loading",e[e.interactive=2]="interactive",e[e.complete=3]="complete"}(G||(G={}));class re{constructor(e){this.stage=G.initial,this.started=!1,this.interpretReadyState=()=>{const{readyState:e}=this;"interactive"==e?this.pageIsInteractive():"complete"==e&&this.pageIsComplete()},this.pageWillUnload=()=>{this.delegate.pageWillUnload()},this.delegate=e}start(){this.started||(this.stage==G.initial&&(this.stage=G.loading),document.addEventListener("readystatechange",this.interpretReadyState,!1),addEventListener("pagehide",this.pageWillUnload,!1),this.started=!0)}stop(){this.started&&(document.removeEventListener("readystatechange",this.interpretReadyState,!1),removeEventListener("pagehide",this.pageWillUnload,!1),this.started=!1)}pageIsInteractive(){this.stage==G.loading&&(this.stage=G.interactive,this.delegate.pageBecameInteractive())}pageIsComplete(){this.pageIsInteractive(),this.stage==G.interactive&&(this.stage=G.complete,this.delegate.pageLoaded())}get readyState(){return document.readyState}}class oe{constructor(e){this.started=!1,this.onScroll=()=>{this.updatePosition({x:window.pageXOffset,y:window.pageYOffset})},this.delegate=e}start(){this.started||(addEventListener("scroll",this.onScroll,!1),this.onScroll(),this.started=!0)}stop(){this.started&&(removeEventListener("scroll",this.onScroll,!1),this.started=!1)}updatePosition(e){this.delegate.scrollPositionChanged(e)}}class de{constructor(e){this.sources=new Set,this.started=!1,this.inspectFetchResponse=e=>{const t=function(e){var t;const a=null===(t=e.detail)||void 0===t?void 0:t.fetchResponse;if(a instanceof $)return a}(e);t&&function(e){var t;return(null!==(t=e.contentType)&&void 0!==t?t:"").startsWith(A.contentType)}(t)&&(e.preventDefault(),this.receiveMessageResponse(t))},this.receiveMessageEvent=e=>{this.started&&"string"==typeof e.data&&this.receiveMessageHTML(e.data)},this.delegate=e}start(){this.started||(this.started=!0,addEventListener("turbo:before-fetch-response",this.inspectFetchResponse,!1))}stop(){this.started&&(this.started=!1,removeEventListener("turbo:before-fetch-response",this.inspectFetchResponse,!1))}connectStreamSource(e){this.streamSourceIsConnected(e)||(this.sources.add(e),e.addEventListener("message",this.receiveMessageEvent,!1))}disconnectStreamSource(e){this.streamSourceIsConnected(e)&&(this.sources.delete(e),e.removeEventListener("message",this.receiveMessageEvent,!1))}streamSourceIsConnected(e){return this.sources.has(e)}async receiveMessageResponse(e){const t=await e.responseHTML;t&&this.receiveMessageHTML(t)}receiveMessageHTML(e){this.delegate.receivedMessageFromStream(new A(e))}}class le extends N{async render(){this.replaceHeadAndBody(),this.activateScriptElements()}replaceHeadAndBody(){const{documentElement:e,head:t,body:a}=document;e.replaceChild(this.newHead,t),e.replaceChild(this.newElement,a)}activateScriptElements(){for(const e of this.scriptElements){const t=e.parentNode;if(t){const a=this.createScriptElement(e);t.replaceChild(a,e)}}}get newHead(){return this.newSnapshot.headSnapshot.element}get scriptElements(){return[...document.documentElement.querySelectorAll("script")]}}class ce extends N{get shouldRender(){return this.newSnapshot.isVisitable&&this.trackedElementsAreIdentical}prepareToRender(){this.mergeHead()}async render(){this.willRender&&this.replaceBody()}finishRendering(){super.finishRendering(),this.isPreview||this.focusFirstAutofocusableElement()}get currentHeadSnapshot(){return this.currentSnapshot.headSnapshot}get newHeadSnapshot(){return this.newSnapshot.headSnapshot}get newElement(){return this.newSnapshot.element}mergeHead(){this.copyNewHeadStylesheetElements(),this.copyNewHeadScriptElements(),this.removeCurrentHeadProvisionalElements(),this.copyNewHeadProvisionalElements()}replaceBody(){this.preservingPermanentElements((()=>{this.activateNewBody(),this.assignNewBody()}))}get trackedElementsAreIdentical(){return this.currentHeadSnapshot.trackedElementSignature==this.newHeadSnapshot.trackedElementSignature}copyNewHeadStylesheetElements(){for(const e of this.newHeadStylesheetElements)document.head.appendChild(e)}copyNewHeadScriptElements(){for(const e of this.newHeadScriptElements)document.head.appendChild(this.createScriptElement(e))}removeCurrentHeadProvisionalElements(){for(const e of this.currentHeadProvisionalElements)document.head.removeChild(e)}copyNewHeadProvisionalElements(){for(const e of this.newHeadProvisionalElements)document.head.appendChild(e)}activateNewBody(){document.adoptNode(this.newElement),this.activateNewBodyScriptElements()}activateNewBodyScriptElements(){for(const e of this.newBodyScriptElements){const t=this.createScriptElement(e);e.replaceWith(t)}}assignNewBody(){document.body&&this.newElement instanceof HTMLBodyElement?document.body.replaceWith(this.newElement):document.documentElement.appendChild(this.newElement)}get newHeadStylesheetElements(){return this.newHeadSnapshot.getStylesheetElementsNotInSnapshot(this.currentHeadSnapshot)}get newHeadScriptElements(){return this.newHeadSnapshot.getScriptElementsNotInSnapshot(this.currentHeadSnapshot)}get currentHeadProvisionalElements(){return this.currentHeadSnapshot.provisionalElements}get newHeadProvisionalElements(){return this.newHeadSnapshot.provisionalElements}get newBodyScriptElements(){return this.newElement.querySelectorAll("script")}}class ue{constructor(e){this.keys=[],this.snapshots={},this.size=e}has(e){return b(e)in this.snapshots}get(e){if(this.has(e)){const t=this.read(e);return this.touch(e),t}}put(e,t){return this.write(e,t),this.touch(e),t}clear(){this.snapshots={}}read(e){return this.snapshots[b(e)]}write(e,t){this.snapshots[b(e)]=t}touch(e){const t=b(e),a=this.keys.indexOf(t);a>-1&&this.keys.splice(a,1),this.keys.unshift(t),this.trim()}trim(){for(const e of this.keys.splice(this.size))delete this.snapshots[e]}}class me extends q{constructor(){super(...arguments),this.snapshotCache=new ue(10),this.lastRenderedLocation=new URL(location.href)}renderPage(e,t=!1,a=!0){const n=new ce(this.snapshot,e,t,a);return this.render(n)}renderError(e){const t=new le(this.snapshot,e,!1);return this.render(t)}clearSnapshotCache(){this.snapshotCache.clear()}async cacheSnapshot(){if(this.shouldCacheSnapshot){this.delegate.viewWillCacheSnapshot();const{snapshot:e,lastRenderedLocation:t}=this;await new Promise((e=>setTimeout((()=>e()),0)));const a=e.clone();return this.snapshotCache.put(t,a),a}}getCachedSnapshotForLocation(e){return this.snapshotCache.get(e)}get snapshot(){return V.fromElement(this.element)}get shouldCacheSnapshot(){return this.snapshot.isCacheable}}function pe(e){Object.defineProperties(e,he)}const he={absoluteURL:{get(){return this.toString()}}},ge=new class{constructor(){this.navigator=new se(this),this.history=new ae(this),this.view=new me(this,document.documentElement),this.adapter=new Z(this),this.pageObserver=new re(this),this.cacheObserver=new X,this.linkClickObserver=new ne(this),this.formSubmitObserver=new ee(this),this.scrollObserver=new oe(this),this.streamObserver=new de(this),this.frameRedirector=new te(document.documentElement),this.drive=!0,this.enabled=!0,this.progressBarDelay=500,this.started=!1}start(){this.started||(this.pageObserver.start(),this.cacheObserver.start(),this.linkClickObserver.start(),this.formSubmitObserver.start(),this.scrollObserver.start(),this.streamObserver.start(),this.frameRedirector.start(),this.history.start(),this.started=!0,this.enabled=!0)}disable(){this.enabled=!1}stop(){this.started&&(this.pageObserver.stop(),this.cacheObserver.stop(),this.linkClickObserver.stop(),this.formSubmitObserver.stop(),this.scrollObserver.stop(),this.streamObserver.stop(),this.frameRedirector.stop(),this.history.stop(),this.started=!1)}registerAdapter(e){this.adapter=e}visit(e,t={}){this.navigator.proposeVisit(p(e),t)}connectStreamSource(e){this.streamObserver.connectStreamSource(e)}disconnectStreamSource(e){this.streamObserver.disconnectStreamSource(e)}renderStreamMessage(e){document.documentElement.appendChild(A.wrap(e).fragment)}clearCache(){this.view.clearSnapshotCache()}setProgressBarDelay(e){this.progressBarDelay=e}get location(){return this.history.location}get restorationIdentifier(){return this.history.restorationIdentifier}historyPoppedToLocationWithRestorationIdentifier(e,t){this.enabled?this.navigator.startVisit(e,t,{action:"restore",historyChanged:!0}):this.adapter.pageInvalidated()}scrollPositionChanged(e){this.history.updateRestorationData({scrollPosition:e})}willFollowLinkToLocation(e,t){return this.elementDriveEnabled(e)&&w(t,this.snapshot.rootLocation)&&this.applicationAllowsFollowingLinkToLocation(e,t)}followedLinkToLocation(e,t){const a=this.getActionForLink(e);this.convertLinkWithMethodClickToFormSubmission(e)||this.visit(t.href,{action:a})}convertLinkWithMethodClickToFormSubmission(e){const t=e.getAttribute("data-turbo-method");if(t){const a=document.createElement("form");a.method=t,a.action=e.getAttribute("href")||"undefined",a.hidden=!0,e.hasAttribute("data-turbo-confirm")&&a.setAttribute("data-turbo-confirm",e.getAttribute("data-turbo-confirm"));const n=this.getTargetFrameForLink(e);return n?(a.setAttribute("data-turbo-frame",n),a.addEventListener("turbo:submit-start",(()=>a.remove()))):a.addEventListener("submit",(()=>a.remove())),document.body.appendChild(a),_("submit",{cancelable:!0,target:a})}return!1}allowsVisitingLocationWithAction(e,t){return this.locationWithActionIsSamePage(e,t)||this.applicationAllowsVisitingLocation(e)}visitProposedToLocation(e,t){pe(e),this.adapter.visitProposedToLocation(e,t)}visitStarted(e){pe(e.location),e.silent||this.notifyApplicationAfterVisitingLocation(e.location,e.action)}visitCompleted(e){this.notifyApplicationAfterPageLoad(e.getTimingMetrics())}locationWithActionIsSamePage(e,t){return this.navigator.locationWithActionIsSamePage(e,t)}visitScrolledToSamePageLocation(e,t){this.notifyApplicationAfterVisitingSamePageLocation(e,t)}willSubmitForm(e,t){const a=g(e,t);return this.elementDriveEnabled(e)&&(!t||this.elementDriveEnabled(t))&&w(p(a),this.snapshot.rootLocation)}formSubmitted(e,t){this.navigator.submitForm(e,t)}pageBecameInteractive(){this.view.lastRenderedLocation=this.location,this.notifyApplicationAfterPageLoad()}pageLoaded(){this.history.assumeControlOfScrollRestoration()}pageWillUnload(){this.history.relinquishControlOfScrollRestoration()}receivedMessageFromStream(e){this.renderStreamMessage(e)}viewWillCacheSnapshot(){var e;(null===(e=this.navigator.currentVisit)||void 0===e?void 0:e.silent)||this.notifyApplicationBeforeCachingSnapshot()}allowsImmediateRender({element:e},t){return!this.notifyApplicationBeforeRender(e,t).defaultPrevented}viewRenderedSnapshot(e,t){this.view.lastRenderedLocation=this.history.location,this.notifyApplicationAfterRender()}viewInvalidated(){this.adapter.pageInvalidated()}frameLoaded(e){this.notifyApplicationAfterFrameLoad(e)}frameRendered(e,t){this.notifyApplicationAfterFrameRender(e,t)}applicationAllowsFollowingLinkToLocation(e,t){return!this.notifyApplicationAfterClickingLinkToLocation(e,t).defaultPrevented}applicationAllowsVisitingLocation(e){return!this.notifyApplicationBeforeVisitingLocation(e).defaultPrevented}notifyApplicationAfterClickingLinkToLocation(e,t){return _("turbo:click",{target:e,detail:{url:t.href},cancelable:!0})}notifyApplicationBeforeVisitingLocation(e){return _("turbo:before-visit",{detail:{url:e.href},cancelable:!0})}notifyApplicationAfterVisitingLocation(e,t){return D(document.documentElement),_("turbo:visit",{detail:{url:e.href,action:t}})}notifyApplicationBeforeCachingSnapshot(){return _("turbo:before-cache")}notifyApplicationBeforeRender(e,t){return _("turbo:before-render",{detail:{newBody:e,resume:t},cancelable:!0})}notifyApplicationAfterRender(){return _("turbo:render")}notifyApplicationAfterPageLoad(e={}){return T(document.documentElement),_("turbo:load",{detail:{url:this.location.href,timing:e}})}notifyApplicationAfterVisitingSamePageLocation(e,t){dispatchEvent(new HashChangeEvent("hashchange",{oldURL:e.toString(),newURL:t.toString()}))}notifyApplicationAfterFrameLoad(e){return _("turbo:frame-load",{target:e})}notifyApplicationAfterFrameRender(e,t){return _("turbo:frame-render",{detail:{fetchResponse:e},target:t,cancelable:!0})}elementDriveEnabled(e){const t=null==e?void 0:e.closest("[data-turbo]");return this.drive?!t||"false"!=t.getAttribute("data-turbo"):!!t&&"true"==t.getAttribute("data-turbo")}getActionForLink(e){const t=e.getAttribute("data-turbo-action");return ie(t)?t:"advance"}getTargetFrameForLink(e){const t=e.getAttribute("data-turbo-frame");if(t)return t;{const t=e.closest("turbo-frame");if(t)return t.id}}get snapshot(){return this.view.snapshot}},{navigator:fe}=ge;function ve(){ge.start()}function we(e){ge.registerAdapter(e)}function ye(e,t){ge.visit(e,t)}function be(e){ge.connectStreamSource(e)}function $e(e){ge.disconnectStreamSource(e)}function _e(e){ge.renderStreamMessage(e)}function ke(){ge.clearCache()}function Se(e){ge.setProgressBarDelay(e)}function Ce(e){I.confirmMethod=e}var Me=Object.freeze({__proto__:null,navigator:fe,session:ge,PageRenderer:ce,PageSnapshot:V,start:ve,registerAdapter:we,visit:ye,connectStreamSource:be,disconnectStreamSource:$e,renderStreamMessage:_e,clearCache:ke,setProgressBarDelay:Se,setConfirmMethod:Ce});class Le{constructor(e){this.visitCachedSnapshot=({element:e})=>{var t;const{id:a,clone:n}=this;null===(t=e.querySelector("#"+a))||void 0===t||t.replaceWith(n)},this.clone=e.cloneNode(!0),this.id=e.id}}function De(e){if(null!=e){const t=document.getElementById(e);if(t instanceof m)return t}}function Te(e,t){if(e){const n=e.getAttribute("src");if(null!=n&&null!=t&&(a=t,p(n).href==p(a).href))throw new Error(`Matching <turbo-frame id="${e.id}"> element has a source URL which references itself`);if(e.ownerDocument!==document&&(e=document.importNode(e,!0)),e instanceof m)return e.connectedCallback(),e.disconnectedCallback(),e}var a}const xe={after(){this.targetElements.forEach((e=>{var t;return null===(t=e.parentElement)||void 0===t?void 0:t.insertBefore(this.templateContent,e.nextSibling)}))},append(){this.removeDuplicateTargetChildren(),this.targetElements.forEach((e=>e.append(this.templateContent)))},before(){this.targetElements.forEach((e=>{var t;return null===(t=e.parentElement)||void 0===t?void 0:t.insertBefore(this.templateContent,e)}))},prepend(){this.removeDuplicateTargetChildren(),this.targetElements.forEach((e=>e.prepend(this.templateContent)))},remove(){this.targetElements.forEach((e=>e.remove()))},replace(){this.targetElements.forEach((e=>e.replaceWith(this.templateContent)))},update(){this.targetElements.forEach((e=>{e.innerHTML="",e.append(this.templateContent)}))}};class Ee extends HTMLElement{async connectedCallback(){try{await this.render()}catch(e){console.error(e)}finally{this.disconnect()}}async render(){var e;return null!==(e=this.renderPromise)&&void 0!==e?e:this.renderPromise=(async()=>{this.dispatchEvent(this.beforeRenderEvent)&&(await k(),this.performAction())})()}disconnect(){try{this.remove()}catch(e){}}removeDuplicateTargetChildren(){this.duplicateChildren.forEach((e=>e.remove()))}get duplicateChildren(){var e;const t=this.targetElements.flatMap((e=>[...e.children])).filter((e=>!!e.id)),a=[...null===(e=this.templateContent)||void 0===e?void 0:e.children].filter((e=>!!e.id)).map((e=>e.id));return t.filter((e=>a.includes(e.id)))}get performAction(){if(this.action){const e=xe[this.action];if(e)return e;this.raise("unknown action")}this.raise("action attribute is missing")}get targetElements(){return this.target?this.targetElementsById:this.targets?this.targetElementsByQuery:void this.raise("target or targets attribute is missing")}get templateContent(){return this.templateElement.content.cloneNode(!0)}get templateElement(){if(this.firstElementChild instanceof HTMLTemplateElement)return this.firstElementChild;this.raise("first child element must be a <template> element")}get action(){return this.getAttribute("action")}get target(){return this.getAttribute("target")}get targets(){return this.getAttribute("targets")}raise(e){throw new Error(`${this.description}: ${e}`)}get description(){var e,t;return null!==(t=(null!==(e=this.outerHTML.match(/<[^>]+>/))&&void 0!==e?e:[])[0])&&void 0!==t?t:"<turbo-stream>"}get beforeRenderEvent(){return new CustomEvent("turbo:before-stream-render",{bubbles:!0,cancelable:!0})}get targetElementsById(){var e;const t=null===(e=this.ownerDocument)||void 0===e?void 0:e.getElementById(this.target);return null!==t?[t]:[]}get targetElementsByQuery(){var e;const t=null===(e=this.ownerDocument)||void 0===e?void 0:e.querySelectorAll(this.targets);return 0!==t.length?Array.prototype.slice.call(t):[]}}m.delegateConstructor=class{constructor(e){this.fetchResponseLoaded=e=>{},this.currentFetchRequest=null,this.resolveVisitPromise=()=>{},this.connected=!1,this.hasBeenLoaded=!1,this.settingSourceURL=!1,this.element=e,this.view=new j(this,this.element),this.appearanceObserver=new E(this,this.element),this.linkInterceptor=new R(this,this.element),this.formInterceptor=new O(this,this.element)}connect(){this.connected||(this.connected=!0,this.reloadable=!1,this.loadingStyle==r.lazy&&this.appearanceObserver.start(),this.linkInterceptor.start(),this.formInterceptor.start(),this.sourceURLChanged())}disconnect(){this.connected&&(this.connected=!1,this.appearanceObserver.stop(),this.linkInterceptor.stop(),this.formInterceptor.stop())}disabledChanged(){this.loadingStyle==r.eager&&this.loadSourceURL()}sourceURLChanged(){(this.loadingStyle==r.eager||this.hasBeenLoaded)&&this.loadSourceURL()}loadingStyleChanged(){this.loadingStyle==r.lazy?this.appearanceObserver.start():(this.appearanceObserver.stop(),this.loadSourceURL())}async loadSourceURL(){if(!this.settingSourceURL&&this.enabled&&this.isActive&&(this.reloadable||this.sourceURL!=this.currentURL)){const e=this.currentURL;if(this.currentURL=this.sourceURL,this.sourceURL)try{this.element.loaded=this.visit(p(this.sourceURL)),this.appearanceObserver.stop(),await this.element.loaded,this.hasBeenLoaded=!0}catch(t){throw this.currentURL=e,t}}}async loadResponse(e){(e.redirected||e.succeeded&&e.isHTML)&&(this.sourceURL=e.response.url);try{const t=await e.responseHTML;if(t){const{body:a}=S(t),n=new F(await this.extractForeignFrameElement(a)),i=new B(this.view.snapshot,n,!1,!1);this.view.renderPromise&&await this.view.renderPromise,await this.view.render(i),ge.frameRendered(e,this.element),ge.frameLoaded(this.element),this.fetchResponseLoaded(e)}}catch(e){console.error(e),this.view.invalidate()}finally{this.fetchResponseLoaded=()=>{}}}elementAppearedInViewport(e){this.loadSourceURL()}shouldInterceptLinkClick(e,t){return!e.hasAttribute("data-turbo-method")&&this.shouldInterceptNavigation(e)}linkClickIntercepted(e,t){this.reloadable=!0,this.navigateFrame(e,t)}shouldInterceptFormSubmission(e,t){return this.shouldInterceptNavigation(e,t)}formSubmissionIntercepted(e,t){this.formSubmission&&this.formSubmission.stop(),this.reloadable=!1,this.formSubmission=new I(this,e,t);const{fetchRequest:a}=this.formSubmission;this.prepareHeadersForRequest(a.headers,a),this.formSubmission.start()}prepareHeadersForRequest(e,t){e["Turbo-Frame"]=this.id}requestStarted(e){D(this.element)}requestPreventedHandlingResponse(e,t){this.resolveVisitPromise()}async requestSucceededWithResponse(e,t){await this.loadResponse(t),this.resolveVisitPromise()}requestFailedWithResponse(e,t){console.error(t),this.resolveVisitPromise()}requestErrored(e,t){console.error(t),this.resolveVisitPromise()}requestFinished(e){T(this.element)}formSubmissionStarted({formElement:e}){D(e,this.findFrameElement(e))}formSubmissionSucceededWithResponse(e,t){const a=this.findFrameElement(e.formElement,e.submitter);this.proposeVisitIfNavigatedWithAction(a,e.formElement,e.submitter),a.delegate.loadResponse(t)}formSubmissionFailedWithResponse(e,t){this.element.delegate.loadResponse(t)}formSubmissionErrored(e,t){console.error(t)}formSubmissionFinished({formElement:e}){T(e,this.findFrameElement(e))}allowsImmediateRender(e,t){return!0}viewRenderedSnapshot(e,t){}viewInvalidated(){}async visit(e){var t;const a=new x(this,o.get,e,new URLSearchParams,this.element);return null===(t=this.currentFetchRequest)||void 0===t||t.cancel(),this.currentFetchRequest=a,new Promise((e=>{this.resolveVisitPromise=()=>{this.resolveVisitPromise=()=>{},this.currentFetchRequest=null,e()},a.perform()}))}navigateFrame(e,t,a){const n=this.findFrameElement(e,a);this.proposeVisitIfNavigatedWithAction(n,e,a),n.setAttribute("reloadable",""),n.src=t}proposeVisitIfNavigatedWithAction(e,t,a){const n=L("data-turbo-action",a,t,e);if(ie(n)){const{visitCachedSnapshot:t}=new Le(e);e.delegate.fetchResponseLoaded=a=>{if(e.src){const{statusCode:i,redirected:s}=a,r={statusCode:i,redirected:s,responseHTML:e.ownerDocument.documentElement.outerHTML};ge.visit(e.src,{action:n,response:r,visitCachedSnapshot:t,willRender:!1})}}}}findFrameElement(e,t){var a;return null!==(a=De(L("data-turbo-frame",t,e)||this.element.getAttribute("target")))&&void 0!==a?a:this.element}async extractForeignFrameElement(e){let t;const a=CSS.escape(this.id);try{if(t=Te(e.querySelector(`turbo-frame#${a}`),this.currentURL))return t;if(t=Te(e.querySelector(`turbo-frame[src][recurse~=${a}]`),this.currentURL))return await t.loaded,await this.extractForeignFrameElement(t);console.error(`Response has no matching <turbo-frame id="${a}"> element`)}catch(e){console.error(e)}return new m}formActionIsVisitable(e,t){return w(p(g(e,t)),this.rootLocation)}shouldInterceptNavigation(e,t){const a=L("data-turbo-frame",t,e)||this.element.getAttribute("target");if(e instanceof HTMLFormElement&&!this.formActionIsVisitable(e,t))return!1;if(!this.enabled||"_top"==a)return!1;if(a){const e=De(a);if(e)return!e.disabled}return!!ge.elementDriveEnabled(e)&&!(t&&!ge.elementDriveEnabled(t))}get id(){return this.element.id}get enabled(){return!this.element.disabled}get sourceURL(){if(this.element.src)return this.element.src}get reloadable(){return this.findFrameElement(this.element).hasAttribute("reloadable")}set reloadable(e){const t=this.findFrameElement(this.element);e?t.setAttribute("reloadable",""):t.removeAttribute("reloadable")}set sourceURL(e){this.settingSourceURL=!0,this.element.src=null!=e?e:null,this.currentURL=this.element.src,this.settingSourceURL=!1}get loadingStyle(){return this.element.loading}get isLoading(){return void 0!==this.formSubmission||void 0!==this.resolveVisitPromise()}get isActive(){return this.element.isActive&&this.connected}get rootLocation(){var e;const t=this.element.ownerDocument.querySelector('meta[name="turbo-root"]');return p(null!==(e=null==t?void 0:t.content)&&void 0!==e?e:"/")}},customElements.define("turbo-frame",m),customElements.define("turbo-stream",Ee),(()=>{let e=document.currentScript;if(e&&!e.hasAttribute("data-turbo-suppress-warning"))for(;e=e.parentElement;)if(e==document.body)return console.warn(C`
+    `;
+    }
+    show() {
+        if (!this.visible) {
+            this.visible = true;
+            this.installProgressElement();
+            this.startTrickling();
+        }
+    }
+    hide() {
+        if (this.visible && !this.hiding) {
+            this.hiding = true;
+            this.fadeProgressElement(() => {
+                this.uninstallProgressElement();
+                this.stopTrickling();
+                this.visible = false;
+                this.hiding = false;
+            });
+        }
+    }
+    setValue(value) {
+        this.value = value;
+        this.refresh();
+    }
+    installStylesheetElement() {
+        document.head.insertBefore(this.stylesheetElement, document.head.firstChild);
+    }
+    installProgressElement() {
+        this.progressElement.style.width = "0";
+        this.progressElement.style.opacity = "1";
+        document.documentElement.insertBefore(this.progressElement, document.body);
+        this.refresh();
+    }
+    fadeProgressElement(callback) {
+        this.progressElement.style.opacity = "0";
+        setTimeout(callback, ProgressBar.animationDuration * 1.5);
+    }
+    uninstallProgressElement() {
+        if (this.progressElement.parentNode) {
+            document.documentElement.removeChild(this.progressElement);
+        }
+    }
+    startTrickling() {
+        if (!this.trickleInterval) {
+            this.trickleInterval = window.setInterval(this.trickle, ProgressBar.animationDuration);
+        }
+    }
+    stopTrickling() {
+        window.clearInterval(this.trickleInterval);
+        delete this.trickleInterval;
+    }
+    refresh() {
+        requestAnimationFrame(() => {
+            this.progressElement.style.width = `${10 + (this.value * 90)}%`;
+        });
+    }
+    createStylesheetElement() {
+        const element = document.createElement("style");
+        element.type = "text/css";
+        element.textContent = ProgressBar.defaultCSS;
+        return element;
+    }
+    createProgressElement() {
+        const element = document.createElement("div");
+        element.className = "turbo-progress-bar";
+        return element;
+    }
+}
+ProgressBar.animationDuration = 300;
+
+class HeadSnapshot extends Snapshot {
+    constructor() {
+        super(...arguments);
+        this.detailsByOuterHTML = this.children
+            .filter((element) => !elementIsNoscript(element))
+            .map((element) => elementWithoutNonce(element))
+            .reduce((result, element) => {
+            const { outerHTML } = element;
+            const details = outerHTML in result
+                ? result[outerHTML]
+                : {
+                    type: elementType(element),
+                    tracked: elementIsTracked(element),
+                    elements: []
+                };
+            return Object.assign(Object.assign({}, result), { [outerHTML]: Object.assign(Object.assign({}, details), { elements: [...details.elements, element] }) });
+        }, {});
+    }
+    get trackedElementSignature() {
+        return Object.keys(this.detailsByOuterHTML)
+            .filter(outerHTML => this.detailsByOuterHTML[outerHTML].tracked)
+            .join("");
+    }
+    getScriptElementsNotInSnapshot(snapshot) {
+        return this.getElementsMatchingTypeNotInSnapshot("script", snapshot);
+    }
+    getStylesheetElementsNotInSnapshot(snapshot) {
+        return this.getElementsMatchingTypeNotInSnapshot("stylesheet", snapshot);
+    }
+    getElementsMatchingTypeNotInSnapshot(matchedType, snapshot) {
+        return Object.keys(this.detailsByOuterHTML)
+            .filter(outerHTML => !(outerHTML in snapshot.detailsByOuterHTML))
+            .map(outerHTML => this.detailsByOuterHTML[outerHTML])
+            .filter(({ type }) => type == matchedType)
+            .map(({ elements: [element] }) => element);
+    }
+    get provisionalElements() {
+        return Object.keys(this.detailsByOuterHTML).reduce((result, outerHTML) => {
+            const { type, tracked, elements } = this.detailsByOuterHTML[outerHTML];
+            if (type == null && !tracked) {
+                return [...result, ...elements];
+            }
+            else if (elements.length > 1) {
+                return [...result, ...elements.slice(1)];
+            }
+            else {
+                return result;
+            }
+        }, []);
+    }
+    getMetaValue(name) {
+        const element = this.findMetaElementByName(name);
+        return element
+            ? element.getAttribute("content")
+            : null;
+    }
+    findMetaElementByName(name) {
+        return Object.keys(this.detailsByOuterHTML).reduce((result, outerHTML) => {
+            const { elements: [element] } = this.detailsByOuterHTML[outerHTML];
+            return elementIsMetaElementWithName(element, name) ? element : result;
+        }, undefined);
+    }
+}
+function elementType(element) {
+    if (elementIsScript(element)) {
+        return "script";
+    }
+    else if (elementIsStylesheet(element)) {
+        return "stylesheet";
+    }
+}
+function elementIsTracked(element) {
+    return element.getAttribute("data-turbo-track") == "reload";
+}
+function elementIsScript(element) {
+    const tagName = element.tagName.toLowerCase();
+    return tagName == "script";
+}
+function elementIsNoscript(element) {
+    const tagName = element.tagName.toLowerCase();
+    return tagName == "noscript";
+}
+function elementIsStylesheet(element) {
+    const tagName = element.tagName.toLowerCase();
+    return tagName == "style" || (tagName == "link" && element.getAttribute("rel") == "stylesheet");
+}
+function elementIsMetaElementWithName(element, name) {
+    const tagName = element.tagName.toLowerCase();
+    return tagName == "meta" && element.getAttribute("name") == name;
+}
+function elementWithoutNonce(element) {
+    if (element.hasAttribute("nonce")) {
+        element.setAttribute("nonce", "");
+    }
+    return element;
+}
+
+class PageSnapshot extends Snapshot {
+    constructor(element, headSnapshot) {
+        super(element);
+        this.headSnapshot = headSnapshot;
+    }
+    static fromHTMLString(html = "") {
+        return this.fromDocument(parseHTMLDocument(html));
+    }
+    static fromElement(element) {
+        return this.fromDocument(element.ownerDocument);
+    }
+    static fromDocument({ head, body }) {
+        return new this(body, new HeadSnapshot(head));
+    }
+    clone() {
+        return new PageSnapshot(this.element.cloneNode(true), this.headSnapshot);
+    }
+    get headElement() {
+        return this.headSnapshot.element;
+    }
+    get rootLocation() {
+        var _a;
+        const root = (_a = this.getSetting("root")) !== null && _a !== void 0 ? _a : "/";
+        return expandURL(root);
+    }
+    get cacheControlValue() {
+        return this.getSetting("cache-control");
+    }
+    get isPreviewable() {
+        return this.cacheControlValue != "no-preview";
+    }
+    get isCacheable() {
+        return this.cacheControlValue != "no-cache";
+    }
+    get isVisitable() {
+        return this.getSetting("visit-control") != "reload";
+    }
+    getSetting(name) {
+        return this.headSnapshot.getMetaValue(`turbo-${name}`);
+    }
+}
+
+var TimingMetric;
+(function (TimingMetric) {
+    TimingMetric["visitStart"] = "visitStart";
+    TimingMetric["requestStart"] = "requestStart";
+    TimingMetric["requestEnd"] = "requestEnd";
+    TimingMetric["visitEnd"] = "visitEnd";
+})(TimingMetric || (TimingMetric = {}));
+var VisitState;
+(function (VisitState) {
+    VisitState["initialized"] = "initialized";
+    VisitState["started"] = "started";
+    VisitState["canceled"] = "canceled";
+    VisitState["failed"] = "failed";
+    VisitState["completed"] = "completed";
+})(VisitState || (VisitState = {}));
+const defaultOptions = {
+    action: "advance",
+    historyChanged: false,
+    visitCachedSnapshot: () => { },
+    willRender: true,
+};
+var SystemStatusCode;
+(function (SystemStatusCode) {
+    SystemStatusCode[SystemStatusCode["networkFailure"] = 0] = "networkFailure";
+    SystemStatusCode[SystemStatusCode["timeoutFailure"] = -1] = "timeoutFailure";
+    SystemStatusCode[SystemStatusCode["contentTypeMismatch"] = -2] = "contentTypeMismatch";
+})(SystemStatusCode || (SystemStatusCode = {}));
+class Visit {
+    constructor(delegate, location, restorationIdentifier, options = {}) {
+        this.identifier = uuid();
+        this.timingMetrics = {};
+        this.followedRedirect = false;
+        this.historyChanged = false;
+        this.scrolled = false;
+        this.snapshotCached = false;
+        this.state = VisitState.initialized;
+        this.delegate = delegate;
+        this.location = location;
+        this.restorationIdentifier = restorationIdentifier || uuid();
+        const { action, historyChanged, referrer, snapshotHTML, response, visitCachedSnapshot, willRender } = Object.assign(Object.assign({}, defaultOptions), options);
+        this.action = action;
+        this.historyChanged = historyChanged;
+        this.referrer = referrer;
+        this.snapshotHTML = snapshotHTML;
+        this.response = response;
+        this.isSamePage = this.delegate.locationWithActionIsSamePage(this.location, this.action);
+        this.visitCachedSnapshot = visitCachedSnapshot;
+        this.willRender = willRender;
+        this.scrolled = !willRender;
+    }
+    get adapter() {
+        return this.delegate.adapter;
+    }
+    get view() {
+        return this.delegate.view;
+    }
+    get history() {
+        return this.delegate.history;
+    }
+    get restorationData() {
+        return this.history.getRestorationDataForIdentifier(this.restorationIdentifier);
+    }
+    get silent() {
+        return this.isSamePage;
+    }
+    start() {
+        if (this.state == VisitState.initialized) {
+            this.recordTimingMetric(TimingMetric.visitStart);
+            this.state = VisitState.started;
+            this.adapter.visitStarted(this);
+            this.delegate.visitStarted(this);
+        }
+    }
+    cancel() {
+        if (this.state == VisitState.started) {
+            if (this.request) {
+                this.request.cancel();
+            }
+            this.cancelRender();
+            this.state = VisitState.canceled;
+        }
+    }
+    complete() {
+        if (this.state == VisitState.started) {
+            this.recordTimingMetric(TimingMetric.visitEnd);
+            this.state = VisitState.completed;
+            this.adapter.visitCompleted(this);
+            this.delegate.visitCompleted(this);
+            this.followRedirect();
+        }
+    }
+    fail() {
+        if (this.state == VisitState.started) {
+            this.state = VisitState.failed;
+            this.adapter.visitFailed(this);
+        }
+    }
+    changeHistory() {
+        var _a;
+        if (!this.historyChanged) {
+            const actionForHistory = this.location.href === ((_a = this.referrer) === null || _a === void 0 ? void 0 : _a.href) ? "replace" : this.action;
+            const method = this.getHistoryMethodForAction(actionForHistory);
+            this.history.update(method, this.location, this.restorationIdentifier);
+            this.historyChanged = true;
+        }
+    }
+    issueRequest() {
+        if (this.hasPreloadedResponse()) {
+            this.simulateRequest();
+        }
+        else if (this.shouldIssueRequest() && !this.request) {
+            this.request = new FetchRequest(this, FetchMethod.get, this.location);
+            this.request.perform();
+        }
+    }
+    simulateRequest() {
+        if (this.response) {
+            this.startRequest();
+            this.recordResponse();
+            this.finishRequest();
+        }
+    }
+    startRequest() {
+        this.recordTimingMetric(TimingMetric.requestStart);
+        this.adapter.visitRequestStarted(this);
+    }
+    recordResponse(response = this.response) {
+        this.response = response;
+        if (response) {
+            const { statusCode } = response;
+            if (isSuccessful(statusCode)) {
+                this.adapter.visitRequestCompleted(this);
+            }
+            else {
+                this.adapter.visitRequestFailedWithStatusCode(this, statusCode);
+            }
+        }
+    }
+    finishRequest() {
+        this.recordTimingMetric(TimingMetric.requestEnd);
+        this.adapter.visitRequestFinished(this);
+    }
+    loadResponse() {
+        if (this.response) {
+            const { statusCode, responseHTML } = this.response;
+            this.render(async () => {
+                this.cacheSnapshot();
+                if (this.view.renderPromise)
+                    await this.view.renderPromise;
+                if (isSuccessful(statusCode) && responseHTML != null) {
+                    await this.view.renderPage(PageSnapshot.fromHTMLString(responseHTML), false, this.willRender);
+                    this.adapter.visitRendered(this);
+                    this.complete();
+                }
+                else {
+                    await this.view.renderError(PageSnapshot.fromHTMLString(responseHTML));
+                    this.adapter.visitRendered(this);
+                    this.fail();
+                }
+            });
+        }
+    }
+    getCachedSnapshot() {
+        const snapshot = this.view.getCachedSnapshotForLocation(this.location) || this.getPreloadedSnapshot();
+        if (snapshot && (!getAnchor(this.location) || snapshot.hasAnchor(getAnchor(this.location)))) {
+            if (this.action == "restore" || snapshot.isPreviewable) {
+                return snapshot;
+            }
+        }
+    }
+    getPreloadedSnapshot() {
+        if (this.snapshotHTML) {
+            return PageSnapshot.fromHTMLString(this.snapshotHTML);
+        }
+    }
+    hasCachedSnapshot() {
+        return this.getCachedSnapshot() != null;
+    }
+    loadCachedSnapshot() {
+        const snapshot = this.getCachedSnapshot();
+        if (snapshot) {
+            const isPreview = this.shouldIssueRequest();
+            this.render(async () => {
+                this.cacheSnapshot();
+                if (this.isSamePage) {
+                    this.adapter.visitRendered(this);
+                }
+                else {
+                    if (this.view.renderPromise)
+                        await this.view.renderPromise;
+                    await this.view.renderPage(snapshot, isPreview, this.willRender);
+                    this.adapter.visitRendered(this);
+                    if (!isPreview) {
+                        this.complete();
+                    }
+                }
+            });
+        }
+    }
+    followRedirect() {
+        var _a;
+        if (this.redirectedToLocation && !this.followedRedirect && ((_a = this.response) === null || _a === void 0 ? void 0 : _a.redirected)) {
+            this.adapter.visitProposedToLocation(this.redirectedToLocation, {
+                action: 'replace',
+                response: this.response
+            });
+            this.followedRedirect = true;
+        }
+    }
+    goToSamePageAnchor() {
+        if (this.isSamePage) {
+            this.render(async () => {
+                this.cacheSnapshot();
+                this.adapter.visitRendered(this);
+            });
+        }
+    }
+    requestStarted() {
+        this.startRequest();
+    }
+    requestPreventedHandlingResponse(request, response) {
+    }
+    async requestSucceededWithResponse(request, response) {
+        const responseHTML = await response.responseHTML;
+        const { redirected, statusCode } = response;
+        if (responseHTML == undefined) {
+            this.recordResponse({ statusCode: SystemStatusCode.contentTypeMismatch, redirected });
+        }
+        else {
+            this.redirectedToLocation = response.redirected ? response.location : undefined;
+            this.recordResponse({ statusCode: statusCode, responseHTML, redirected });
+        }
+    }
+    async requestFailedWithResponse(request, response) {
+        const responseHTML = await response.responseHTML;
+        const { redirected, statusCode } = response;
+        if (responseHTML == undefined) {
+            this.recordResponse({ statusCode: SystemStatusCode.contentTypeMismatch, redirected });
+        }
+        else {
+            this.recordResponse({ statusCode: statusCode, responseHTML, redirected });
+        }
+    }
+    requestErrored(request, error) {
+        this.recordResponse({ statusCode: SystemStatusCode.networkFailure, redirected: false });
+    }
+    requestFinished() {
+        this.finishRequest();
+    }
+    performScroll() {
+        if (!this.scrolled) {
+            if (this.action == "restore") {
+                this.scrollToRestoredPosition() || this.scrollToAnchor() || this.view.scrollToTop();
+            }
+            else {
+                this.scrollToAnchor() || this.view.scrollToTop();
+            }
+            if (this.isSamePage) {
+                this.delegate.visitScrolledToSamePageLocation(this.view.lastRenderedLocation, this.location);
+            }
+            this.scrolled = true;
+        }
+    }
+    scrollToRestoredPosition() {
+        const { scrollPosition } = this.restorationData;
+        if (scrollPosition) {
+            this.view.scrollToPosition(scrollPosition);
+            return true;
+        }
+    }
+    scrollToAnchor() {
+        const anchor = getAnchor(this.location);
+        if (anchor != null) {
+            this.view.scrollToAnchor(anchor);
+            return true;
+        }
+    }
+    recordTimingMetric(metric) {
+        this.timingMetrics[metric] = new Date().getTime();
+    }
+    getTimingMetrics() {
+        return Object.assign({}, this.timingMetrics);
+    }
+    getHistoryMethodForAction(action) {
+        switch (action) {
+            case "replace": return history.replaceState;
+            case "advance":
+            case "restore": return history.pushState;
+        }
+    }
+    hasPreloadedResponse() {
+        return typeof this.response == "object";
+    }
+    shouldIssueRequest() {
+        if (this.isSamePage) {
+            return false;
+        }
+        else if (this.action == "restore") {
+            return !this.hasCachedSnapshot();
+        }
+        else {
+            return this.willRender;
+        }
+    }
+    cacheSnapshot() {
+        if (!this.snapshotCached) {
+            this.view.cacheSnapshot().then(snapshot => snapshot && this.visitCachedSnapshot(snapshot));
+            this.snapshotCached = true;
+        }
+    }
+    async render(callback) {
+        this.cancelRender();
+        await new Promise(resolve => {
+            this.frame = requestAnimationFrame(() => resolve());
+        });
+        await callback();
+        delete this.frame;
+        this.performScroll();
+    }
+    cancelRender() {
+        if (this.frame) {
+            cancelAnimationFrame(this.frame);
+            delete this.frame;
+        }
+    }
+}
+function isSuccessful(statusCode) {
+    return statusCode >= 200 && statusCode < 300;
+}
+
+class BrowserAdapter {
+    constructor(session) {
+        this.progressBar = new ProgressBar;
+        this.showProgressBar = () => {
+            this.progressBar.show();
+        };
+        this.session = session;
+    }
+    visitProposedToLocation(location, options) {
+        this.navigator.startVisit(location, uuid(), options);
+    }
+    visitStarted(visit) {
+        visit.loadCachedSnapshot();
+        visit.issueRequest();
+        visit.changeHistory();
+        visit.goToSamePageAnchor();
+    }
+    visitRequestStarted(visit) {
+        this.progressBar.setValue(0);
+        if (visit.hasCachedSnapshot() || visit.action != "restore") {
+            this.showVisitProgressBarAfterDelay();
+        }
+        else {
+            this.showProgressBar();
+        }
+    }
+    visitRequestCompleted(visit) {
+        visit.loadResponse();
+    }
+    visitRequestFailedWithStatusCode(visit, statusCode) {
+        switch (statusCode) {
+            case SystemStatusCode.networkFailure:
+            case SystemStatusCode.timeoutFailure:
+            case SystemStatusCode.contentTypeMismatch:
+                return this.reload();
+            default:
+                return visit.loadResponse();
+        }
+    }
+    visitRequestFinished(visit) {
+        this.progressBar.setValue(1);
+        this.hideVisitProgressBar();
+    }
+    visitCompleted(visit) {
+    }
+    pageInvalidated() {
+        this.reload();
+    }
+    visitFailed(visit) {
+    }
+    visitRendered(visit) {
+    }
+    formSubmissionStarted(formSubmission) {
+        this.progressBar.setValue(0);
+        this.showFormProgressBarAfterDelay();
+    }
+    formSubmissionFinished(formSubmission) {
+        this.progressBar.setValue(1);
+        this.hideFormProgressBar();
+    }
+    showVisitProgressBarAfterDelay() {
+        this.visitProgressBarTimeout = window.setTimeout(this.showProgressBar, this.session.progressBarDelay);
+    }
+    hideVisitProgressBar() {
+        this.progressBar.hide();
+        if (this.visitProgressBarTimeout != null) {
+            window.clearTimeout(this.visitProgressBarTimeout);
+            delete this.visitProgressBarTimeout;
+        }
+    }
+    showFormProgressBarAfterDelay() {
+        if (this.formProgressBarTimeout == null) {
+            this.formProgressBarTimeout = window.setTimeout(this.showProgressBar, this.session.progressBarDelay);
+        }
+    }
+    hideFormProgressBar() {
+        this.progressBar.hide();
+        if (this.formProgressBarTimeout != null) {
+            window.clearTimeout(this.formProgressBarTimeout);
+            delete this.formProgressBarTimeout;
+        }
+    }
+    reload() {
+        window.location.reload();
+    }
+    get navigator() {
+        return this.session.navigator;
+    }
+}
+
+class CacheObserver {
+    constructor() {
+        this.started = false;
+    }
+    start() {
+        if (!this.started) {
+            this.started = true;
+            addEventListener("turbo:before-cache", this.removeStaleElements, false);
+        }
+    }
+    stop() {
+        if (this.started) {
+            this.started = false;
+            removeEventListener("turbo:before-cache", this.removeStaleElements, false);
+        }
+    }
+    removeStaleElements() {
+        const staleElements = [...document.querySelectorAll('[data-turbo-cache="false"]')];
+        for (const element of staleElements) {
+            element.remove();
+        }
+    }
+}
+
+class FormSubmitObserver {
+    constructor(delegate) {
+        this.started = false;
+        this.submitCaptured = () => {
+            removeEventListener("submit", this.submitBubbled, false);
+            addEventListener("submit", this.submitBubbled, false);
+        };
+        this.submitBubbled = ((event) => {
+            if (!event.defaultPrevented) {
+                const form = event.target instanceof HTMLFormElement ? event.target : undefined;
+                const submitter = event.submitter || undefined;
+                if (form) {
+                    const method = (submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("formmethod")) || form.getAttribute("method");
+                    if (method != "dialog" && this.delegate.willSubmitForm(form, submitter)) {
+                        event.preventDefault();
+                        this.delegate.formSubmitted(form, submitter);
+                    }
+                }
+            }
+        });
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            addEventListener("submit", this.submitCaptured, true);
+            this.started = true;
+        }
+    }
+    stop() {
+        if (this.started) {
+            removeEventListener("submit", this.submitCaptured, true);
+            this.started = false;
+        }
+    }
+}
+
+class FrameRedirector {
+    constructor(element) {
+        this.element = element;
+        this.linkInterceptor = new LinkInterceptor(this, element);
+        this.formInterceptor = new FormInterceptor(this, element);
+    }
+    start() {
+        this.linkInterceptor.start();
+        this.formInterceptor.start();
+    }
+    stop() {
+        this.linkInterceptor.stop();
+        this.formInterceptor.stop();
+    }
+    shouldInterceptLinkClick(element, url) {
+        return this.shouldRedirect(element);
+    }
+    linkClickIntercepted(element, url) {
+        const frame = this.findFrameElement(element);
+        if (frame) {
+            frame.delegate.linkClickIntercepted(element, url);
+        }
+    }
+    shouldInterceptFormSubmission(element, submitter) {
+        return this.shouldSubmit(element, submitter);
+    }
+    formSubmissionIntercepted(element, submitter) {
+        const frame = this.findFrameElement(element, submitter);
+        if (frame) {
+            frame.removeAttribute("reloadable");
+            frame.delegate.formSubmissionIntercepted(element, submitter);
+        }
+    }
+    shouldSubmit(form, submitter) {
+        var _a;
+        const action = getAction(form, submitter);
+        const meta = this.element.ownerDocument.querySelector(`meta[name="turbo-root"]`);
+        const rootLocation = expandURL((_a = meta === null || meta === void 0 ? void 0 : meta.content) !== null && _a !== void 0 ? _a : "/");
+        return this.shouldRedirect(form, submitter) && locationIsVisitable(action, rootLocation);
+    }
+    shouldRedirect(element, submitter) {
+        const frame = this.findFrameElement(element, submitter);
+        return frame ? frame != element.closest("turbo-frame") : false;
+    }
+    findFrameElement(element, submitter) {
+        const id = (submitter === null || submitter === void 0 ? void 0 : submitter.getAttribute("data-turbo-frame")) || element.getAttribute("data-turbo-frame");
+        if (id && id != "_top") {
+            const frame = this.element.querySelector(`#${id}:not([disabled])`);
+            if (frame instanceof FrameElement) {
+                return frame;
+            }
+        }
+    }
+}
+
+class History {
+    constructor(delegate) {
+        this.restorationIdentifier = uuid();
+        this.restorationData = {};
+        this.started = false;
+        this.pageLoaded = false;
+        this.onPopState = (event) => {
+            if (this.shouldHandlePopState()) {
+                const { turbo } = event.state || {};
+                if (turbo) {
+                    this.location = new URL(window.location.href);
+                    const { restorationIdentifier } = turbo;
+                    this.restorationIdentifier = restorationIdentifier;
+                    this.delegate.historyPoppedToLocationWithRestorationIdentifier(this.location, restorationIdentifier);
+                }
+            }
+        };
+        this.onPageLoad = async (event) => {
+            await nextMicrotask();
+            this.pageLoaded = true;
+        };
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            addEventListener("popstate", this.onPopState, false);
+            addEventListener("load", this.onPageLoad, false);
+            this.started = true;
+            this.replace(new URL(window.location.href));
+        }
+    }
+    stop() {
+        if (this.started) {
+            removeEventListener("popstate", this.onPopState, false);
+            removeEventListener("load", this.onPageLoad, false);
+            this.started = false;
+        }
+    }
+    push(location, restorationIdentifier) {
+        this.update(history.pushState, location, restorationIdentifier);
+    }
+    replace(location, restorationIdentifier) {
+        this.update(history.replaceState, location, restorationIdentifier);
+    }
+    update(method, location, restorationIdentifier = uuid()) {
+        const state = { turbo: { restorationIdentifier } };
+        method.call(history, state, "", location.href);
+        this.location = location;
+        this.restorationIdentifier = restorationIdentifier;
+    }
+    getRestorationDataForIdentifier(restorationIdentifier) {
+        return this.restorationData[restorationIdentifier] || {};
+    }
+    updateRestorationData(additionalData) {
+        const { restorationIdentifier } = this;
+        const restorationData = this.restorationData[restorationIdentifier];
+        this.restorationData[restorationIdentifier] = Object.assign(Object.assign({}, restorationData), additionalData);
+    }
+    assumeControlOfScrollRestoration() {
+        var _a;
+        if (!this.previousScrollRestoration) {
+            this.previousScrollRestoration = (_a = history.scrollRestoration) !== null && _a !== void 0 ? _a : "auto";
+            history.scrollRestoration = "manual";
+        }
+    }
+    relinquishControlOfScrollRestoration() {
+        if (this.previousScrollRestoration) {
+            history.scrollRestoration = this.previousScrollRestoration;
+            delete this.previousScrollRestoration;
+        }
+    }
+    shouldHandlePopState() {
+        return this.pageIsLoaded();
+    }
+    pageIsLoaded() {
+        return this.pageLoaded || document.readyState == "complete";
+    }
+}
+
+class LinkClickObserver {
+    constructor(delegate) {
+        this.started = false;
+        this.clickCaptured = () => {
+            removeEventListener("click", this.clickBubbled, false);
+            addEventListener("click", this.clickBubbled, false);
+        };
+        this.clickBubbled = (event) => {
+            if (this.clickEventIsSignificant(event)) {
+                const target = (event.composedPath && event.composedPath()[0]) || event.target;
+                const link = this.findLinkFromClickTarget(target);
+                if (link) {
+                    const location = this.getLocationForLink(link);
+                    if (this.delegate.willFollowLinkToLocation(link, location)) {
+                        event.preventDefault();
+                        this.delegate.followedLinkToLocation(link, location);
+                    }
+                }
+            }
+        };
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            addEventListener("click", this.clickCaptured, true);
+            this.started = true;
+        }
+    }
+    stop() {
+        if (this.started) {
+            removeEventListener("click", this.clickCaptured, true);
+            this.started = false;
+        }
+    }
+    clickEventIsSignificant(event) {
+        return !((event.target && event.target.isContentEditable)
+            || event.defaultPrevented
+            || event.which > 1
+            || event.altKey
+            || event.ctrlKey
+            || event.metaKey
+            || event.shiftKey);
+    }
+    findLinkFromClickTarget(target) {
+        if (target instanceof Element) {
+            return target.closest("a[href]:not([target^=_]):not([download])");
+        }
+    }
+    getLocationForLink(link) {
+        return expandURL(link.getAttribute("href") || "");
+    }
+}
+
+function isAction(action) {
+    return action == "advance" || action == "replace" || action == "restore";
+}
+
+class Navigator {
+    constructor(delegate) {
+        this.delegate = delegate;
+    }
+    proposeVisit(location, options = {}) {
+        if (this.delegate.allowsVisitingLocationWithAction(location, options.action)) {
+            if (locationIsVisitable(location, this.view.snapshot.rootLocation)) {
+                this.delegate.visitProposedToLocation(location, options);
+            }
+            else {
+                window.location.href = location.toString();
+            }
+        }
+    }
+    startVisit(locatable, restorationIdentifier, options = {}) {
+        this.stop();
+        this.currentVisit = new Visit(this, expandURL(locatable), restorationIdentifier, Object.assign({ referrer: this.location }, options));
+        this.currentVisit.start();
+    }
+    submitForm(form, submitter) {
+        this.stop();
+        this.formSubmission = new FormSubmission(this, form, submitter, true);
+        this.formSubmission.start();
+    }
+    stop() {
+        if (this.formSubmission) {
+            this.formSubmission.stop();
+            delete this.formSubmission;
+        }
+        if (this.currentVisit) {
+            this.currentVisit.cancel();
+            delete this.currentVisit;
+        }
+    }
+    get adapter() {
+        return this.delegate.adapter;
+    }
+    get view() {
+        return this.delegate.view;
+    }
+    get history() {
+        return this.delegate.history;
+    }
+    formSubmissionStarted(formSubmission) {
+        if (typeof this.adapter.formSubmissionStarted === 'function') {
+            this.adapter.formSubmissionStarted(formSubmission);
+        }
+    }
+    async formSubmissionSucceededWithResponse(formSubmission, fetchResponse) {
+        if (formSubmission == this.formSubmission) {
+            const responseHTML = await fetchResponse.responseHTML;
+            if (responseHTML) {
+                if (formSubmission.method != FetchMethod.get) {
+                    this.view.clearSnapshotCache();
+                }
+                const { statusCode, redirected } = fetchResponse;
+                const action = this.getActionForFormSubmission(formSubmission);
+                const visitOptions = { action, response: { statusCode, responseHTML, redirected } };
+                this.proposeVisit(fetchResponse.location, visitOptions);
+            }
+        }
+    }
+    async formSubmissionFailedWithResponse(formSubmission, fetchResponse) {
+        const responseHTML = await fetchResponse.responseHTML;
+        if (responseHTML) {
+            const snapshot = PageSnapshot.fromHTMLString(responseHTML);
+            if (fetchResponse.serverError) {
+                await this.view.renderError(snapshot);
+            }
+            else {
+                await this.view.renderPage(snapshot);
+            }
+            this.view.scrollToTop();
+            this.view.clearSnapshotCache();
+        }
+    }
+    formSubmissionErrored(formSubmission, error) {
+        console.error(error);
+    }
+    formSubmissionFinished(formSubmission) {
+        if (typeof this.adapter.formSubmissionFinished === 'function') {
+            this.adapter.formSubmissionFinished(formSubmission);
+        }
+    }
+    visitStarted(visit) {
+        this.delegate.visitStarted(visit);
+    }
+    visitCompleted(visit) {
+        this.delegate.visitCompleted(visit);
+    }
+    locationWithActionIsSamePage(location, action) {
+        const anchor = getAnchor(location);
+        const currentAnchor = getAnchor(this.view.lastRenderedLocation);
+        const isRestorationToTop = action === 'restore' && typeof anchor === 'undefined';
+        return action !== "replace" &&
+            getRequestURL(location) === getRequestURL(this.view.lastRenderedLocation) &&
+            (isRestorationToTop || (anchor != null && anchor !== currentAnchor));
+    }
+    visitScrolledToSamePageLocation(oldURL, newURL) {
+        this.delegate.visitScrolledToSamePageLocation(oldURL, newURL);
+    }
+    get location() {
+        return this.history.location;
+    }
+    get restorationIdentifier() {
+        return this.history.restorationIdentifier;
+    }
+    getActionForFormSubmission(formSubmission) {
+        const { formElement, submitter } = formSubmission;
+        const action = getAttribute("data-turbo-action", submitter, formElement);
+        return isAction(action) ? action : "advance";
+    }
+}
+
+var PageStage;
+(function (PageStage) {
+    PageStage[PageStage["initial"] = 0] = "initial";
+    PageStage[PageStage["loading"] = 1] = "loading";
+    PageStage[PageStage["interactive"] = 2] = "interactive";
+    PageStage[PageStage["complete"] = 3] = "complete";
+})(PageStage || (PageStage = {}));
+class PageObserver {
+    constructor(delegate) {
+        this.stage = PageStage.initial;
+        this.started = false;
+        this.interpretReadyState = () => {
+            const { readyState } = this;
+            if (readyState == "interactive") {
+                this.pageIsInteractive();
+            }
+            else if (readyState == "complete") {
+                this.pageIsComplete();
+            }
+        };
+        this.pageWillUnload = () => {
+            this.delegate.pageWillUnload();
+        };
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            if (this.stage == PageStage.initial) {
+                this.stage = PageStage.loading;
+            }
+            document.addEventListener("readystatechange", this.interpretReadyState, false);
+            addEventListener("pagehide", this.pageWillUnload, false);
+            this.started = true;
+        }
+    }
+    stop() {
+        if (this.started) {
+            document.removeEventListener("readystatechange", this.interpretReadyState, false);
+            removeEventListener("pagehide", this.pageWillUnload, false);
+            this.started = false;
+        }
+    }
+    pageIsInteractive() {
+        if (this.stage == PageStage.loading) {
+            this.stage = PageStage.interactive;
+            this.delegate.pageBecameInteractive();
+        }
+    }
+    pageIsComplete() {
+        this.pageIsInteractive();
+        if (this.stage == PageStage.interactive) {
+            this.stage = PageStage.complete;
+            this.delegate.pageLoaded();
+        }
+    }
+    get readyState() {
+        return document.readyState;
+    }
+}
+
+class ScrollObserver {
+    constructor(delegate) {
+        this.started = false;
+        this.onScroll = () => {
+            this.updatePosition({ x: window.pageXOffset, y: window.pageYOffset });
+        };
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            addEventListener("scroll", this.onScroll, false);
+            this.onScroll();
+            this.started = true;
+        }
+    }
+    stop() {
+        if (this.started) {
+            removeEventListener("scroll", this.onScroll, false);
+            this.started = false;
+        }
+    }
+    updatePosition(position) {
+        this.delegate.scrollPositionChanged(position);
+    }
+}
+
+class StreamObserver {
+    constructor(delegate) {
+        this.sources = new Set;
+        this.started = false;
+        this.inspectFetchResponse = ((event) => {
+            const response = fetchResponseFromEvent(event);
+            if (response && fetchResponseIsStream(response)) {
+                event.preventDefault();
+                this.receiveMessageResponse(response);
+            }
+        });
+        this.receiveMessageEvent = (event) => {
+            if (this.started && typeof event.data == "string") {
+                this.receiveMessageHTML(event.data);
+            }
+        };
+        this.delegate = delegate;
+    }
+    start() {
+        if (!this.started) {
+            this.started = true;
+            addEventListener("turbo:before-fetch-response", this.inspectFetchResponse, false);
+        }
+    }
+    stop() {
+        if (this.started) {
+            this.started = false;
+            removeEventListener("turbo:before-fetch-response", this.inspectFetchResponse, false);
+        }
+    }
+    connectStreamSource(source) {
+        if (!this.streamSourceIsConnected(source)) {
+            this.sources.add(source);
+            source.addEventListener("message", this.receiveMessageEvent, false);
+        }
+    }
+    disconnectStreamSource(source) {
+        if (this.streamSourceIsConnected(source)) {
+            this.sources.delete(source);
+            source.removeEventListener("message", this.receiveMessageEvent, false);
+        }
+    }
+    streamSourceIsConnected(source) {
+        return this.sources.has(source);
+    }
+    async receiveMessageResponse(response) {
+        const html = await response.responseHTML;
+        if (html) {
+            this.receiveMessageHTML(html);
+        }
+    }
+    receiveMessageHTML(html) {
+        this.delegate.receivedMessageFromStream(new StreamMessage(html));
+    }
+}
+function fetchResponseFromEvent(event) {
+    var _a;
+    const fetchResponse = (_a = event.detail) === null || _a === void 0 ? void 0 : _a.fetchResponse;
+    if (fetchResponse instanceof FetchResponse) {
+        return fetchResponse;
+    }
+}
+function fetchResponseIsStream(response) {
+    var _a;
+    const contentType = (_a = response.contentType) !== null && _a !== void 0 ? _a : "";
+    return contentType.startsWith(StreamMessage.contentType);
+}
+
+class ErrorRenderer extends Renderer {
+    async render() {
+        this.replaceHeadAndBody();
+        this.activateScriptElements();
+    }
+    replaceHeadAndBody() {
+        const { documentElement, head, body } = document;
+        documentElement.replaceChild(this.newHead, head);
+        documentElement.replaceChild(this.newElement, body);
+    }
+    activateScriptElements() {
+        for (const replaceableElement of this.scriptElements) {
+            const parentNode = replaceableElement.parentNode;
+            if (parentNode) {
+                const element = this.createScriptElement(replaceableElement);
+                parentNode.replaceChild(element, replaceableElement);
+            }
+        }
+    }
+    get newHead() {
+        return this.newSnapshot.headSnapshot.element;
+    }
+    get scriptElements() {
+        return [...document.documentElement.querySelectorAll("script")];
+    }
+}
+
+class PageRenderer extends Renderer {
+    get shouldRender() {
+        return this.newSnapshot.isVisitable && this.trackedElementsAreIdentical;
+    }
+    prepareToRender() {
+        this.mergeHead();
+    }
+    async render() {
+        if (this.willRender) {
+            this.replaceBody();
+        }
+    }
+    finishRendering() {
+        super.finishRendering();
+        if (!this.isPreview) {
+            this.focusFirstAutofocusableElement();
+        }
+    }
+    get currentHeadSnapshot() {
+        return this.currentSnapshot.headSnapshot;
+    }
+    get newHeadSnapshot() {
+        return this.newSnapshot.headSnapshot;
+    }
+    get newElement() {
+        return this.newSnapshot.element;
+    }
+    mergeHead() {
+        this.copyNewHeadStylesheetElements();
+        this.copyNewHeadScriptElements();
+        this.removeCurrentHeadProvisionalElements();
+        this.copyNewHeadProvisionalElements();
+    }
+    replaceBody() {
+        this.preservingPermanentElements(() => {
+            this.activateNewBody();
+            this.assignNewBody();
+        });
+    }
+    get trackedElementsAreIdentical() {
+        return this.currentHeadSnapshot.trackedElementSignature == this.newHeadSnapshot.trackedElementSignature;
+    }
+    copyNewHeadStylesheetElements() {
+        for (const element of this.newHeadStylesheetElements) {
+            document.head.appendChild(element);
+        }
+    }
+    copyNewHeadScriptElements() {
+        for (const element of this.newHeadScriptElements) {
+            document.head.appendChild(this.createScriptElement(element));
+        }
+    }
+    removeCurrentHeadProvisionalElements() {
+        for (const element of this.currentHeadProvisionalElements) {
+            document.head.removeChild(element);
+        }
+    }
+    copyNewHeadProvisionalElements() {
+        for (const element of this.newHeadProvisionalElements) {
+            document.head.appendChild(element);
+        }
+    }
+    activateNewBody() {
+        document.adoptNode(this.newElement);
+        this.activateNewBodyScriptElements();
+    }
+    activateNewBodyScriptElements() {
+        for (const inertScriptElement of this.newBodyScriptElements) {
+            const activatedScriptElement = this.createScriptElement(inertScriptElement);
+            inertScriptElement.replaceWith(activatedScriptElement);
+        }
+    }
+    assignNewBody() {
+        if (document.body && this.newElement instanceof HTMLBodyElement) {
+            document.body.replaceWith(this.newElement);
+        }
+        else {
+            document.documentElement.appendChild(this.newElement);
+        }
+    }
+    get newHeadStylesheetElements() {
+        return this.newHeadSnapshot.getStylesheetElementsNotInSnapshot(this.currentHeadSnapshot);
+    }
+    get newHeadScriptElements() {
+        return this.newHeadSnapshot.getScriptElementsNotInSnapshot(this.currentHeadSnapshot);
+    }
+    get currentHeadProvisionalElements() {
+        return this.currentHeadSnapshot.provisionalElements;
+    }
+    get newHeadProvisionalElements() {
+        return this.newHeadSnapshot.provisionalElements;
+    }
+    get newBodyScriptElements() {
+        return this.newElement.querySelectorAll("script");
+    }
+}
+
+class SnapshotCache {
+    constructor(size) {
+        this.keys = [];
+        this.snapshots = {};
+        this.size = size;
+    }
+    has(location) {
+        return toCacheKey(location) in this.snapshots;
+    }
+    get(location) {
+        if (this.has(location)) {
+            const snapshot = this.read(location);
+            this.touch(location);
+            return snapshot;
+        }
+    }
+    put(location, snapshot) {
+        this.write(location, snapshot);
+        this.touch(location);
+        return snapshot;
+    }
+    clear() {
+        this.snapshots = {};
+    }
+    read(location) {
+        return this.snapshots[toCacheKey(location)];
+    }
+    write(location, snapshot) {
+        this.snapshots[toCacheKey(location)] = snapshot;
+    }
+    touch(location) {
+        const key = toCacheKey(location);
+        const index = this.keys.indexOf(key);
+        if (index > -1)
+            this.keys.splice(index, 1);
+        this.keys.unshift(key);
+        this.trim();
+    }
+    trim() {
+        for (const key of this.keys.splice(this.size)) {
+            delete this.snapshots[key];
+        }
+    }
+}
+
+class PageView extends View {
+    constructor() {
+        super(...arguments);
+        this.snapshotCache = new SnapshotCache(10);
+        this.lastRenderedLocation = new URL(location.href);
+    }
+    renderPage(snapshot, isPreview = false, willRender = true) {
+        const renderer = new PageRenderer(this.snapshot, snapshot, isPreview, willRender);
+        return this.render(renderer);
+    }
+    renderError(snapshot) {
+        const renderer = new ErrorRenderer(this.snapshot, snapshot, false);
+        return this.render(renderer);
+    }
+    clearSnapshotCache() {
+        this.snapshotCache.clear();
+    }
+    async cacheSnapshot() {
+        if (this.shouldCacheSnapshot) {
+            this.delegate.viewWillCacheSnapshot();
+            const { snapshot, lastRenderedLocation: location } = this;
+            await nextEventLoopTick();
+            const cachedSnapshot = snapshot.clone();
+            this.snapshotCache.put(location, cachedSnapshot);
+            return cachedSnapshot;
+        }
+    }
+    getCachedSnapshotForLocation(location) {
+        return this.snapshotCache.get(location);
+    }
+    get snapshot() {
+        return PageSnapshot.fromElement(this.element);
+    }
+    get shouldCacheSnapshot() {
+        return this.snapshot.isCacheable;
+    }
+}
+
+class Session {
+    constructor() {
+        this.navigator = new Navigator(this);
+        this.history = new History(this);
+        this.view = new PageView(this, document.documentElement);
+        this.adapter = new BrowserAdapter(this);
+        this.pageObserver = new PageObserver(this);
+        this.cacheObserver = new CacheObserver();
+        this.linkClickObserver = new LinkClickObserver(this);
+        this.formSubmitObserver = new FormSubmitObserver(this);
+        this.scrollObserver = new ScrollObserver(this);
+        this.streamObserver = new StreamObserver(this);
+        this.frameRedirector = new FrameRedirector(document.documentElement);
+        this.drive = true;
+        this.enabled = true;
+        this.progressBarDelay = 500;
+        this.started = false;
+    }
+    start() {
+        if (!this.started) {
+            this.pageObserver.start();
+            this.cacheObserver.start();
+            this.linkClickObserver.start();
+            this.formSubmitObserver.start();
+            this.scrollObserver.start();
+            this.streamObserver.start();
+            this.frameRedirector.start();
+            this.history.start();
+            this.started = true;
+            this.enabled = true;
+        }
+    }
+    disable() {
+        this.enabled = false;
+    }
+    stop() {
+        if (this.started) {
+            this.pageObserver.stop();
+            this.cacheObserver.stop();
+            this.linkClickObserver.stop();
+            this.formSubmitObserver.stop();
+            this.scrollObserver.stop();
+            this.streamObserver.stop();
+            this.frameRedirector.stop();
+            this.history.stop();
+            this.started = false;
+        }
+    }
+    registerAdapter(adapter) {
+        this.adapter = adapter;
+    }
+    visit(location, options = {}) {
+        this.navigator.proposeVisit(expandURL(location), options);
+    }
+    connectStreamSource(source) {
+        this.streamObserver.connectStreamSource(source);
+    }
+    disconnectStreamSource(source) {
+        this.streamObserver.disconnectStreamSource(source);
+    }
+    renderStreamMessage(message) {
+        document.documentElement.appendChild(StreamMessage.wrap(message).fragment);
+    }
+    clearCache() {
+        this.view.clearSnapshotCache();
+    }
+    setProgressBarDelay(delay) {
+        this.progressBarDelay = delay;
+    }
+    get location() {
+        return this.history.location;
+    }
+    get restorationIdentifier() {
+        return this.history.restorationIdentifier;
+    }
+    historyPoppedToLocationWithRestorationIdentifier(location, restorationIdentifier) {
+        if (this.enabled) {
+            this.navigator.startVisit(location, restorationIdentifier, { action: "restore", historyChanged: true });
+        }
+        else {
+            this.adapter.pageInvalidated();
+        }
+    }
+    scrollPositionChanged(position) {
+        this.history.updateRestorationData({ scrollPosition: position });
+    }
+    willFollowLinkToLocation(link, location) {
+        return this.elementDriveEnabled(link)
+            && locationIsVisitable(location, this.snapshot.rootLocation)
+            && this.applicationAllowsFollowingLinkToLocation(link, location);
+    }
+    followedLinkToLocation(link, location) {
+        const action = this.getActionForLink(link);
+        this.convertLinkWithMethodClickToFormSubmission(link) || this.visit(location.href, { action });
+    }
+    convertLinkWithMethodClickToFormSubmission(link) {
+        const linkMethod = link.getAttribute("data-turbo-method");
+        if (linkMethod) {
+            const form = document.createElement("form");
+            form.method = linkMethod;
+            form.action = link.getAttribute("href") || "undefined";
+            form.hidden = true;
+            if (link.hasAttribute("data-turbo-confirm")) {
+                form.setAttribute("data-turbo-confirm", link.getAttribute("data-turbo-confirm"));
+            }
+            const frame = this.getTargetFrameForLink(link);
+            if (frame) {
+                form.setAttribute("data-turbo-frame", frame);
+                form.addEventListener("turbo:submit-start", () => form.remove());
+            }
+            else {
+                form.addEventListener("submit", () => form.remove());
+            }
+            document.body.appendChild(form);
+            return dispatch("submit", { cancelable: true, target: form });
+        }
+        else {
+            return false;
+        }
+    }
+    allowsVisitingLocationWithAction(location, action) {
+        return this.locationWithActionIsSamePage(location, action) || this.applicationAllowsVisitingLocation(location);
+    }
+    visitProposedToLocation(location, options) {
+        extendURLWithDeprecatedProperties(location);
+        this.adapter.visitProposedToLocation(location, options);
+    }
+    visitStarted(visit) {
+        extendURLWithDeprecatedProperties(visit.location);
+        if (!visit.silent) {
+            this.notifyApplicationAfterVisitingLocation(visit.location, visit.action);
+        }
+    }
+    visitCompleted(visit) {
+        this.notifyApplicationAfterPageLoad(visit.getTimingMetrics());
+    }
+    locationWithActionIsSamePage(location, action) {
+        return this.navigator.locationWithActionIsSamePage(location, action);
+    }
+    visitScrolledToSamePageLocation(oldURL, newURL) {
+        this.notifyApplicationAfterVisitingSamePageLocation(oldURL, newURL);
+    }
+    willSubmitForm(form, submitter) {
+        const action = getAction(form, submitter);
+        return this.elementDriveEnabled(form)
+            && (!submitter || this.elementDriveEnabled(submitter))
+            && locationIsVisitable(expandURL(action), this.snapshot.rootLocation);
+    }
+    formSubmitted(form, submitter) {
+        this.navigator.submitForm(form, submitter);
+    }
+    pageBecameInteractive() {
+        this.view.lastRenderedLocation = this.location;
+        this.notifyApplicationAfterPageLoad();
+    }
+    pageLoaded() {
+        this.history.assumeControlOfScrollRestoration();
+    }
+    pageWillUnload() {
+        this.history.relinquishControlOfScrollRestoration();
+    }
+    receivedMessageFromStream(message) {
+        this.renderStreamMessage(message);
+    }
+    viewWillCacheSnapshot() {
+        var _a;
+        if (!((_a = this.navigator.currentVisit) === null || _a === void 0 ? void 0 : _a.silent)) {
+            this.notifyApplicationBeforeCachingSnapshot();
+        }
+    }
+    allowsImmediateRender({ element }, resume) {
+        const event = this.notifyApplicationBeforeRender(element, resume);
+        return !event.defaultPrevented;
+    }
+    viewRenderedSnapshot(snapshot, isPreview) {
+        this.view.lastRenderedLocation = this.history.location;
+        this.notifyApplicationAfterRender();
+    }
+    viewInvalidated() {
+        this.adapter.pageInvalidated();
+    }
+    frameLoaded(frame) {
+        this.notifyApplicationAfterFrameLoad(frame);
+    }
+    frameRendered(fetchResponse, frame) {
+        this.notifyApplicationAfterFrameRender(fetchResponse, frame);
+    }
+    applicationAllowsFollowingLinkToLocation(link, location) {
+        const event = this.notifyApplicationAfterClickingLinkToLocation(link, location);
+        return !event.defaultPrevented;
+    }
+    applicationAllowsVisitingLocation(location) {
+        const event = this.notifyApplicationBeforeVisitingLocation(location);
+        return !event.defaultPrevented;
+    }
+    notifyApplicationAfterClickingLinkToLocation(link, location) {
+        return dispatch("turbo:click", { target: link, detail: { url: location.href }, cancelable: true });
+    }
+    notifyApplicationBeforeVisitingLocation(location) {
+        return dispatch("turbo:before-visit", { detail: { url: location.href }, cancelable: true });
+    }
+    notifyApplicationAfterVisitingLocation(location, action) {
+        markAsBusy(document.documentElement);
+        return dispatch("turbo:visit", { detail: { url: location.href, action } });
+    }
+    notifyApplicationBeforeCachingSnapshot() {
+        return dispatch("turbo:before-cache");
+    }
+    notifyApplicationBeforeRender(newBody, resume) {
+        return dispatch("turbo:before-render", { detail: { newBody, resume }, cancelable: true });
+    }
+    notifyApplicationAfterRender() {
+        return dispatch("turbo:render");
+    }
+    notifyApplicationAfterPageLoad(timing = {}) {
+        clearBusyState(document.documentElement);
+        return dispatch("turbo:load", { detail: { url: this.location.href, timing } });
+    }
+    notifyApplicationAfterVisitingSamePageLocation(oldURL, newURL) {
+        dispatchEvent(new HashChangeEvent("hashchange", { oldURL: oldURL.toString(), newURL: newURL.toString() }));
+    }
+    notifyApplicationAfterFrameLoad(frame) {
+        return dispatch("turbo:frame-load", { target: frame });
+    }
+    notifyApplicationAfterFrameRender(fetchResponse, frame) {
+        return dispatch("turbo:frame-render", { detail: { fetchResponse }, target: frame, cancelable: true });
+    }
+    elementDriveEnabled(element) {
+        const container = element === null || element === void 0 ? void 0 : element.closest("[data-turbo]");
+        if (this.drive) {
+            if (container) {
+                return container.getAttribute("data-turbo") != "false";
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            if (container) {
+                return container.getAttribute("data-turbo") == "true";
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    getActionForLink(link) {
+        const action = link.getAttribute("data-turbo-action");
+        return isAction(action) ? action : "advance";
+    }
+    getTargetFrameForLink(link) {
+        const frame = link.getAttribute("data-turbo-frame");
+        if (frame) {
+            return frame;
+        }
+        else {
+            const container = link.closest("turbo-frame");
+            if (container) {
+                return container.id;
+            }
+        }
+    }
+    get snapshot() {
+        return this.view.snapshot;
+    }
+}
+function extendURLWithDeprecatedProperties(url) {
+    Object.defineProperties(url, deprecatedLocationPropertyDescriptors);
+}
+const deprecatedLocationPropertyDescriptors = {
+    absoluteURL: {
+        get() {
+            return this.toString();
+        }
+    }
+};
+
+const session = new Session;
+const { navigator: navigator$1 } = session;
+function start() {
+    session.start();
+}
+function registerAdapter(adapter) {
+    session.registerAdapter(adapter);
+}
+function visit(location, options) {
+    session.visit(location, options);
+}
+function connectStreamSource(source) {
+    session.connectStreamSource(source);
+}
+function disconnectStreamSource(source) {
+    session.disconnectStreamSource(source);
+}
+function renderStreamMessage(message) {
+    session.renderStreamMessage(message);
+}
+function clearCache() {
+    session.clearCache();
+}
+function setProgressBarDelay(delay) {
+    session.setProgressBarDelay(delay);
+}
+function setConfirmMethod(confirmMethod) {
+    FormSubmission.confirmMethod = confirmMethod;
+}
+
+var Turbo = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    navigator: navigator$1,
+    session: session,
+    PageRenderer: PageRenderer,
+    PageSnapshot: PageSnapshot,
+    start: start,
+    registerAdapter: registerAdapter,
+    visit: visit,
+    connectStreamSource: connectStreamSource,
+    disconnectStreamSource: disconnectStreamSource,
+    renderStreamMessage: renderStreamMessage,
+    clearCache: clearCache,
+    setProgressBarDelay: setProgressBarDelay,
+    setConfirmMethod: setConfirmMethod
+});
+
+class FrameController {
+    constructor(element) {
+        this.fetchResponseLoaded = (fetchResponse) => { };
+        this.currentFetchRequest = null;
+        this.resolveVisitPromise = () => { };
+        this.connected = false;
+        this.hasBeenLoaded = false;
+        this.settingSourceURL = false;
+        this.element = element;
+        this.view = new FrameView(this, this.element);
+        this.appearanceObserver = new AppearanceObserver(this, this.element);
+        this.linkInterceptor = new LinkInterceptor(this, this.element);
+        this.formInterceptor = new FormInterceptor(this, this.element);
+    }
+    connect() {
+        if (!this.connected) {
+            this.connected = true;
+            this.reloadable = false;
+            if (this.loadingStyle == FrameLoadingStyle.lazy) {
+                this.appearanceObserver.start();
+            }
+            this.linkInterceptor.start();
+            this.formInterceptor.start();
+            this.sourceURLChanged();
+        }
+    }
+    disconnect() {
+        if (this.connected) {
+            this.connected = false;
+            this.appearanceObserver.stop();
+            this.linkInterceptor.stop();
+            this.formInterceptor.stop();
+        }
+    }
+    disabledChanged() {
+        if (this.loadingStyle == FrameLoadingStyle.eager) {
+            this.loadSourceURL();
+        }
+    }
+    sourceURLChanged() {
+        if (this.loadingStyle == FrameLoadingStyle.eager || this.hasBeenLoaded) {
+            this.loadSourceURL();
+        }
+    }
+    loadingStyleChanged() {
+        if (this.loadingStyle == FrameLoadingStyle.lazy) {
+            this.appearanceObserver.start();
+        }
+        else {
+            this.appearanceObserver.stop();
+            this.loadSourceURL();
+        }
+    }
+    async loadSourceURL() {
+        if (!this.settingSourceURL && this.enabled && this.isActive && (this.reloadable || this.sourceURL != this.currentURL)) {
+            const previousURL = this.currentURL;
+            this.currentURL = this.sourceURL;
+            if (this.sourceURL) {
+                try {
+                    this.element.loaded = this.visit(expandURL(this.sourceURL));
+                    this.appearanceObserver.stop();
+                    await this.element.loaded;
+                    this.hasBeenLoaded = true;
+                }
+                catch (error) {
+                    this.currentURL = previousURL;
+                    throw error;
+                }
+            }
+        }
+    }
+    async loadResponse(fetchResponse) {
+        if (fetchResponse.redirected || (fetchResponse.succeeded && fetchResponse.isHTML)) {
+            this.sourceURL = fetchResponse.response.url;
+        }
+        try {
+            const html = await fetchResponse.responseHTML;
+            if (html) {
+                const { body } = parseHTMLDocument(html);
+                const snapshot = new Snapshot(await this.extractForeignFrameElement(body));
+                const renderer = new FrameRenderer(this.view.snapshot, snapshot, false, false);
+                if (this.view.renderPromise)
+                    await this.view.renderPromise;
+                await this.view.render(renderer);
+                session.frameRendered(fetchResponse, this.element);
+                session.frameLoaded(this.element);
+                this.fetchResponseLoaded(fetchResponse);
+            }
+        }
+        catch (error) {
+            console.error(error);
+            this.view.invalidate();
+        }
+        finally {
+            this.fetchResponseLoaded = () => { };
+        }
+    }
+    elementAppearedInViewport(element) {
+        this.loadSourceURL();
+    }
+    shouldInterceptLinkClick(element, url) {
+        if (element.hasAttribute("data-turbo-method")) {
+            return false;
+        }
+        else {
+            return this.shouldInterceptNavigation(element);
+        }
+    }
+    linkClickIntercepted(element, url) {
+        this.reloadable = true;
+        this.navigateFrame(element, url);
+    }
+    shouldInterceptFormSubmission(element, submitter) {
+        return this.shouldInterceptNavigation(element, submitter);
+    }
+    formSubmissionIntercepted(element, submitter) {
+        if (this.formSubmission) {
+            this.formSubmission.stop();
+        }
+        this.reloadable = false;
+        this.formSubmission = new FormSubmission(this, element, submitter);
+        const { fetchRequest } = this.formSubmission;
+        this.prepareHeadersForRequest(fetchRequest.headers, fetchRequest);
+        this.formSubmission.start();
+    }
+    prepareHeadersForRequest(headers, request) {
+        headers["Turbo-Frame"] = this.id;
+    }
+    requestStarted(request) {
+        markAsBusy(this.element);
+    }
+    requestPreventedHandlingResponse(request, response) {
+        this.resolveVisitPromise();
+    }
+    async requestSucceededWithResponse(request, response) {
+        await this.loadResponse(response);
+        this.resolveVisitPromise();
+    }
+    requestFailedWithResponse(request, response) {
+        console.error(response);
+        this.resolveVisitPromise();
+    }
+    requestErrored(request, error) {
+        console.error(error);
+        this.resolveVisitPromise();
+    }
+    requestFinished(request) {
+        clearBusyState(this.element);
+    }
+    formSubmissionStarted({ formElement }) {
+        markAsBusy(formElement, this.findFrameElement(formElement));
+    }
+    formSubmissionSucceededWithResponse(formSubmission, response) {
+        const frame = this.findFrameElement(formSubmission.formElement, formSubmission.submitter);
+        this.proposeVisitIfNavigatedWithAction(frame, formSubmission.formElement, formSubmission.submitter);
+        frame.delegate.loadResponse(response);
+    }
+    formSubmissionFailedWithResponse(formSubmission, fetchResponse) {
+        this.element.delegate.loadResponse(fetchResponse);
+    }
+    formSubmissionErrored(formSubmission, error) {
+        console.error(error);
+    }
+    formSubmissionFinished({ formElement }) {
+        clearBusyState(formElement, this.findFrameElement(formElement));
+    }
+    allowsImmediateRender(snapshot, resume) {
+        return true;
+    }
+    viewRenderedSnapshot(snapshot, isPreview) {
+    }
+    viewInvalidated() {
+    }
+    async visit(url) {
+        var _a;
+        const request = new FetchRequest(this, FetchMethod.get, url, new URLSearchParams, this.element);
+        (_a = this.currentFetchRequest) === null || _a === void 0 ? void 0 : _a.cancel();
+        this.currentFetchRequest = request;
+        return new Promise(resolve => {
+            this.resolveVisitPromise = () => {
+                this.resolveVisitPromise = () => { };
+                this.currentFetchRequest = null;
+                resolve();
+            };
+            request.perform();
+        });
+    }
+    navigateFrame(element, url, submitter) {
+        const frame = this.findFrameElement(element, submitter);
+        this.proposeVisitIfNavigatedWithAction(frame, element, submitter);
+        frame.setAttribute("reloadable", "");
+        frame.src = url;
+    }
+    proposeVisitIfNavigatedWithAction(frame, element, submitter) {
+        const action = getAttribute("data-turbo-action", submitter, element, frame);
+        if (isAction(action)) {
+            const { visitCachedSnapshot } = new SnapshotSubstitution(frame);
+            frame.delegate.fetchResponseLoaded = (fetchResponse) => {
+                if (frame.src) {
+                    const { statusCode, redirected } = fetchResponse;
+                    const responseHTML = frame.ownerDocument.documentElement.outerHTML;
+                    const response = { statusCode, redirected, responseHTML };
+                    session.visit(frame.src, { action, response, visitCachedSnapshot, willRender: false });
+                }
+            };
+        }
+    }
+    findFrameElement(element, submitter) {
+        var _a;
+        const id = getAttribute("data-turbo-frame", submitter, element) || this.element.getAttribute("target");
+        return (_a = getFrameElementById(id)) !== null && _a !== void 0 ? _a : this.element;
+    }
+    async extractForeignFrameElement(container) {
+        let element;
+        const id = CSS.escape(this.id);
+        try {
+            if (element = activateElement(container.querySelector(`turbo-frame#${id}`), this.currentURL)) {
+                return element;
+            }
+            if (element = activateElement(container.querySelector(`turbo-frame[src][recurse~=${id}]`), this.currentURL)) {
+                await element.loaded;
+                return await this.extractForeignFrameElement(element);
+            }
+            console.error(`Response has no matching <turbo-frame id="${id}"> element`);
+        }
+        catch (error) {
+            console.error(error);
+        }
+        return new FrameElement();
+    }
+    formActionIsVisitable(form, submitter) {
+        const action = getAction(form, submitter);
+        return locationIsVisitable(expandURL(action), this.rootLocation);
+    }
+    shouldInterceptNavigation(element, submitter) {
+        const id = getAttribute("data-turbo-frame", submitter, element) || this.element.getAttribute("target");
+        if (element instanceof HTMLFormElement && !this.formActionIsVisitable(element, submitter)) {
+            return false;
+        }
+        if (!this.enabled || id == "_top") {
+            return false;
+        }
+        if (id) {
+            const frameElement = getFrameElementById(id);
+            if (frameElement) {
+                return !frameElement.disabled;
+            }
+        }
+        if (!session.elementDriveEnabled(element)) {
+            return false;
+        }
+        if (submitter && !session.elementDriveEnabled(submitter)) {
+            return false;
+        }
+        return true;
+    }
+    get id() {
+        return this.element.id;
+    }
+    get enabled() {
+        return !this.element.disabled;
+    }
+    get sourceURL() {
+        if (this.element.src) {
+            return this.element.src;
+        }
+    }
+    get reloadable() {
+        const frame = this.findFrameElement(this.element);
+        return frame.hasAttribute("reloadable");
+    }
+    set reloadable(value) {
+        const frame = this.findFrameElement(this.element);
+        if (value) {
+            frame.setAttribute("reloadable", "");
+        }
+        else {
+            frame.removeAttribute("reloadable");
+        }
+    }
+    set sourceURL(sourceURL) {
+        this.settingSourceURL = true;
+        this.element.src = sourceURL !== null && sourceURL !== void 0 ? sourceURL : null;
+        this.currentURL = this.element.src;
+        this.settingSourceURL = false;
+    }
+    get loadingStyle() {
+        return this.element.loading;
+    }
+    get isLoading() {
+        return this.formSubmission !== undefined || this.resolveVisitPromise() !== undefined;
+    }
+    get isActive() {
+        return this.element.isActive && this.connected;
+    }
+    get rootLocation() {
+        var _a;
+        const meta = this.element.ownerDocument.querySelector(`meta[name="turbo-root"]`);
+        const root = (_a = meta === null || meta === void 0 ? void 0 : meta.content) !== null && _a !== void 0 ? _a : "/";
+        return expandURL(root);
+    }
+}
+class SnapshotSubstitution {
+    constructor(element) {
+        this.visitCachedSnapshot = ({ element }) => {
+            var _a;
+            const { id, clone } = this;
+            (_a = element.querySelector("#" + id)) === null || _a === void 0 ? void 0 : _a.replaceWith(clone);
+        };
+        this.clone = element.cloneNode(true);
+        this.id = element.id;
+    }
+}
+function getFrameElementById(id) {
+    if (id != null) {
+        const element = document.getElementById(id);
+        if (element instanceof FrameElement) {
+            return element;
+        }
+    }
+}
+function activateElement(element, currentURL) {
+    if (element) {
+        const src = element.getAttribute("src");
+        if (src != null && currentURL != null && urlsAreEqual(src, currentURL)) {
+            throw new Error(`Matching <turbo-frame id="${element.id}"> element has a source URL which references itself`);
+        }
+        if (element.ownerDocument !== document) {
+            element = document.importNode(element, true);
+        }
+        if (element instanceof FrameElement) {
+            element.connectedCallback();
+            element.disconnectedCallback();
+            return element;
+        }
+    }
+}
+
+const StreamActions = {
+    after() {
+        this.targetElements.forEach(e => { var _a; return (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(this.templateContent, e.nextSibling); });
+    },
+    append() {
+        this.removeDuplicateTargetChildren();
+        this.targetElements.forEach(e => e.append(this.templateContent));
+    },
+    before() {
+        this.targetElements.forEach(e => { var _a; return (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(this.templateContent, e); });
+    },
+    prepend() {
+        this.removeDuplicateTargetChildren();
+        this.targetElements.forEach(e => e.prepend(this.templateContent));
+    },
+    remove() {
+        this.targetElements.forEach(e => e.remove());
+    },
+    replace() {
+        this.targetElements.forEach(e => e.replaceWith(this.templateContent));
+    },
+    update() {
+        this.targetElements.forEach(e => {
+            e.innerHTML = "";
+            e.append(this.templateContent);
+        });
+    }
+};
+
+class StreamElement extends HTMLElement {
+    async connectedCallback() {
+        try {
+            await this.render();
+        }
+        catch (error) {
+            console.error(error);
+        }
+        finally {
+            this.disconnect();
+        }
+    }
+    async render() {
+        var _a;
+        return (_a = this.renderPromise) !== null && _a !== void 0 ? _a : (this.renderPromise = (async () => {
+            if (this.dispatchEvent(this.beforeRenderEvent)) {
+                await nextAnimationFrame();
+                this.performAction();
+            }
+        })());
+    }
+    disconnect() {
+        try {
+            this.remove();
+        }
+        catch (_a) { }
+    }
+    removeDuplicateTargetChildren() {
+        this.duplicateChildren.forEach(c => c.remove());
+    }
+    get duplicateChildren() {
+        var _a;
+        const existingChildren = this.targetElements.flatMap(e => [...e.children]).filter(c => !!c.id);
+        const newChildrenIds = [...(_a = this.templateContent) === null || _a === void 0 ? void 0 : _a.children].filter(c => !!c.id).map(c => c.id);
+        return existingChildren.filter(c => newChildrenIds.includes(c.id));
+    }
+    get performAction() {
+        if (this.action) {
+            const actionFunction = StreamActions[this.action];
+            if (actionFunction) {
+                return actionFunction;
+            }
+            this.raise("unknown action");
+        }
+        this.raise("action attribute is missing");
+    }
+    get targetElements() {
+        if (this.target) {
+            return this.targetElementsById;
+        }
+        else if (this.targets) {
+            return this.targetElementsByQuery;
+        }
+        else {
+            this.raise("target or targets attribute is missing");
+        }
+    }
+    get templateContent() {
+        return this.templateElement.content.cloneNode(true);
+    }
+    get templateElement() {
+        if (this.firstElementChild instanceof HTMLTemplateElement) {
+            return this.firstElementChild;
+        }
+        this.raise("first child element must be a <template> element");
+    }
+    get action() {
+        return this.getAttribute("action");
+    }
+    get target() {
+        return this.getAttribute("target");
+    }
+    get targets() {
+        return this.getAttribute("targets");
+    }
+    raise(message) {
+        throw new Error(`${this.description}: ${message}`);
+    }
+    get description() {
+        var _a, _b;
+        return (_b = ((_a = this.outerHTML.match(/<[^>]+>/)) !== null && _a !== void 0 ? _a : [])[0]) !== null && _b !== void 0 ? _b : "<turbo-stream>";
+    }
+    get beforeRenderEvent() {
+        return new CustomEvent("turbo:before-stream-render", { bubbles: true, cancelable: true });
+    }
+    get targetElementsById() {
+        var _a;
+        const element = (_a = this.ownerDocument) === null || _a === void 0 ? void 0 : _a.getElementById(this.target);
+        if (element !== null) {
+            return [element];
+        }
+        else {
+            return [];
+        }
+    }
+    get targetElementsByQuery() {
+        var _a;
+        const elements = (_a = this.ownerDocument) === null || _a === void 0 ? void 0 : _a.querySelectorAll(this.targets);
+        if (elements.length !== 0) {
+            return Array.prototype.slice.call(elements);
+        }
+        else {
+            return [];
+        }
+    }
+}
+
+FrameElement.delegateConstructor = FrameController;
+customElements.define("turbo-frame", FrameElement);
+customElements.define("turbo-stream", StreamElement);
+
+(() => {
+    let element = document.currentScript;
+    if (!element)
+        return;
+    if (element.hasAttribute("data-turbo-suppress-warning"))
+        return;
+    while (element = element.parentElement) {
+        if (element == document.body) {
+            return console.warn(unindent `
         You are loading Turbo from a <script> element inside the <body> element. This is probably not what you meant to do!
 
         Load your application’s JavaScript bundle inside the <head> element instead. <script> elements in <body> are evaluated with each page change.
@@ -22,4 +3355,241 @@
 
         ——
         Suppress this warning by adding a "data-turbo-suppress-warning" attribute to: %s
-      `,e.outerHTML)})(),window.Turbo=Me,ve(),window.Turbo=n,ve()},5579:()=>{listenClick("#changePassword",(function(){$("#changePasswordForm")[0].reset(),$(".pass-check-meter div.flex-grow-1").removeClass("active"),$("#changePasswordModal").modal("show").appendTo("body")})),listenClick("#changeLanguage",(function(){$("#changeLanguageModal").modal("show").appendTo("body")})),listenClick("#passwordChangeBtn",(function(){$.ajax({url:changePasswordUrl,type:"PUT",data:$("#changePasswordForm").serialize(),success:function(e){$("#changePasswordModal").modal("hide"),$("#changePasswordForm")[0].reset(),displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),1e3)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),window.printErrorMessage=function(e,t){$(e).show().html(""),$(e).text(t.message)},listenClick("#emailNotification",(function(){$("#emailNotificationModal").modal("show").appendTo("body"),$("#emailNotificationForm").length&&$("#emailNotificationForm")[0].reset()})),listenClick("#emailNotificationChange",(function(){$.ajax({url:route("emailNotification"),type:"PUT",data:$("#emailNotificationForm").serialize(),success:function(e){$("#emailNotificationModal").modal("hide"),displaySuccessMessage(e.message)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick("#languageChangeBtn",(function(){$.ajax({url:updateLanguageURL,type:"POST",data:$("#changeLanguageForm").serialize(),success:function(e){$("#changeLanguageModal").modal("hide"),displaySuccessMessage(e.message),Turbo.visit(window.location.href)},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},9083:(e,t,a)=>{"use strict";a(7908);document.addEventListener("turbo:load",(function(){var e=".visit-date";if(!$(e).length)return;var t=$(".currentLanguage").val();$(e).flatpickr({locale:t,disableMobile:!0})})),listenSubmit("#saveForm",(function(e){e.preventDefault(),$("#btnSubmit").attr("disabled",!0),$("#saveForm")[0].submit()}))},9438:()=>{listenClick(".doctor-visit-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("doctors.visits.destroy",t),Lang.get("messages.visits"))}))},234:()=>{setTimeout((function(){$(".visit-detail-width").parent().parent().addClass("visit-detail-width")}),100),listenSubmit("#addVisitProblem",(function(e){if(e.preventDefault(),""===$("#problemName").val().trim().replace(/ \r\n\t/g,""))return displayErrorMessage(Lang.get("messages.common.problem_white_space")),!1;var t=$(this).find("#problemSubmitBtn");setAdminBtnLoader(t);var a=$("#doctorLogin").val()?route("doctors.visits.add.problem"):route("add.problem");$.ajax({url:a,type:"POST",data:$(this).serialize(),dataType:"json",success:function(e){$("ul#problemLists").empty(),e.data.length>0?(displaySuccessMessage(e.message),$.each(e.data,(function(e,t){$("#problemName").val(""),$("#problemLists").append('<li class="list-group-item text-break text-wrap d-flex justify-content-between align-items-center py-5">'.concat(t.problem_name,'<span class="remove-problem" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete" data-id="').concat(t.id,'"><a href="javascript:void(0)"><i class="fas fa-trash text-danger"></i></a></span></li>'))}))):$("#problemLists").append('<p class="text-center fw-bold text-muted mt-3">'.concat($("#noRecordsFoundMSG").val(),"</p>"))},complete:function(){$("#problemSubmitBtn").attr("disabled",!1)}})})),listenClick(".remove-problem",(function(e){e.preventDefault();var t=$(this).attr("data-id"),a=$("#doctorLogin").val()?route("doctors.visits.delete.problem",t):route("delete.problem",t);$(this).closest("li").remove(),$.ajax({url:a,type:"POST",dataType:"json",success:function(e){e.success&&($("#problemLists li").length<1?(displaySuccessMessage(e.message),$("#problemLists").append('<p class="text-center fw-bold mt-3 text-muted text-gray-600">'.concat($("#noRecordsFoundMSG").val(),"</p>"))):displaySuccessMessage(e.message))}})})),listenSubmit("#addVisitObservation",(function(e){if(e.preventDefault(),""===$("#observationName").val().trim().replace(/ \r\n\t/g,""))return displayErrorMessage(Lang.get("messages.common.observation_white_space")),!1;var t=$(this).find("#observationSubmitBtn");setAdminBtnLoader(t);var a=$("#doctorLogin").val()?route("doctors.visits.add.observation"):route("add.observation");$.ajax({url:a,type:"POST",data:$(this).serialize(),dataType:"json",success:function(e){$("ul#observationLists").empty(),e.data.length>0?(displaySuccessMessage(e.message),$.each(e.data,(function(e,t){$("#observationName").val(""),$("#observationLists").append('<li class="list-group-item text-break text-wrap d-flex justify-content-between align-items-center py-5">'.concat(t.observation_name,'<span class="remove-observation" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete" data-id="').concat(t.id,'"><a href="javascript:void(0)"><i class="fas fa-trash text-danger"></i></a></span></li>'))}))):$("#observationLists").append('<p class="text-center fw-bold text-muted mt-3">'.concat($("#noRecordsFoundMSG").val(),"</p>"))},complete:function(){$("#observationSubmitBtn").attr("disabled",!1)}})})),listenClick(".remove-observation",(function(e){e.preventDefault();var t=$(this).attr("data-id"),a=$("#doctorLogin").val()?route("doctors.visits.delete.observation",t):route("delete.observation",t);$(this).closest("li").remove(),$.ajax({url:a,type:"POST",dataType:"json",success:function(e){e.success&&($("#observationLists li").length<1?(displaySuccessMessage(e.message),$("#observationLists").append('<p class="text-center fw-bold mt-3 text-muted text-gray-600">'.concat($("#noRecordsFoundMSG").val(),"</p>"))):displaySuccessMessage(e.message))}})})),listenSubmit("#addVisitNote",(function(e){if(e.preventDefault(),""===$("#noteName").val().trim().replace(/ \r\n\t/g,""))return displayErrorMessage(Lang.get("messages.common.note_white_space")),!1;var t=$(this).find("#noteSubmitBtn");setAdminBtnLoader(t);var a=$("#doctorLogin").val()?route("doctors.visits.add.note"):route("add.note");$.ajax({url:a,type:"POST",data:$(this).serialize(),dataType:"json",success:function(e){$("ul#noteLists").empty(),e.data.length>0?(displaySuccessMessage(e.message),$.each(e.data,(function(e,t){$("#noteName").val(""),$("#noteLists").append('<li class="list-group-item text-break text-wrap d-flex justify-content-between align-items-center py-5">'.concat(t.note_name,'<span class="remove-note" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete" data-id="').concat(t.id,'"><a href="javascript:void(0)"><i class="fas fa-trash text-danger"></i></a></span></li>'))}))):$("#noteLists").append('<p class="text-center fw-bold text-muted mt-3">'.concat($("#noRecordsFoundMSG").val(),"</p>"))},complete:function(){$("#noteSubmitBtn").attr("disabled",!1)}})})),listenClick(".remove-note",(function(e){e.preventDefault();var t=$(this).attr("data-id");$(this).closest("li").remove();var a=$("#doctorLogin").val()?route("doctors.visits.delete.note",t):route("delete.note",t);$.ajax({url:a,type:"POST",dataType:"json",success:function(e){e.success&&($("#noteLists li").length<1?(displaySuccessMessage(e.message),$("#noteLists").append('<p class="text-center fw-bold mt-3 text-muted text-gray-600">'.concat($("#noRecordsFoundMSG").val(),"</p>"))):displaySuccessMessage(e.message))}})})),listenSubmit("#addPrescription",(function(e){e.preventDefault();var t=$(this).find("#prescriptionSubmitBtn");setAdminBtnLoader(t);var a=$("#doctorLogin").val()?route("doctors.visits.add.prescription"):route("add.prescription");$.ajax({url:a,type:"POST",data:$(this).serialize(),dataType:"json",success:function(e){$("#addPrescription")[0].reset(),$(".visit-prescriptions").empty(),$("#prescriptionId").val(""),$.each(e.data,(function(e,t){var a=[{id:t.id,name:t.prescription_name,frequency:t.frequency,duration:t.duration}],n=prepareTemplateRender("#visitsPrescriptionTblTemplate",a);$(".visit-prescriptions").append(n)})),$("#addVisitPrescription").removeClass("show"),displaySuccessMessage(e.message)},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){$("#prescriptionSubmitBtn").attr("disabled",!1)}})})),listenClick(".edit-prescription-btn",(function(){var e=$(this).attr("data-id");$("#addVisitPrescription").hasClass("show")||$("#addVisitPrescription").addClass("show"),function(e){var t=$("#doctorLogin").val()?route("doctors.visits.edit.prescription",e):route("edit.prescription",e);$.ajax({url:t,type:"GET",success:function(e){$("#addPrescription")[0].reset(),$("#prescriptionId").val(e.data.id),$("#prescriptionNameId").val(e.data.prescription_name),$("#frequencyId").val(e.data.frequency),$("#durationId").val(e.data.duration),$("#descriptionId").val(e.data.description)}})}(e)})),listenClick(".delete-visit-prescription-btn",(function(e){e.preventDefault();var t=$(this).attr("data-id");$(this).closest("tr").remove();var a=$("#doctorLogin").val()?route("doctors.visits.delete.prescription",t):route("delete.prescription",t);$.ajax({url:a,type:"POST",dataType:"json",success:function(e){$("#addPrescription")[0].reset(),$("#prescriptionId").val(""),e.data.length<1?($("#addVisitPrescription").removeClass("show"),displaySuccessMessage(e.message),$(".visit-prescriptions").append('<tr><td colspan="4" class="text-center fw-bold  text-muted text-gray-600">No data available in table</td></tr>')):($("#addVisitPrescription").removeClass("show"),displaySuccessMessage(e.message))}})})),listenClick(".reset-form",(function(){$("#addPrescription")[0].reset()}))},4012:()=>{listenClick(".visit-delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");deleteItem(route("visits.destroy",t),Lang.get("messages.visits"))}))},7908:function(e,t){!function(e){"use strict";var t=function(){return(t=Object.assign||function(e){for(var t,a=1,n=arguments.length;a<n;a++)for(var i in t=arguments[a])Object.prototype.hasOwnProperty.call(t,i)&&(e[i]=t[i]);return e}).apply(this,arguments)},a="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},n={weekdays:{shorthand:["أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"],longhand:["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]},months:{shorthand:["1","2","3","4","5","6","7","8","9","10","11","12"],longhand:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]},rangeSeparator:" - "};a.l10ns.ar=n,a.l10ns;var i="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},s={weekdays:{shorthand:["So","Mo","Di","Mi","Do","Fr","Sa"],longhand:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]},months:{shorthand:["Jän","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],longhand:["Jänner","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]},firstDayOfWeek:1,weekAbbreviation:"KW",rangeSeparator:" bis ",scrollTitle:"Zum Ändern scrollen",toggleTitle:"Zum Umschalten klicken"};i.l10ns.at=s,i.l10ns;var r="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},o={weekdays:{shorthand:["B.","B.e.","Ç.a.","Ç.","C.a.","C.","Ş."],longhand:["Bazar","Bazar ertəsi","Çərşənbə axşamı","Çərşənbə","Cümə axşamı","Cümə","Şənbə"]},months:{shorthand:["Yan","Fev","Mar","Apr","May","İyn","İyl","Avq","Sen","Okt","Noy","Dek"],longhand:["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" - ",weekAbbreviation:"Hf",scrollTitle:"Artırmaq üçün sürüşdürün",toggleTitle:"Aç / Bağla",amPM:["GƏ","GS"],time_24hr:!0};r.l10ns.az=o,r.l10ns;var d="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},l={weekdays:{shorthand:["Нд","Пн","Аў","Ср","Чц","Пт","Сб"],longhand:["Нядзеля","Панядзелак","Аўторак","Серада","Чацвер","Пятніца","Субота"]},months:{shorthand:["Сту","Лют","Сак","Кра","Тра","Чэр","Ліп","Жні","Вер","Кас","Ліс","Сне"],longhand:["Студзень","Люты","Сакавік","Красавік","Травень","Чэрвень","Ліпень","Жнівень","Верасень","Кастрычнік","Лістапад","Снежань"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Тыд.",scrollTitle:"Пракруціце для павелічэння",toggleTitle:"Націсніце для пераключэння",amPM:["ДП","ПП"],yearAriaLabel:"Год",time_24hr:!0};d.l10ns.be=l,d.l10ns;var c="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},u={firstDayOfWeek:1,weekdays:{shorthand:["Ned","Pon","Uto","Sri","Čet","Pet","Sub"],longhand:["Nedjelja","Ponedjeljak","Utorak","Srijeda","Četvrtak","Petak","Subota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Mart","April","Maj","Juni","Juli","Avgust","Septembar","Oktobar","Novembar","Decembar"]},time_24hr:!0};c.l10ns.bs=u,c.l10ns;var m="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},p={weekdays:{shorthand:["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Неделя","Понеделник","Вторник","Сряда","Четвъртък","Петък","Събота"]},months:{shorthand:["Яну","Фев","Март","Апр","Май","Юни","Юли","Авг","Сеп","Окт","Ное","Дек"],longhand:["Януари","Февруари","Март","Април","Май","Юни","Юли","Август","Септември","Октомври","Ноември","Декември"]},time_24hr:!0,firstDayOfWeek:1};m.l10ns.bg=p,m.l10ns;var h="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},g={weekdays:{shorthand:["রবি","সোম","মঙ্গল","বুধ","বৃহস্পতি","শুক্র","শনি"],longhand:["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"]},months:{shorthand:["জানু","ফেব্রু","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগ","সেপ্টে","অক্টো","নভে","ডিসে"],longhand:["জানুয়ারী","ফেব্রুয়ারী","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"]}};h.l10ns.bn=g,h.l10ns;var f="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},v={weekdays:{shorthand:["Dg","Dl","Dt","Dc","Dj","Dv","Ds"],longhand:["Diumenge","Dilluns","Dimarts","Dimecres","Dijous","Divendres","Dissabte"]},months:{shorthand:["Gen","Febr","Març","Abr","Maig","Juny","Jul","Ag","Set","Oct","Nov","Des"],longhand:["Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre"]},ordinal:function(e){var t=e%100;if(t>3&&t<21)return"è";switch(t%10){case 1:return"r";case 2:return"n";case 3:return"r";case 4:return"t";default:return"è"}},firstDayOfWeek:1,time_24hr:!0};f.l10ns.cat=f.l10ns.ca=v,f.l10ns;var w="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},y={weekdays:{shorthand:["Ne","Po","Út","St","Čt","Pá","So"],longhand:["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"]},months:{shorthand:["Led","Ún","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"],longhand:["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" do ",weekAbbreviation:"Týd.",scrollTitle:"Rolujte pro změnu",toggleTitle:"Přepnout dopoledne/odpoledne",amPM:["dop.","odp."],yearAriaLabel:"Rok",time_24hr:!0};w.l10ns.cs=y,w.l10ns;var b="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},$={weekdays:{shorthand:["Sul","Llun","Maw","Mer","Iau","Gwe","Sad"],longhand:["Dydd Sul","Dydd Llun","Dydd Mawrth","Dydd Mercher","Dydd Iau","Dydd Gwener","Dydd Sadwrn"]},months:{shorthand:["Ion","Chwef","Maw","Ebr","Mai","Meh","Gorff","Awst","Medi","Hyd","Tach","Rhag"],longhand:["Ionawr","Chwefror","Mawrth","Ebrill","Mai","Mehefin","Gorffennaf","Awst","Medi","Hydref","Tachwedd","Rhagfyr"]},firstDayOfWeek:1,ordinal:function(e){return 1===e?"af":2===e?"ail":3===e||4===e?"ydd":5===e||6===e?"ed":e>=7&&e<=10||12==e||15==e||18==e||20==e?"fed":11==e||13==e||14==e||16==e||17==e||19==e?"eg":e>=21&&e<=39?"ain":""},time_24hr:!0};b.l10ns.cy=$,b.l10ns;var _="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},k={weekdays:{shorthand:["søn","man","tir","ons","tors","fre","lør"],longhand:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"]},months:{shorthand:["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"],longhand:["januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"uge",time_24hr:!0};_.l10ns.da=k,_.l10ns;var S="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},C={weekdays:{shorthand:["So","Mo","Di","Mi","Do","Fr","Sa"],longhand:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]},months:{shorthand:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],longhand:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]},firstDayOfWeek:1,weekAbbreviation:"KW",rangeSeparator:" bis ",scrollTitle:"Zum Ändern scrollen",toggleTitle:"Zum Umschalten klicken",time_24hr:!0};S.l10ns.de=C,S.l10ns;var M={weekdays:{shorthand:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],longhand:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]},months:{shorthand:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],longhand:["January","February","March","April","May","June","July","August","September","October","November","December"]},daysInMonth:[31,28,31,30,31,30,31,31,30,31,30,31],firstDayOfWeek:0,ordinal:function(e){var t=e%100;if(t>3&&t<21)return"th";switch(t%10){case 1:return"st";case 2:return"nd";case 3:return"rd";default:return"th"}},rangeSeparator:" to ",weekAbbreviation:"Wk",scrollTitle:"Scroll to increment",toggleTitle:"Click to toggle",amPM:["AM","PM"],yearAriaLabel:"Year",monthAriaLabel:"Month",hourAriaLabel:"Hour",minuteAriaLabel:"Minute",time_24hr:!1},L="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},D={firstDayOfWeek:1,rangeSeparator:" ĝis ",weekAbbreviation:"Sem",scrollTitle:"Rulumu por pligrandigi la valoron",toggleTitle:"Klaku por ŝalti",weekdays:{shorthand:["Dim","Lun","Mar","Mer","Ĵaŭ","Ven","Sab"],longhand:["dimanĉo","lundo","mardo","merkredo","ĵaŭdo","vendredo","sabato"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Aŭg","Sep","Okt","Nov","Dec"],longhand:["januaro","februaro","marto","aprilo","majo","junio","julio","aŭgusto","septembro","oktobro","novembro","decembro"]},ordinal:function(){return"-a"},time_24hr:!0};L.l10ns.eo=D,L.l10ns;var T="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},x={weekdays:{shorthand:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],longhand:["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"]},months:{shorthand:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],longhand:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]},ordinal:function(){return"º"},firstDayOfWeek:1,rangeSeparator:" a ",time_24hr:!0};T.l10ns.es=x,T.l10ns;var E="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},A={weekdays:{shorthand:["P","E","T","K","N","R","L"],longhand:["Pühapäev","Esmaspäev","Teisipäev","Kolmapäev","Neljapäev","Reede","Laupäev"]},months:{shorthand:["Jaan","Veebr","Märts","Apr","Mai","Juuni","Juuli","Aug","Sept","Okt","Nov","Dets"],longhand:["Jaanuar","Veebruar","Märts","Aprill","Mai","Juuni","Juuli","August","September","Oktoober","November","Detsember"]},firstDayOfWeek:1,ordinal:function(){return"."},weekAbbreviation:"Näd",rangeSeparator:" kuni ",scrollTitle:"Keri, et suurendada",toggleTitle:"Klõpsa, et vahetada",time_24hr:!0};E.l10ns.et=A,E.l10ns;var I="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},P={weekdays:{shorthand:["یک","دو","سه","چهار","پنج","جمعه","شنبه"],longhand:["یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنچ‌شنبه","جمعه","شنبه"]},months:{shorthand:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],longhand:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"]},firstDayOfWeek:6,ordinal:function(){return""}};I.l10ns.fa=P,I.l10ns;var F="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},O={firstDayOfWeek:1,weekdays:{shorthand:["Su","Ma","Ti","Ke","To","Pe","La"],longhand:["Sunnuntai","Maanantai","Tiistai","Keskiviikko","Torstai","Perjantai","Lauantai"]},months:{shorthand:["Tammi","Helmi","Maalis","Huhti","Touko","Kesä","Heinä","Elo","Syys","Loka","Marras","Joulu"],longhand:["Tammikuu","Helmikuu","Maaliskuu","Huhtikuu","Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu","Lokakuu","Marraskuu","Joulukuu"]},ordinal:function(){return"."},time_24hr:!0};F.l10ns.fi=O,F.l10ns;var q="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},j={weekdays:{shorthand:["Sun","Mán","Týs","Mik","Hós","Frí","Ley"],longhand:["Sunnudagur","Mánadagur","Týsdagur","Mikudagur","Hósdagur","Fríggjadagur","Leygardagur"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],longhand:["Januar","Februar","Mars","Apríl","Mai","Juni","Juli","August","Septembur","Oktobur","Novembur","Desembur"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"vika",scrollTitle:"Rulla fyri at broyta",toggleTitle:"Trýst fyri at skifta",yearAriaLabel:"Ár",time_24hr:!0};q.l10ns.fo=j,q.l10ns;var R="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},N={firstDayOfWeek:1,weekdays:{shorthand:["dim","lun","mar","mer","jeu","ven","sam"],longhand:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]},months:{shorthand:["janv","févr","mars","avr","mai","juin","juil","août","sept","oct","nov","déc"],longhand:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]},ordinal:function(e){return e>1?"":"er"},rangeSeparator:" au ",weekAbbreviation:"Sem",scrollTitle:"Défiler pour augmenter la valeur",toggleTitle:"Cliquer pour basculer",time_24hr:!0};R.l10ns.fr=N,R.l10ns;var B="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Y={weekdays:{shorthand:["Κυ","Δε","Τρ","Τε","Πέ","Πα","Σά"],longhand:["Κυριακή","Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο"]},months:{shorthand:["Ιαν","Φεβ","Μάρ","Απρ","Μάι","Ιού","Ιού","Αύγ","Σεπ","Οκτ","Νοέ","Δεκ"],longhand:["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"]},firstDayOfWeek:1,ordinal:function(){return""},weekAbbreviation:"Εβδ",rangeSeparator:" έως ",scrollTitle:"Μετακυλήστε για προσαύξηση",toggleTitle:"Κάντε κλικ για αλλαγή",amPM:["ΠΜ","ΜΜ"]};B.l10ns.gr=Y,B.l10ns;var J="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},z={weekdays:{shorthand:["א","ב","ג","ד","ה","ו","ש"],longhand:["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"]},months:{shorthand:["ינו׳","פבר׳","מרץ","אפר׳","מאי","יוני","יולי","אוג׳","ספט׳","אוק׳","נוב׳","דצמ׳"],longhand:["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"]},rangeSeparator:" אל ",time_24hr:!0};J.l10ns.he=z,J.l10ns;var H="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},V={weekdays:{shorthand:["रवि","सोम","मंगल","बुध","गुरु","शुक्र","शनि"],longhand:["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"]},months:{shorthand:["जन","फर","मार्च","अप्रेल","मई","जून","जूलाई","अग","सित","अक्ट","नव","दि"],longhand:["जनवरी ","फरवरी","मार्च","अप्रेल","मई","जून","जूलाई","अगस्त ","सितम्बर","अक्टूबर","नवम्बर","दिसम्बर"]}};H.l10ns.hi=V,H.l10ns;var W="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},U={firstDayOfWeek:1,weekdays:{shorthand:["Ned","Pon","Uto","Sri","Čet","Pet","Sub"],longhand:["Nedjelja","Ponedjeljak","Utorak","Srijeda","Četvrtak","Petak","Subota"]},months:{shorthand:["Sij","Velj","Ožu","Tra","Svi","Lip","Srp","Kol","Ruj","Lis","Stu","Pro"],longhand:["Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"]},time_24hr:!0};W.l10ns.hr=U,W.l10ns;var G="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},K={firstDayOfWeek:1,weekdays:{shorthand:["V","H","K","Sz","Cs","P","Szo"],longhand:["Vasárnap","Hétfő","Kedd","Szerda","Csütörtök","Péntek","Szombat"]},months:{shorthand:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Szep","Okt","Nov","Dec"],longhand:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"]},ordinal:function(){return"."},weekAbbreviation:"Hét",scrollTitle:"Görgessen",toggleTitle:"Kattintson a váltáshoz",rangeSeparator:" - ",time_24hr:!0};G.l10ns.hu=K,G.l10ns;var Q="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Z={weekdays:{shorthand:["Min","Sen","Sel","Rab","Kam","Jum","Sab"],longhand:["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"],longhand:["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"]},firstDayOfWeek:1,ordinal:function(){return""},time_24hr:!0,rangeSeparator:" - "};Q.l10ns.id=Z,Q.l10ns;var X="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ee={weekdays:{shorthand:["Sun","Mán","Þri","Mið","Fim","Fös","Lau"],longhand:["Sunnudagur","Mánudagur","Þriðjudagur","Miðvikudagur","Fimmtudagur","Föstudagur","Laugardagur"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maí","Jún","Júl","Ágú","Sep","Okt","Nóv","Des"],longhand:["Janúar","Febrúar","Mars","Apríl","Maí","Júní","Júlí","Ágúst","September","Október","Nóvember","Desember"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"vika",yearAriaLabel:"Ár",time_24hr:!0};X.l10ns.is=ee,X.l10ns;var te="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ae={weekdays:{shorthand:["Dom","Lun","Mar","Mer","Gio","Ven","Sab"],longhand:["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]},months:{shorthand:["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],longhand:["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]},firstDayOfWeek:1,ordinal:function(){return"°"},rangeSeparator:" al ",weekAbbreviation:"Se",scrollTitle:"Scrolla per aumentare",toggleTitle:"Clicca per cambiare",time_24hr:!0};te.l10ns.it=ae,te.l10ns;var ne="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ie={weekdays:{shorthand:["日","月","火","水","木","金","土"],longhand:["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"]},months:{shorthand:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],longhand:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]},time_24hr:!0,rangeSeparator:" から ",monthAriaLabel:"月",amPM:["午前","午後"],yearAriaLabel:"年",hourAriaLabel:"時間",minuteAriaLabel:"分"};ne.l10ns.ja=ie,ne.l10ns;var se="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},re={weekdays:{shorthand:["კვ","ორ","სა","ოთ","ხუ","პა","შა"],longhand:["კვირა","ორშაბათი","სამშაბათი","ოთხშაბათი","ხუთშაბათი","პარასკევი","შაბათი"]},months:{shorthand:["იან","თებ","მარ","აპრ","მაი","ივნ","ივლ","აგვ","სექ","ოქტ","ნოე","დეკ"],longhand:["იანვარი","თებერვალი","მარტი","აპრილი","მაისი","ივნისი","ივლისი","აგვისტო","სექტემბერი","ოქტომბერი","ნოემბერი","დეკემბერი"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"კვ.",scrollTitle:"დასქროლეთ გასადიდებლად",toggleTitle:"დააკლიკეთ გადართვისთვის",amPM:["AM","PM"],yearAriaLabel:"წელი",time_24hr:!0};se.l10ns.ka=re,se.l10ns;var oe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},de={weekdays:{shorthand:["일","월","화","수","목","금","토"],longhand:["일요일","월요일","화요일","수요일","목요일","금요일","토요일"]},months:{shorthand:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],longhand:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]},ordinal:function(){return"일"},rangeSeparator:" ~ "};oe.l10ns.ko=de,oe.l10ns;var le="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ce={weekdays:{shorthand:["អាទិត្យ","ចន្ទ","អង្គារ","ពុធ","ព្រហស.","សុក្រ","សៅរ៍"],longhand:["អាទិត្យ","ចន្ទ","អង្គារ","ពុធ","ព្រហស្បតិ៍","សុក្រ","សៅរ៍"]},months:{shorthand:["មករា","កុម្ភះ","មីនា","មេសា","ឧសភា","មិថុនា","កក្កដា","សីហា","កញ្ញា","តុលា","វិច្ឆិកា","ធ្នូ"],longhand:["មករា","កុម្ភះ","មីនា","មេសា","ឧសភា","មិថុនា","កក្កដា","សីហា","កញ្ញា","តុលា","វិច្ឆិកា","ធ្នូ"]},ordinal:function(){return""},firstDayOfWeek:1,rangeSeparator:" ដល់ ",weekAbbreviation:"សប្តាហ៍",scrollTitle:"រំកិលដើម្បីបង្កើន",toggleTitle:"ចុចដើម្បីផ្លាស់ប្ដូរ",yearAriaLabel:"ឆ្នាំ",time_24hr:!0};le.l10ns.km=ce,le.l10ns;var ue="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},me={weekdays:{shorthand:["Жс","Дс","Сc","Ср","Бс","Жм","Сб"],longhand:["Жексенбi","Дүйсенбi","Сейсенбi","Сәрсенбi","Бейсенбi","Жұма","Сенбi"]},months:{shorthand:["Қаң","Ақп","Нау","Сәу","Мам","Мау","Шiл","Там","Қыр","Қаз","Қар","Жел"],longhand:["Қаңтар","Ақпан","Наурыз","Сәуiр","Мамыр","Маусым","Шiлде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Апта",scrollTitle:"Үлкейту үшін айналдырыңыз",toggleTitle:"Ауыстыру үшін басыңыз",amPM:["ТД","ТК"],yearAriaLabel:"Жыл"};ue.l10ns.kz=me,ue.l10ns;var pe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},he={weekdays:{shorthand:["S","Pr","A","T","K","Pn","Š"],longhand:["Sekmadienis","Pirmadienis","Antradienis","Trečiadienis","Ketvirtadienis","Penktadienis","Šeštadienis"]},months:{shorthand:["Sau","Vas","Kov","Bal","Geg","Bir","Lie","Rgp","Rgs","Spl","Lap","Grd"],longhand:["Sausis","Vasaris","Kovas","Balandis","Gegužė","Birželis","Liepa","Rugpjūtis","Rugsėjis","Spalis","Lapkritis","Gruodis"]},firstDayOfWeek:1,ordinal:function(){return"-a"},rangeSeparator:" iki ",weekAbbreviation:"Sav",scrollTitle:"Keisti laiką pelės rateliu",toggleTitle:"Perjungti laiko formatą",time_24hr:!0};pe.l10ns.lt=he,pe.l10ns;var ge="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},fe={firstDayOfWeek:1,weekdays:{shorthand:["Sv","Pr","Ot","Tr","Ce","Pk","Se"],longhand:["Svētdiena","Pirmdiena","Otrdiena","Trešdiena","Ceturtdiena","Piektdiena","Sestdiena"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jūn","Jūl","Aug","Sep","Okt","Nov","Dec"],longhand:["Janvāris","Februāris","Marts","Aprīlis","Maijs","Jūnijs","Jūlijs","Augusts","Septembris","Oktobris","Novembris","Decembris"]},rangeSeparator:" līdz ",time_24hr:!0};ge.l10ns.lv=fe,ge.l10ns;var ve="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},we={weekdays:{shorthand:["Не","По","Вт","Ср","Че","Пе","Са"],longhand:["Недела","Понеделник","Вторник","Среда","Четврток","Петок","Сабота"]},months:{shorthand:["Јан","Фев","Мар","Апр","Мај","Јун","Јул","Авг","Сеп","Окт","Ное","Дек"],longhand:["Јануари","Февруари","Март","Април","Мај","Јуни","Јули","Август","Септември","Октомври","Ноември","Декември"]},firstDayOfWeek:1,weekAbbreviation:"Нед.",rangeSeparator:" до ",time_24hr:!0};ve.l10ns.mk=we,ve.l10ns;var ye="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},be={firstDayOfWeek:1,weekdays:{shorthand:["Да","Мя","Лх","Пү","Ба","Бя","Ня"],longhand:["Даваа","Мягмар","Лхагва","Пүрэв","Баасан","Бямба","Ням"]},months:{shorthand:["1-р сар","2-р сар","3-р сар","4-р сар","5-р сар","6-р сар","7-р сар","8-р сар","9-р сар","10-р сар","11-р сар","12-р сар"],longhand:["Нэгдүгээр сар","Хоёрдугаар сар","Гуравдугаар сар","Дөрөвдүгээр сар","Тавдугаар сар","Зургаадугаар сар","Долдугаар сар","Наймдугаар сар","Есдүгээр сар","Аравдугаар сар","Арваннэгдүгээр сар","Арванхоёрдугаар сар"]},rangeSeparator:"-с ",time_24hr:!0};ye.l10ns.mn=be,ye.l10ns;var $e="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},_e={weekdays:{shorthand:["Min","Isn","Sel","Rab","Kha","Jum","Sab"],longhand:["Minggu","Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu"]},months:{shorthand:["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"],longhand:["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"]},firstDayOfWeek:1,ordinal:function(){return""}};$e.l10ns;var ke="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Se={weekdays:{shorthand:["နွေ","လာ","ဂါ","ဟူး","ကြာ","သော","နေ"],longhand:["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"]},months:{shorthand:["ဇန်","ဖေ","မတ်","ပြီ","မေ","ဇွန်","လိုင်","သြ","စက်","အောက်","နို","ဒီ"],longhand:["ဇန်နဝါရီ","ဖေဖော်ဝါရီ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူလိုင်","သြဂုတ်","စက်တင်ဘာ","အောက်တိုဘာ","နိုဝင်ဘာ","ဒီဇင်ဘာ"]},firstDayOfWeek:1,ordinal:function(){return""},time_24hr:!0};ke.l10ns.my=Se,ke.l10ns;var Ce="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Me={weekdays:{shorthand:["zo","ma","di","wo","do","vr","za"],longhand:["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"]},months:{shorthand:["jan","feb","mrt","apr","mei","jun","jul","aug","sept","okt","nov","dec"],longhand:["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"]},firstDayOfWeek:1,weekAbbreviation:"wk",rangeSeparator:" t/m ",scrollTitle:"Scroll voor volgende / vorige",toggleTitle:"Klik om te wisselen",time_24hr:!0,ordinal:function(e){return 1===e||8===e||e>=20?"ste":"de"}};Ce.l10ns.nl=Me,Ce.l10ns;var Le="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},De={weekdays:{shorthand:["Søn","Man","Tir","Ons","Tor","Fre","Lør"],longhand:["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],longhand:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"Uke",scrollTitle:"Scroll for å endre",toggleTitle:"Klikk for å veksle",time_24hr:!0,ordinal:function(){return"."}};Le.l10ns.no=De,Le.l10ns;var Te="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},xe={weekdays:{shorthand:["ਐਤ","ਸੋਮ","ਮੰਗਲ","ਬੁੱਧ","ਵੀਰ","ਸ਼ੁੱਕਰ","ਸ਼ਨਿੱਚਰ"],longhand:["ਐਤਵਾਰ","ਸੋਮਵਾਰ","ਮੰਗਲਵਾਰ","ਬੁੱਧਵਾਰ","ਵੀਰਵਾਰ","ਸ਼ੁੱਕਰਵਾਰ","ਸ਼ਨਿੱਚਰਵਾਰ"]},months:{shorthand:["ਜਨ","ਫ਼ਰ","ਮਾਰ","ਅਪ੍ਰੈ","ਮਈ","ਜੂਨ","ਜੁਲਾ","ਅਗ","ਸਤੰ","ਅਕ","ਨਵੰ","ਦਸੰ"],longhand:["ਜਨਵਰੀ","ਫ਼ਰਵਰੀ","ਮਾਰਚ","ਅਪ੍ਰੈਲ","ਮਈ","ਜੂਨ","ਜੁਲਾਈ","ਅਗਸਤ","ਸਤੰਬਰ","ਅਕਤੂਬਰ","ਨਵੰਬਰ","ਦਸੰਬਰ"]},time_24hr:!0};Te.l10ns.pa=xe,Te.l10ns;var Ee="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ae={weekdays:{shorthand:["Nd","Pn","Wt","Śr","Cz","Pt","So"],longhand:["Niedziela","Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota"]},months:{shorthand:["Sty","Lut","Mar","Kwi","Maj","Cze","Lip","Sie","Wrz","Paź","Lis","Gru"],longhand:["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"]},rangeSeparator:" do ",weekAbbreviation:"tydz.",scrollTitle:"Przewiń, aby zwiększyć",toggleTitle:"Kliknij, aby przełączyć",firstDayOfWeek:1,time_24hr:!0,ordinal:function(){return"."}};Ee.l10ns.pl=Ae,Ee.l10ns;var Ie="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Pe={weekdays:{shorthand:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],longhand:["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"]},months:{shorthand:["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],longhand:["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]},rangeSeparator:" até ",time_24hr:!0};Ie.l10ns.pt=Pe,Ie.l10ns;var Fe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Oe={weekdays:{shorthand:["Dum","Lun","Mar","Mie","Joi","Vin","Sâm"],longhand:["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"]},months:{shorthand:["Ian","Feb","Mar","Apr","Mai","Iun","Iul","Aug","Sep","Oct","Noi","Dec"],longhand:["Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie","Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"]},firstDayOfWeek:1,time_24hr:!0,ordinal:function(){return""}};Fe.l10ns.ro=Oe,Fe.l10ns;var qe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},je={weekdays:{shorthand:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"]},months:{shorthand:["Янв","Фев","Март","Апр","Май","Июнь","Июль","Авг","Сен","Окт","Ноя","Дек"],longhand:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Нед.",scrollTitle:"Прокрутите для увеличения",toggleTitle:"Нажмите для переключения",amPM:["ДП","ПП"],yearAriaLabel:"Год",time_24hr:!0};qe.l10ns.ru=je,qe.l10ns;var Re="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ne={weekdays:{shorthand:["ඉ","ස","අ","බ","බ්‍ර","සි","සෙ"],longhand:["ඉරිදා","සඳුදා","අඟහරුවාදා","බදාදා","බ්‍රහස්පතින්දා","සිකුරාදා","සෙනසුරාදා"]},months:{shorthand:["ජන","පෙබ","මාර්","අප්‍රේ","මැයි","ජුනි","ජූලි","අගෝ","සැප්","ඔක්","නොවැ","දෙසැ"],longhand:["ජනවාරි","පෙබරවාරි","මාර්තු","අප්‍රේල්","මැයි","ජුනි","ජූලි","අගෝස්තු","සැප්තැම්බර්","ඔක්තෝබර්","නොවැම්බර්","දෙසැම්බර්"]},time_24hr:!0};Re.l10ns.si=Ne,Re.l10ns;var Be="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ye={weekdays:{shorthand:["Ned","Pon","Ut","Str","Štv","Pia","Sob"],longhand:["Nedeľa","Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Máj","Jún","Júl","Aug","Sep","Okt","Nov","Dec"],longhand:["Január","Február","Marec","Apríl","Máj","Jún","Júl","August","September","Október","November","December"]},firstDayOfWeek:1,rangeSeparator:" do ",time_24hr:!0,ordinal:function(){return"."}};Be.l10ns.sk=Ye,Be.l10ns;var Je="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ze={weekdays:{shorthand:["Ned","Pon","Tor","Sre","Čet","Pet","Sob"],longhand:["Nedelja","Ponedeljek","Torek","Sreda","Četrtek","Petek","Sobota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Marec","April","Maj","Junij","Julij","Avgust","September","Oktober","November","December"]},firstDayOfWeek:1,rangeSeparator:" do ",time_24hr:!0,ordinal:function(){return"."}};Je.l10ns.sl=ze,Je.l10ns;var He="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ve={weekdays:{shorthand:["Di","Hë","Ma","Më","En","Pr","Sh"],longhand:["E Diel","E Hënë","E Martë","E Mërkurë","E Enjte","E Premte","E Shtunë"]},months:{shorthand:["Jan","Shk","Mar","Pri","Maj","Qer","Kor","Gus","Sht","Tet","Nën","Dhj"],longhand:["Janar","Shkurt","Mars","Prill","Maj","Qershor","Korrik","Gusht","Shtator","Tetor","Nëntor","Dhjetor"]},time_24hr:!0};He.l10ns.sq=Ve,He.l10ns;var We="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ue={weekdays:{shorthand:["Ned","Pon","Uto","Sre","Čet","Pet","Sub"],longhand:["Nedelja","Ponedeljak","Utorak","Sreda","Četvrtak","Petak","Subota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Mart","April","Maj","Jun","Jul","Avgust","Septembar","Oktobar","Novembar","Decembar"]},firstDayOfWeek:1,weekAbbreviation:"Ned.",rangeSeparator:" do ",time_24hr:!0};We.l10ns.sr=Ue,We.l10ns;var Ge="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ke={firstDayOfWeek:1,weekAbbreviation:"v",weekdays:{shorthand:["Sön","Mån","Tis","Ons","Tor","Fre","Lör"],longhand:["Söndag","Måndag","Tisdag","Onsdag","Torsdag","Fredag","Lördag"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Aug","Sep","Okt","Nov","Dec"],longhand:["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"]},time_24hr:!0,ordinal:function(){return"."}};Ge.l10ns.sv=Ke,Ge.l10ns;var Qe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ze={weekdays:{shorthand:["อา","จ","อ","พ","พฤ","ศ","ส"],longhand:["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"]},months:{shorthand:["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],longhand:["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]},firstDayOfWeek:1,rangeSeparator:" ถึง ",scrollTitle:"เลื่อนเพื่อเพิ่มหรือลด",toggleTitle:"คลิกเพื่อเปลี่ยน",time_24hr:!0,ordinal:function(){return""}};Qe.l10ns.th=Ze,Qe.l10ns;var Xe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},et={weekdays:{shorthand:["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"],longhand:["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"]},months:{shorthand:["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"],longhand:["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" - ",weekAbbreviation:"Hf",scrollTitle:"Artırmak için kaydırın",toggleTitle:"Aç/Kapa",amPM:["ÖÖ","ÖS"],time_24hr:!0};Xe.l10ns.tr=et,Xe.l10ns;var tt="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},at={firstDayOfWeek:1,weekdays:{shorthand:["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"]},months:{shorthand:["Січ","Лют","Бер","Кві","Тра","Чер","Лип","Сер","Вер","Жов","Лис","Гру"],longhand:["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]},time_24hr:!0};tt.l10ns.uk=at,tt.l10ns;var nt="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},it={weekdays:{shorthand:["Якш","Душ","Сеш","Чор","Пай","Жум","Шан"],longhand:["Якшанба","Душанба","Сешанба","Чоршанба","Пайшанба","Жума","Шанба"]},months:{shorthand:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],longhand:["Январ","Феврал","Март","Апрел","Май","Июн","Июл","Август","Сентябр","Октябр","Ноябр","Декабр"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Ҳафта",scrollTitle:"Катталаштириш учун айлантиринг",toggleTitle:"Ўтиш учун босинг",amPM:["AM","PM"],yearAriaLabel:"Йил",time_24hr:!0};nt.l10ns.uz=it,nt.l10ns;var st="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},rt={weekdays:{shorthand:["Ya","Du","Se","Cho","Pa","Ju","Sha"],longhand:["Yakshanba","Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba"]},months:{shorthand:["Yan","Fev","Mar","Apr","May","Iyun","Iyul","Avg","Sen","Okt","Noy","Dek"],longhand:["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Hafta",scrollTitle:"Kattalashtirish uchun aylantiring",toggleTitle:"O‘tish uchun bosing",amPM:["AM","PM"],yearAriaLabel:"Yil",time_24hr:!0};st.l10ns.uz_latn=rt,st.l10ns;var ot="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},dt={weekdays:{shorthand:["CN","T2","T3","T4","T5","T6","T7"],longhand:["Chủ nhật","Thứ hai","Thứ ba","Thứ tư","Thứ năm","Thứ sáu","Thứ bảy"]},months:{shorthand:["Th1","Th2","Th3","Th4","Th5","Th6","Th7","Th8","Th9","Th10","Th11","Th12"],longhand:["Tháng một","Tháng hai","Tháng ba","Tháng tư","Tháng năm","Tháng sáu","Tháng bảy","Tháng tám","Tháng chín","Tháng mười","Tháng mười một","Tháng mười hai"]},firstDayOfWeek:1,rangeSeparator:" đến "};ot.l10ns.vn=dt,ot.l10ns;var lt="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ct={weekdays:{shorthand:["周日","周一","周二","周三","周四","周五","周六"],longhand:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]},months:{shorthand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],longhand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]},rangeSeparator:" 至 ",weekAbbreviation:"周",scrollTitle:"滚动切换",toggleTitle:"点击切换 12/24 小时时制"};lt.l10ns.zh=ct,lt.l10ns;var ut="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},mt={weekdays:{shorthand:["週日","週一","週二","週三","週四","週五","週六"],longhand:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]},months:{shorthand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],longhand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]},rangeSeparator:" 至 ",weekAbbreviation:"週",scrollTitle:"滾動切換",toggleTitle:"點擊切換 12/24 小時時制"};ut.l10ns.zh_tw=mt,ut.l10ns;var pt={ar:n,at:s,az:o,be:l,bg:p,bn:g,bs:u,ca:v,cat:v,cs:y,cy:$,da:k,de:C,default:t({},M),en:M,eo:D,es:x,et:A,fa:P,fi:O,fo:j,fr:N,gr:Y,he:z,hi:V,hr:U,hu:K,id:Z,is:ee,it:ae,ja:ie,ka:re,ko:de,km:ce,kz:me,lt:he,lv:fe,mk:we,mn:be,ms:_e,my:Se,nl:Me,no:De,pa:xe,pl:Ae,pt:Pe,ro:Oe,ru:je,si:Ne,sk:Ye,sl:ze,sq:Ve,sr:Ue,sv:Ke,th:Ze,tr:et,uk:at,vn:dt,zh:ct,zh_tw:mt,uz:it,uz_latn:rt};e.default=pt,Object.defineProperty(e,"__esModule",{value:!0})}(t)},2743:e=>{!function(t,a){var n=a.jQuery;e.exports=n?t(a,n):function(e){if(e&&!e.fn)throw"Provide jQuery or null";return t(a,e)}}((function(e,t){"use strict";var a=!1===t;t=t&&t.fn?t:e.jQuery;var n,i,s,r,o,d,l,c,u,m,p,h,g,f,v,w,y,b,$,_,k,S,C="v1.0.11",M="_ocp",L=/[ \t]*(\r\n|\n|\r)/g,D=/\\(['"\\])/g,T=/['"\\]/g,x=/(?:\x08|^)(onerror:)?(?:(~?)(([\w$.]+):)?([^\x08]+))\x08(,)?([^\x08]+)/gi,E=/^if\s/,A=/<(\w+)[>\s]/,I=/[\x00`><\"'&=]/,P=/^on[A-Z]|^convert(Back)?$/,F=/^\#\d+_`[\s\S]*\/\d+_`$/,O=/[\x00`><"'&=]/g,q=/[&<>]/g,j=/&(amp|gt|lt);/g,R=/\[['"]?|['"]?\]/g,N=0,B={"&":"&amp;","<":"&lt;",">":"&gt;","\0":"&#0;","'":"&#39;",'"':"&#34;","`":"&#96;","=":"&#61;"},Y={amp:"&",gt:">",lt:"<"},J="html",z="object",H="data-jsv-tmpl",V="jsvTmpl",W="For #index in nested block use #getIndex().",U={},G={},K=e.jsrender,Q=K&&t&&!t.render,Z={template:{compile:function e(a,n,i,s){function o(n){var r,o;if(""+n===n||n.nodeType>0&&(d=n)){if(!d)if(/^\.?\/[^\\:*?"<>]*$/.test(n))(o=c[a=a||n])?n=o:d=document.getElementById(n);else if("#"===n.charAt(0))d=document.getElementById(n.slice(1));else if(t.fn&&!h.rTmpl.test(n))try{d=t(n,document)[0]}catch(e){}d&&("SCRIPT"!==d.tagName&&_e(n+": Use script block, not "+d.tagName),s?n=d.innerHTML:((r=d.getAttribute(H))&&(r!==V?(n=c[r],delete c[r]):t.fn&&(n=t.data(d).jsvTmpl)),r&&n||(a=a||(t.fn?V:n),n=e(a,d.innerHTML,i,s)),n.tmplName=a=a||r,a!==V&&(c[a]=n),d.setAttribute(H,a),t.fn&&t.data(d,V,n))),d=void 0}else n.fn||(n=void 0);return n}var d,l,m=n=n||"";h._html=u.html,0===s&&(s=void 0,m=o(m));(s=s||(n.markup?n.bnds?se({},n):n:{})).tmplName=s.tmplName||a||"unnamed",i&&(s._parentTmpl=i);!m&&n.markup&&(m=o(n.markup))&&m.fn&&(m=m.markup);if(void 0!==m)return m.render||n.render?m.tmpls&&(l=m):(n=fe(m,s),Se(m.replace(T,"\\$&"),n)),l||function(e){var t,a,n;for(t in Z)e[a=t+"s"]&&(n=e[a],e[a]={},r[a](n,e))}(l=se((function(){return l.render.apply(l,arguments)}),n)),l}},tag:{compile:function(e,t,a){var n,i,s,r=new h._tg;function o(){var t=this;t._={unlinked:!0},t.inline=!0,t.tagName=e}d(t)?t={depends:t.depends,render:t}:""+t===t&&(t={template:t});if(i=t.baseTag)for(s in t.flow=!!t.flow,(i=""+i===i?a&&a.tags[i]||p[i]:i)||_e('baseTag: "'+t.baseTag+'" not found'),r=se(r,i),t)r[s]=ee(i[s],t[s]);else r=se(r,t);void 0!==(n=r.template)&&(r.template=""+n===n?c[n]||c(n):n);(o.prototype=r).constructor=r._ctr=o,a&&(r._parentTmpl=a);return r}},viewModel:{compile:function(e,a){var n,i,s,r=this,c=a.getters,u=a.extend,m=a.id,p=t.extend({_is:e||"unnamed",unmap:k,merge:_},u),h="",g="",f=c?c.length:0,v=t.observable,w={};function y(e){i.apply(this,e)}function b(){return new y(arguments)}function $(e,t){for(var a,n,i,s,o,d=0;d<f;d++)a=void 0,(i=c[d])+""!==i&&(i=(a=i).getter,o=a.parentRef),void 0===(s=e[i])&&a&&void 0!==(n=a.defaultVal)&&(s=he(n,e)),t(s,a&&r[a.type],i,o)}function _(e,t,a){e=e+""===e?JSON.parse(e):e;var n,i,s,r,d,c,u,p,h,g,f=0,y=this;if(l(y)){for(u={},h=[],i=e.length,s=y.length;f<i;f++){for(p=e[f],c=!1,n=0;n<s&&!c;n++)u[n]||(d=y[n],m&&(u[n]=c=m+""===m?p[m]&&(w[m]?d[m]():d[m])===p[m]:m(d,p)));c?(d.merge(p),h.push(d)):(h.push(g=b.map(p)),a&&ge(g,a,t))}v?v(y).refresh(h,!0):y.splice.apply(y,[0,y.length].concat(h))}else for(r in $(e,(function(e,t,a,n){t?y[a]().merge(e,y,n):y[a]()!==e&&y[a](e)})),e)r===o||w[r]||(y[r]=e[r])}function k(){var e,t,a,n,i=0,s=this;function u(e){for(var t=[],a=0,n=e.length;a<n;a++)t.push(e[a].unmap());return t}if(l(s))return u(s);for(e={};i<f;i++)a=void 0,(t=c[i])+""!==t&&(t=(a=t).getter),n=s[t](),e[t]=a&&n&&r[a.type]?l(n)?u(n):n.unmap():n;for(t in s)!s.hasOwnProperty(t)||"_"===t.charAt(0)&&w[t.slice(1)]||t===o||d(s[t])||(e[t]=s[t]);return e}for(y.prototype=p,n=0;n<f;n++)!function(e){e=e.getter||e,w[e]=n+1;var t="_"+e;h+=(h?",":"")+e,g+="this."+t+" = "+e+";\n",p[e]=p[e]||function(a){if(!arguments.length)return this[t];v?v(this).setProperty(e,a):this[t]=a},v&&(p[e].set=p[e].set||function(e){this[t]=e})}(c[n]);return g=new Function(h,g),(i=function(){g.apply(this,arguments),(s=arguments[f+1])&&ge(this,arguments[f],s)}).prototype=p,p.constructor=i,b.map=function(t){t=t+""===t?JSON.parse(t):t;var a,n,i,s,r=0,d=t,u=[];if(l(t)){for(a=(t=t||[]).length;r<a;r++)u.push(this.map(t[r]));return u._is=e,u.unmap=k,u.merge=_,u}if(t){for($(t,(function(e,t){t&&(e=t.map(e)),u.push(e)})),d=this.apply(this,u),r=f;r--;)if(i=u[r],(s=c[r].parentRef)&&i&&i.unmap)if(l(i))for(a=i.length;a--;)ge(i[a],s,d);else ge(i,s,d);for(n in t)n===o||w[n]||(d[n]=t[n])}return d},b.getters=c,b.extend=u,b.id=m,b}},helper:{},converter:{}};function X(e,t){return function(){var a,n=this,i=n.base;return n.base=e,a=t.apply(n,arguments),n.base=i,a}}function ee(e,t){return d(t)&&((t=X(e?e._d?e:X(ne,e):ne,t))._d=(e&&e._d||0)+1),t}function te(e,t){var a,n=t.props;for(a in n)!P.test(a)||e[a]&&e[a].fix||(e[a]="convert"!==a?ee(e.constructor.prototype[a],n[a]):n[a])}function ae(e){return e}function ne(){return""}function ie(e){this.name=(t.link?"JsViews":"JsRender")+" Error",this.message=e||this.name}function se(e,t){if(e){for(var a in t)e[a]=t[a];return e}}function re(){var e=this.get("item");return e?e.index:void 0}function oe(){return this.index}function de(e,t,a,n){var i,s,r,o=0;if(1===a&&(n=1,a=void 0),t)for(r=(s=t.split(".")).length;e&&o<r;o++)i=e,e=s[o]?e[s[o]]:e;return a&&(a.lt=a.lt||o<r),void 0===e?n?ne:"":n?function(){return e.apply(i,arguments)}:e}function le(a,n,i){var s,r,o,l,c,u,p,g=this,f=!S&&arguments.length>1,v=g.ctx;if(a){if(g._||(c=g.index,g=g.tag),u=g,v&&v.hasOwnProperty(a)||(v=m).hasOwnProperty(a)){if(o=v[a],"tag"===a||"tagCtx"===a||"root"===a||"parentTags"===a)return o}else v=void 0;if((!S&&g.tagCtx||g.linked)&&(o&&o._cxp||(g=g.tagCtx||d(o)?g:!(g=g.scope||g).isTop&&g.ctx.tag||g,void 0!==o&&g.tagCtx&&(g=g.tagCtx.view.scope),v=g._ocps,(o=v&&v.hasOwnProperty(a)&&v[a]||o)&&o._cxp||!i&&!f||((v||(g._ocps=g._ocps||{}))[a]=o=[{_ocp:o,_vw:u,_key:a}],o._cxp={path:M,ind:0,updateValue:function(e,a){return t.observable(o[0]).setProperty(M,e),this}})),l=o&&o._cxp)){if(arguments.length>2)return(r=o[1]?h._ceo(o[1].deps):[M]).unshift(o[0]),r._cxp=l,r;if(c=l.tagElse,p=o[1]?l.tag&&l.tag.cvtArgs?l.tag.cvtArgs(c,1)[l.ind]:o[1](o[0].data,o[0],h):o[0]._ocp,f)return h._ucp(a,n,g,l),g;o=p}return o&&d(o)&&se(s=function(){return o.apply(this&&this!==e?this:u,arguments)},o),s||o}}function ce(e,t){var a,n,i,s,r,o,d,c=this;if(c.tagName){if(!(c=((o=c).tagCtxs||[c])[e||0]))return}else o=c.tag;if(r=o.bindFrom,s=c.args,(d=o.convert)&&""+d===d&&(d="true"===d?void 0:c.view.getRsc("converters",d)||_e("Unknown converter: '"+d+"'")),d&&!t&&(s=s.slice()),r){for(i=[],a=r.length;a--;)n=r[a],i.unshift(ue(c,n));t&&(s=i)}if(d){if(void 0===(d=d.apply(o,i||s)))return s;if(a=(r=r||[0]).length,l(d)&&(!1===d.arg0||1!==a&&d.length===a&&!d.arg0)||(d=[d],r=[0],a=1),t)s=d;else for(;a--;)+(n=r[a])===n&&(s[n]=d[a])}return s}function ue(e,t){return(e=e[+t===t?"args":"props"])&&e[t]}function me(e){return this.cvtArgs(e,1)}function pe(e,t,a,n,i,s,r,o){var d,l,c,u=this,m="array"===t;u.content=o,u.views=m?[]:{},u.data=n,u.tmpl=i,c=u._={key:0,useKey:m?0:1,id:""+N++,onRender:r,bnds:{}},u.linked=!!r,u.type=t||"top",t&&(u.cache={_ct:g._cchCt}),a&&"top"!==a.type||((u.ctx=e||{}).root=u.data),(u.parent=a)?(u.root=a.root||u,d=a.views,l=a._,u.isTop=l.scp,u.scope=(!e.tag||e.tag===a.ctx.tag)&&!u.isTop&&a.scope||u,l.useKey?(d[c.key="_"+l.useKey++]=u,u.index=W,u.getIndex=re):d.length===(c.key=u.index=s)?d.push(u):d.splice(s,0,u),u.ctx=e||a.ctx):t&&(u.root=u)}function he(e,t){return d(e)?e.call(t):e}function ge(e,t,a){Object.defineProperty(e,t,{value:a,configurable:!0})}function fe(e,a){var n,i=f._wm||{},s={tmpls:[],links:{},bnds:[],_is:"template",render:be};return a&&(s=se(s,a)),s.markup=e,s.htmlTag||(n=A.exec(e),s.htmlTag=n?n[1].toLowerCase():""),(n=i[s.htmlTag])&&n!==i.div&&(s.markup=t.trim(s.markup)),s}function ve(e,t){var a=e+"s";r[a]=function n(i,s,o){var d,l,c,u=h.onStore[e];if(i&&typeof i===z&&!i.nodeType&&!i.markup&&!i.getTgt&&!("viewModel"===e&&i.getters||i.extend)){for(l in i)n(l,i[l],s);return s||r}return i&&""+i!==i&&(o=s,s=i,i=void 0),c=o?"viewModel"===e?o:o[a]=o[a]||{}:n,d=t.compile,void 0===s&&(s=d?i:c[i],i=void 0),null===s?i&&delete c[i]:(d&&((s=d.call(c,i,s,o,0)||{})._is=e),i&&(c[i]=s)),u&&u(i,s,o,d),s}}function we(e){v[e]=v[e]||function(t){return arguments.length?(g[e]=t,v):g[e]}}function ye(e){function t(t,a){this.tgt=e.getTgt(t,a),a.map=this}return d(e)&&(e={getTgt:e}),e.baseMap&&(e=se(se({},e.baseMap),e)),e.map=function(e,a){return new t(e,a)},e}function be(e,t,a,n,i,r){var o,c,u,m,p,g,v,w,y=n,b="";if(!0===t?(a=t,t=void 0):typeof t!==z&&(t=void 0),(u=this.tag)?(p=this,m=(y=y||p.view)._getTmpl(u.template||p.tmpl),arguments.length||(e=u.contentCtx&&d(u.contentCtx)?e=u.contentCtx(e):y)):m=this,m){if(!n&&e&&"view"===e._is&&(y=e),y&&e===y&&(e=y.data),g=!y,S=S||g,g&&((t=t||{}).root=e),!S||f.useViews||m.useViews||y&&y!==s)b=$e(m,e,t,a,y,i,r,u);else{if(y?(v=y.data,w=y.index,y.index=W):(v=(y=s).data,y.data=e,y.ctx=t),l(e)&&!a)for(o=0,c=e.length;o<c;o++)y.index=o,y.data=e[o],b+=m.fn(e[o],y,h);else y.data=e,b+=m.fn(e,y,h);y.data=v,y.index=w}g&&(S=void 0)}return b}function $e(e,t,a,n,i,s,r,o){var d,c,u,m,p,g,f,v,w,y,b,$,_,k="";if(o&&(w=o.tagName,$=o.tagCtx,a=a?Te(a,o.ctx):o.ctx,e===i.content?f=e!==i.ctx._wrp?i.ctx._wrp:void 0:e!==$.content?e===o.template?(f=$.tmpl,a._wrp=$.content):f=$.content||i.content:f=i.content,!1===$.props.link&&((a=a||{}).link=!1)),i&&(r=r||i._.onRender,(_=a&&!1===a.link)&&i._.nl&&(r=void 0),a=Te(a,i.ctx),$=!o&&i.tag?i.tag.tagCtxs[i.tagElse]:$),(y=$&&$.props.itemVar)&&("~"!==y[0]&&ke("Use itemVar='~myItem'"),y=y.slice(1)),!0===s&&(g=!0,s=0),r&&o&&o._.noVws&&(r=void 0),v=r,!0===r&&(v=void 0,r=i._.onRender),b=a=e.helpers?Te(e.helpers,a):a,l(t)&&!n)for((u=g?i:void 0!==s&&i||new pe(a,"array",i,t,e,s,r,f))._.nl=_,i&&i._.useKey&&(u._.bnd=!o||o._.bnd&&o,u.tag=o),d=0,c=t.length;d<c;d++)m=new pe(b,"item",u,t[d],e,(s||0)+d,r,u.content),y&&((m.ctx=se({},b))[y]=h._cp(t[d],"#data",m)),p=e.fn(t[d],m,h),k+=u._.onRender?u._.onRender(p,m):p;else u=g?i:new pe(b,w||"data",i,t,e,s,r,f),y&&((u.ctx=se({},b))[y]=h._cp(t,"#data",u)),u.tag=o,u._.nl=_,k+=e.fn(t,u,h);return o&&(u.tagElse=$.index,$.contentView=u),v?v(k,u):k}function _e(e){throw new h.Err(e)}function ke(e){_e("Syntax error\n"+e)}function Se(e,t,a,n,s){function r(t){(t-=f)&&_.push(e.substr(f,t).replace(L,"\\n"))}function o(t,a){t&&(t+="}}",ke((a?"{{"+a+"}} block has {{/"+t+" without {{"+t:"Unmatched or missing {{/"+t)+", in template:\n"+e))}var d,l,c,u,m,p=g.allowCode||t&&t.allowCode||!0===v.allowCode,h=[],f=0,y=[],_=h,k=[,,h];if(p&&t._is&&(t.allowCode=p),a&&(void 0!==n&&(e=e.slice(0,-n.length-2)+b),e=w+e+$),o(y[0]&&y[0][2].pop()[0]),e.replace(i,(function(i,d,l,m,h,g,v,w,b,$,S,C){(v&&d||b&&!l||w&&":"===w.slice(-1)||$)&&ke(i),g&&(h=":",m=J);var M,T,A,I=(d||a)&&[[]],F="",O="",q="",j="",R="",N="",B="",Y="",z=!(b=b||a&&!s)&&!h;l=l||(w=w||"#data",h),r(C),f=C+i.length,v?p&&_.push(["*","\n"+w.replace(/^:/,"ret+= ").replace(D,"$1")+";\n"]):l?("else"===l&&(E.test(w)&&ke('For "{{else if expr}}" use "{{else expr}}"'),I=k[9]&&[[]],k[10]=e.substring(k[10],C),T=k[11]||k[0]||ke("Mismatched: "+i),k=y.pop(),_=k[2],z=!0),w&&Le(w.replace(L," "),I,t,a).replace(x,(function(e,t,a,n,i,s,r,o){return"this:"===n&&(s="undefined"),o&&(A=A||"@"===o[0]),n="'"+i+"':",r?(O+=a+s+",",j+="'"+o+"',"):a?(q+=n+"j._cp("+s+',"'+o+'",view),',N+=n+"'"+o+"',"):t?B+=s:("trigger"===i&&(Y+=s),"lateRender"===i&&(M="false"!==o),F+=n+s+",",R+=n+"'"+o+"',",u=u||P.test(i)),""})).slice(0,-1),I&&I[0]&&I.pop(),c=[l,m||!!n||u||"",z&&[],Me(j||(":"===l?"'#data',":""),R,N),Me(O||(":"===l?"data,":""),F,q),B,Y,M,A,I||0],_.push(c),z&&(y.push(k),(k=c)[10]=f,k[11]=T)):S&&(o(S!==k[0]&&S!==k[11]&&S,k[0]),k[10]=e.substring(k[10],C),k=y.pop()),o(!k&&S),_=k[2]})),r(e.length),(f=h[h.length-1])&&o(""+f!==f&&+f[10]===f[10]&&f[0]),a){for(l=De(h,e,a),m=[],d=h.length;d--;)m.unshift(h[d][9]);Ce(l,m)}else l=De(h,t);return l}function Ce(e,t){var a,n,i=0,s=t.length;for(e.deps=[],e.paths=[];i<s;i++)for(a in e.paths.push(n=t[i]),n)"_jsvto"!==a&&n.hasOwnProperty(a)&&n[a].length&&!n[a].skp&&(e.deps=e.deps.concat(n[a]))}function Me(e,t,a){return[e.slice(0,-1),t.slice(0,-1),a.slice(0,-1)]}function Le(e,a,n,i){var s,r,o,d,l,c=a&&a[0],u={bd:c},m={0:u},p=0,g=0,v=0,w={},y=0,b={},$={},_={},k={0:0},S={0:""},C=0;return"@"===e[0]&&(e=e.replace(R,".")),o=(e+(n?" ":"")).replace(h.rPrm,(function(n,o,M,L,D,x,E,A,I,P,F,O,q,j,R,N,B,Y,J,z,H){L&&!A&&(D=L+D),x=x||"",q=q||"",M=M||o||q,D=D||I,P&&(P=!/\)|]/.test(H[z-1]))&&(D=D.slice(1).split(".").join("^")),F=F||Y||"";var V,W,G,K,Q,Z,X,ee=z;if(!l&&!d){if(E&&ke(e),B&&c){if(V=_[v-1],H.length-1>ee-(V||0)){if(V=t.trim(H.slice(V,ee+n.length)),W=r||m[v-1].bd,(G=W[W.length-1])&&G.prm){for(;G.sb&&G.sb.prm;)G=G.sb;K=G.sb={path:G.sb,bnd:G.bnd}}else W.push(K={path:W.pop()});G&&G.sb===K&&(S[v]=S[v-1].slice(G._cpPthSt)+S[v],S[v-1]=S[v-1].slice(0,G._cpPthSt)),K._cpPthSt=k[v-1],K._cpKey=V,S[v]+=H.slice(C,z),C=z,K._cpfn=U[V]=U[V]||new Function("data,view,j","//"+V+"\nvar v;\nreturn ((v="+S[v]+("]"===N?")]":N)+")!=null?v:null);"),S[v-1]+=$[g]&&f.cache?'view.getCache("'+V.replace(T,"\\$&")+'"':S[v],K.prm=u.bd,K.bnd=K.bnd||K.path&&K.path.indexOf("^")>=0}S[v]=""}"["===F&&(F="[j._sq("),"["===M&&(M="[j._sq(")}return X=l?(l=!j)?n:q+'"':d?(d=!R)?n:q+'"':(M?(b[++g]=!0,w[g]=0,c&&(_[v++]=ee++,u=m[v]={bd:[]},S[v]="",k[v]=1),M):"")+(J?g?"":(p=H.slice(p,ee),(s?(s=r=!1,"\b"):"\b,")+p+(p=ee+n.length,c&&a.push(u.bd=[]),"\b")):A?(v&&ke(e),c&&a.pop(),s="_"+D,L,p=ee+n.length,c&&((c=u.bd=a[s]=[]).skp=!L),D+":"):D?D.split("^").join(".").replace(h.rPath,(function(e,t,n,o,d,l,m,p){if(Q="."===n,n&&(D=D.slice(t.length),/^\.?constructor$/.test(p||D)&&ke(e),Q||(e=(P?(i?"":"(ltOb.lt=ltOb.lt||")+"(ob=":"")+(o?'view.ctxPrm("'+o+'")':d?"view":"data")+(P?")===undefined"+(i?"":")")+'?"":view._getOb(ob,"':"")+(p?(l?"."+l:o||d?"":"."+n)+(m||""):(p=o?"":d?l||"":n,"")),e=t+("view.data"===(e+=p?"."+p:"").slice(0,9)?e.slice(5):e)+(P?(i?'"':'",ltOb')+(F?",1)":")"):"")),c)){if(W="_linkTo"===s?r=a._jsvto=a._jsvto||[]:u.bd,G=Q&&W[W.length-1]){if(G._cpfn){for(;G.sb;)G=G.sb;G.prm&&(G.bnd&&(D="^"+D.slice(1)),G.sb=D,G.bnd=G.bnd||"^"===D[0])}}else W.push(D);F&&!Q&&(_[v]=ee,k[v]=S[v].length)}return e}))+(F||x):x||(N?"]"===N?")]":")":O?($[g]||ke(e),","):o?"":(l=j,d=R,'"'))),l||d||N&&($[g]=!1,g--),c&&(l||d||(N&&(b[g+1]&&(u=m[--v],b[g+1]=!1),y=w[g+1]),F&&(w[g+1]=S[v].length+(M?1:0),(D||N)&&(u=m[++v]={bd:[]},b[g+1]=!0))),S[v]=(S[v]||"")+H.slice(C,z),C=z+n.length,l||d||((Z=M&&b[g+1])&&(S[v-1]+=M,k[v-1]++),"("===F&&Q&&!K&&(S[v]=S[v-1].slice(y)+S[v],S[v-1]=S[v-1].slice(0,y))),S[v]+=Z?X.slice(1):X),l||d||!F||(g++,D&&"("===F&&($[g]=!0)),l||d||!Y||(c&&(S[v]+=F),X+=F),X})),c&&(o=S[0]),!g&&o||ke(e)}function De(e,t,a){var n,i,s,r,o,d,l,c,u,m,h,v,w,y,b,$,_,k,S,C,M,T,x,E,A,I,P,F,O,q,j,R,N,B,Y=0,z=f.useViews||t.useViews||t.tags||t.templates||t.helpers||t.converters,H="",V={},W=e.length;for(""+t===t?(_=a?'data-link="'+t.replace(L," ").slice(1,-1)+'"':t,t=0):(_=t.tmplName||"unnamed",t.allowCode&&(V.allowCode=!0),t.debug&&(V.debug=!0),m=t.bnds,$=t.tmpls),n=0;n<W;n++)if(""+(i=e[n])===i)H+='+"'+i+'"';else if("*"===(s=i[0]))H+=";\n"+i[1]+"\nret=ret";else{if(r=i[1],C=!a&&i[2],N=i[3],B=v=i[4],o="\n\tparams:{args:["+N[0]+"],\n\tprops:{"+N[1]+"}"+(N[2]?",\n\tctx:{"+N[2]+"}":"")+"},\n\targs:["+B[0]+"],\n\tprops:{"+B[1]+"}"+(B[2]?",\n\tctx:{"+B[2]+"}":""),O=i[6],q=i[7],i[8]?(j="\nvar ob,ltOb={},ctxs=",R=";\nctxs.lt=ltOb.lt;\nreturn ctxs;"):(j="\nreturn ",R=""),M=i[10]&&i[10].replace(D,"$1"),(E="else"===s)?h&&h.push(i[9]):(P=i[5]||!1!==g.debugMode&&"undefined",m&&(h=i[9])&&(h=[h],Y=m.push(1))),z=z||v[1]||v[2]||h||/view.(?!index)/.test(v[0]),(A=":"===s)?r&&(s=r===J?">":r+s):(C&&((k=fe(M,V)).tmplName=_+"/"+s,k.useViews=k.useViews||z,De(C,k),z=k.useViews,$.push(k)),E||(S=s,z=z||s&&(!p[s]||!p[s].flow),x=H,H=""),T=(T=e[n+1])&&"else"===T[0]),F=P?";\ntry{\nret+=":"\n+",w="",y="",A&&(h||O||r&&r!==J||q)){if((I=new Function("data,view,j","// "+_+" "+ ++Y+" "+s+j+"{"+o+"};"+R))._er=P,I._tag=s,I._bd=!!h,I._lr=q,a)return I;Ce(I,h),u=!0,w=(b='c("'+r+'",view,')+Y+",",y=")"}if(H+=A?(a?(P?"try{\n":"")+"return ":F)+(u?(u=void 0,z=c=!0,b+(I?(m[Y-1]=I,Y):"{"+o+"}")+")"):">"===s?(l=!0,"h("+v[0]+")"):(!0,"((v="+v[0]+")!=null?v:"+(a?"null)":'"")'))):(d=!0,"\n{view:view,content:false,tmpl:"+(C?$.length:"false")+","+o+"},"),S&&!T){if(H="["+H.slice(0,-1)+"]",b='t("'+S+'",view,this,',a||h){if((H=new Function("data,view,j"," // "+_+" "+Y+" "+S+j+H+R))._er=P,H._tag=S,h&&Ce(m[Y-1]=H,h),H._lr=q,a)return H;w=b+Y+",undefined,",y=")"}H=x+F+b+(h&&Y||H)+")",h=0,S=0}P&&!T&&(z=!0,H+=";\n}catch(e){ret"+(a?"urn ":"+=")+w+"j._err(e,view,"+P+")"+y+";}"+(a?"":"\nret=ret"))}H="// "+_+(V.debug?"\ndebugger;":"")+"\nvar v"+(d?",t=j._tag":"")+(c?",c=j._cnvt":"")+(l?",h=j._html":"")+(a?(i[8]?", ob":"")+";\n":',ret=""')+H+(a?"\n":";\nreturn ret;");try{H=new Function("data,view,j",H)}catch(e){ke("Compiled template code:\n\n"+H+'\n: "'+(e.message||e)+'"')}return t&&(t.fn=H,t.useViews=!!z),H}function Te(e,t){return e&&e!==t?t?se(se({},t),e):e:t&&se({},t)}function xe(e,a){var n,i,s,r=a.tag,o=a.props,c=a.params.props,u=o.filter,m=o.sort,p=!0===m,h=parseInt(o.step),g=o.reverse?-1:1;if(!l(e))return e;if(p||m&&""+m===m?((n=e.map((function(e,t){return{i:t,v:""+(e=p?e:de(e,m))===e?e.toLowerCase():e}}))).sort((function(e,t){return e.v>t.v?g:e.v<t.v?-g:0})),e=n.map((function(t){return e[t.i]}))):(m||g<0)&&!r.dataMap&&(e=e.slice()),d(m)&&(e=e.sort((function(){return m.apply(a,arguments)}))),g<0&&(!m||d(m))&&(e=e.reverse()),e.filter&&u&&(e=e.filter(u,a),a.tag.onFilter&&a.tag.onFilter(a)),c.sorted&&(n=m||g<0?e:e.slice(),r.sorted?t.observable(r.sorted).refresh(n):a.map.sorted=n),i=o.start,s=o.end,(c.start&&void 0===i||c.end&&void 0===s)&&(i=s=0),isNaN(i)&&isNaN(s)||(i=+i||0,s=void 0===s||s>e.length?e.length:+s,e=e.slice(i,s)),h>1){for(i=0,s=e.length,n=[];i<s;i+=h)n.push(e[i]);e=n}return c.paged&&r.paged&&$observable(r.paged).refresh(e),e}function Ee(e,a,n){var i=this.jquery&&(this[0]||_e("Unknown template")),s=i.getAttribute(H);return be.call(s&&t.data(i).jsvTmpl||c(i),e,a,n)}function Ae(e){return B[e]||(B[e]="&#"+e.charCodeAt(0)+";")}function Ie(e,t){return Y[t]||""}function Pe(e){return null!=e?I.test(e)&&(""+e).replace(O,Ae)||e:""}if(r={jsviews:C,sub:{rPath:/^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,rPrm:/(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,View:pe,Err:ie,tmplFn:Se,parse:Le,extend:se,extendCtx:Te,syntaxErr:ke,onStore:{template:function(e,t){null===t?delete G[e]:e&&(G[e]=t)}},addSetting:we,settings:{allowCode:!1},advSet:ne,_thp:te,_gm:ee,_tg:function(){},_cnvt:function(e,t,a,n){var i,s,r,o,d,l="number"==typeof a&&t.tmpl.bnds[a-1];void 0===n&&l&&l._lr&&(n="");void 0!==n?a=n={props:{},args:[n]}:l&&(a=l(t.data,t,h));if(l=l._bd&&l,e||l){if(s=t._lc,i=s&&s.tag,a.view=t,!i){if(i=se(new h._tg,{_:{bnd:l,unlinked:!0,lt:a.lt},inline:!s,tagName:":",convert:e,onArrayChange:!0,flow:!0,tagCtx:a,tagCtxs:[a],_is:"tag"}),(o=a.args.length)>1)for(d=i.bindTo=[];o--;)d.unshift(o);s&&(s.tag=i,i.linkCtx=s),a.ctx=Te(a.ctx,(s?s.view:t).ctx),te(i,a)}i._er=n&&r,i.ctx=a.ctx||i.ctx||{},a.ctx=void 0,r=i.cvtArgs()[0],i._er=n&&r}else r=a.args[0];return null!=(r=l&&t._.onRender?t._.onRender(r,t,i):r)?r:""},_tag:function(e,t,a,n,i,r){function o(e){var t=d[e];if(void 0!==t)for(t=l(t)?t:[t],v=t.length;v--;)O=t[v],isNaN(parseInt(O))||(t[v]=parseInt(O));return t||[0]}var d,c,m,p,g,f,v,w,y,b,$,_,k,S,C,M,L,D,T,x,E,A,I,P,O,q,j,R,N,B=0,Y="",z=(t=t||s)._lc||!1,H=t.ctx,V=a||t.tmpl,W="number"==typeof n&&t.tmpl.bnds[n-1];"tag"===e._is?(e=(d=e).tagName,n=d.tagCtxs,d.template):(c=t.getRsc("tags",e)||_e("Unknown tag: {{"+e+"}} "),c.template);void 0===r&&W&&(W._lr=c.lateRender&&!1!==W._lr||W._lr)&&(r="");void 0!==r?(Y+=r,n=r=[{props:{},args:[],params:{props:{}}}]):W&&(n=W(t.data,t,h));for(f=n.length;B<f;B++)b=n[B],M=b.tmpl,(!z||!z.tag||B&&!z.tag.inline||d._er||M&&+M===M)&&(M&&V.tmpls&&(b.tmpl=b.content=V.tmpls[M-1]),b.index=B,b.ctxPrm=le,b.render=be,b.cvtArgs=ce,b.bndArgs=me,b.view=t,b.ctx=Te(Te(b.ctx,c&&c.ctx),H)),(a=b.props.tmpl)&&(b.tmpl=t._getTmpl(a),b.content=b.content||b.tmpl),d?z&&z.fn._lr&&(L=!!d.init):(d=new c._ctr,L=!!d.init,d.parent=g=H&&H.tag,d.tagCtxs=n,z&&(d.inline=!1,z.tag=d),d.linkCtx=z,(d._.bnd=W||z.fn)?(d._.ths=b.params.props.this,d._.lt=n.lt,d._.arrVws={}):d.dataBoundOnly&&_e(e+" must be data-bound:\n{^{"+e+"}}")),I=d.dataMap,b.tag=d,I&&n&&(b.map=n[B].map),d.flow||($=b.ctx=b.ctx||{},m=d.parents=$.parentTags=H&&Te($.parentTags,H.parentTags)||{},g&&(m[g.tagName]=g),m[d.tagName]=$.tag=d,$.tagCtx=b);if(!(d._er=r)){for(te(d,n[0]),d.rendering={rndr:d.rendering},B=0;B<f;B++){if(b=d.tagCtx=n[B],A=b.props,d.ctx=b.ctx,!B){if(L&&(d.init(b,z,d.ctx),L=void 0),b.args.length||!1===b.argDefault||!1===d.argDefault||(b.args=x=[b.view.data],b.params.args=["#data"]),k=o("bindTo"),void 0!==d.bindTo&&(d.bindTo=k),void 0!==d.bindFrom?d.bindFrom=o("bindFrom"):d.bindTo&&(d.bindFrom=d.bindTo=k),S=d.bindFrom||k,j=k.length,q=S.length,d._.bnd&&(R=d.linkedElement)&&(d.linkedElement=R=l(R)?R:[R],j!==R.length&&_e("linkedElement not same length as bindTo")),(R=d.linkedCtxParam)&&(d.linkedCtxParam=R=l(R)?R:[R],q!==R.length&&_e("linkedCtxParam not same length as bindFrom/bindTo")),S)for(d._.fromIndex={},d._.toIndex={},w=q;w--;)for(O=S[w],v=j;v--;)O===k[v]&&(d._.fromIndex[v]=w,d._.toIndex[w]=v);z&&(z.attr=d.attr=z.attr||d.attr||z._dfAt),p=d.attr,d._.noVws=p&&p!==J}if(x=d.cvtArgs(B),d.linkedCtxParam)for(E=d.cvtArgs(B,1),v=q,N=d.constructor.prototype.ctx;v--;)(_=d.linkedCtxParam[v])&&(O=S[v],C=E[v],b.ctx[_]=h._cp(N&&void 0===C?N[_]:C,void 0!==C&&ue(b.params,O),b.view,d._.bnd&&{tag:d,cvt:d.convert,ind:v,tagElse:B}));(D=A.dataMap||I)&&(x.length||A.dataMap)&&((T=b.map)&&T.src===x[0]&&!i||(T&&T.src&&T.unmap(),D.map(x[0],b,T,!d._.bnd),T=b.map),x=[T.tgt]),y=void 0,d.render&&(y=d.render.apply(d,x),t.linked&&y&&!F.test(y)&&((a={links:[]}).render=a.fn=function(){return y},y=$e(a,t.data,void 0,!0,t,void 0,void 0,d))),x.length||(x=[t]),void 0===y&&(P=x[0],d.contentCtx&&(P=!0===d.contentCtx?t:d.contentCtx(P)),y=b.render(P,!0)||(i?void 0:"")),Y=Y?Y+(y||""):void 0!==y?""+y:void 0}d.rendering=d.rendering.rndr}d.tagCtx=n[0],d.ctx=d.tagCtx.ctx,d._.noVws&&d.inline&&(Y="text"===p?u.html(Y):"");return W&&t._.onRender?t._.onRender(Y,t,d):Y},_er:_e,_err:function(e,t,a){var n=void 0!==a?d(a)?a.call(t.data,e,t):a||"":"{Error: "+(e.message||e)+"}";g.onError&&void 0!==(a=g.onError.call(t.data,e,a&&n,t))&&(n=a);return t&&!t._lc?u.html(n):n},_cp:ae,_sq:function(e){return"constructor"===e&&ke(""),e}},settings:{delimiters:function e(t,a,n){if(!t)return g.delimiters;if(l(t))return e.apply(r,t);_=n?n[0]:_,/^(\W|_){5}$/.test(t+a+_)||_e("Invalid delimiters");return w=t[0],y=t[1],b=a[0],$=a[1],g.delimiters=[w+y,b+$,_],t="\\"+w+"(\\"+_+")?\\"+y,a="\\"+b+"\\"+$,i="(?:(\\w+(?=[\\/\\s\\"+b+"]))|(\\w+)?(:)|(>)|(\\*))\\s*((?:[^\\"+b+"]|\\"+b+"(?!\\"+$+"))*?)",h.rTag="(?:"+i+")",i=new RegExp("(?:"+t+i+"(\\/)?|\\"+w+"(\\"+_+")?\\"+y+"(?:(?:\\/(\\w+))\\s*|!--[\\s\\S]*?--))"+a,"g"),h.rTmpl=new RegExp("^\\s|\\s$|<.*>|([^\\\\]|^)[{}]|"+t+".*"+a),v},advanced:function(e){return e?(se(f,e),h.advSet(),v):f}},map:ye},(ie.prototype=new Error).constructor=ie,re.depends=function(){return[this.get("item"),"index"]},oe.depends="index",pe.prototype={get:function(e,t){t||!0===e||(t=e,e=void 0);var a,n,i,s,r=this,o="root"===t;if(e){if(!(s=t&&r.type===t&&r))if(a=r.views,r._.useKey){for(n in a)if(s=t?a[n].get(e,t):a[n])break}else for(n=0,i=a.length;!s&&n<i;n++)s=t?a[n].get(e,t):a[n]}else if(o)s=r.root;else if(t)for(;r&&!s;)s=r.type===t?r:void 0,r=r.parent;else s=r.parent;return s||void 0},getIndex:oe,ctxPrm:le,getRsc:function(e,t){var a,n,i=this;if(""+t===t){for(;void 0===a&&i;)a=(n=i.tmpl&&i.tmpl[e])&&n[t],i=i.parent;return a||r[e][t]}},_getTmpl:function(e){return e&&(e.fn?e:this.getRsc("templates",e)||c(e))},_getOb:de,getCache:function(e){return g._cchCt>this.cache._ct&&(this.cache={_ct:g._cchCt}),void 0!==this.cache[e]?this.cache[e]:this.cache[e]=U[e](this.data,this,h)},_is:"view"},h=r.sub,v=r.settings,!(K||t&&t.render)){for(n in Z)ve(n,Z[n]);if(u=r.converters,m=r.helpers,p=r.tags,h._tg.prototype={baseApply:function(e){return this.base.apply(this,e)},cvtArgs:ce,bndArgs:me,ctxPrm:le},s=h.topView=new pe,t){if(t.fn.render=Ee,o=t.expando,t.observable){if(C!==(C=t.views.jsviews))throw"jquery.observable.js requires jsrender.js "+C;se(h,t.views.sub),r.map=t.views.map}}else t={},a&&(e.jsrender=t),t.renderFile=t.__express=t.compile=function(){throw"Node.js: use npm jsrender, or jsrender-node.js"},t.isFunction=function(e){return"function"==typeof e},t.isArray=Array.isArray||function(e){return"[object Array]"==={}.toString.call(e)},h._jq=function(e){e!==t&&(se(e,t),(t=e).fn.render=Ee,delete t.jsrender,o=t.expando)},t.jsrender=C;for(k in(g=h.settings).allowCode=!1,d=t.isFunction,t.render=G,t.views=r,t.templates=c=r.templates,g)we(k);(v.debugMode=function(e){return void 0===e?g.debugMode:(g._clFns&&g._clFns(),g.debugMode=e,g.onError=e+""===e?function(){return e}:d(e)?e:void 0,v)})(!1),f=g.advanced={cache:!0,useViews:!1,_jsv:!1},p({if:{render:function(e){var t=this,a=t.tagCtx;return t.rendering.done||!e&&(a.args.length||!a.index)?"":(t.rendering.done=!0,void(t.selected=a.index))},contentCtx:!0,flow:!0},for:{sortDataMap:ye(xe),init:function(e,t){this.setDataMap(this.tagCtxs)},render:function(e){var t,a,n,i,s,r=this,o=r.tagCtx,d=!1===o.argDefault,c=o.props,u=d||o.args.length,m="",p=0;if(!r.rendering.done){if(t=u?e:o.view.data,d)for(d=c.reverse?"unshift":"push",i=+c.end,s=+c.step||1,t=[],n=+c.start||0;(i-n)*s>0;n+=s)t[d](n);void 0!==t&&(a=l(t),m+=o.render(t,!u||c.noIteration),p+=a?t.length:1),(r.rendering.done=p)&&(r.selected=o.index)}return m},setDataMap:function(e){for(var t,a,n,i=e.length;i--;)a=(t=e[i]).props,n=t.params.props,t.argDefault=void 0===a.end||t.args.length>0,a.dataMap=!1!==t.argDefault&&l(t.args[0])&&(n.sort||n.start||n.end||n.step||n.filter||n.reverse||a.sort||a.start||a.end||a.step||a.filter||a.reverse)&&this.sortDataMap},flow:!0},props:{baseTag:"for",dataMap:ye((function(e,a){var n,i,s=a.map,r=s&&s.propsArr;if(!r){if(r=[],typeof e===z||d(e))for(n in e)i=e[n],n===o||!e.hasOwnProperty(n)||a.props.noFunctions&&t.isFunction(i)||r.push({key:n,prop:i});s&&(s.propsArr=s.options&&r)}return xe(r,a)})),init:ne,flow:!0},include:{flow:!0},"*":{render:ae,flow:!0},":*":{render:ae,flow:!0},dbg:m.dbg=u.dbg=function(e){try{throw console.log("JsRender dbg breakpoint: "+e),"dbg breakpoint"}catch(e){}return this.base?this.baseApply(arguments):e}}),u({html:Pe,attr:Pe,encode:function(e){return""+e===e?e.replace(q,Ae):e},unencode:function(e){return""+e===e?e.replace(j,Ie):e},url:function(e){return null!=e?encodeURI(""+e):null===e?e:""}})}return g=h.settings,l=(t||K).isArray,v.delimiters("{{","}}","^"),Q&&K.views.sub._jq(t),t||K}),window)},9356:()=>{},1770:()=>{},1939:()=>{},8819:()=>{},289:()=>{},7888:()=>{},1457:()=>{}},__webpack_module_cache__={},deferred;function __webpack_require__(e){var t=__webpack_module_cache__[e];if(void 0!==t)return t.exports;var a=__webpack_module_cache__[e]={exports:{}};return __webpack_modules__[e].call(a.exports,a,a.exports,__webpack_require__),a.exports}__webpack_require__.m=__webpack_modules__,deferred=[],__webpack_require__.O=(e,t,a,n)=>{if(!t){var i=1/0;for(d=0;d<deferred.length;d++){for(var[t,a,n]=deferred[d],s=!0,r=0;r<t.length;r++)(!1&n||i>=n)&&Object.keys(__webpack_require__.O).every((e=>__webpack_require__.O[e](t[r])))?t.splice(r--,1):(s=!1,n<i&&(i=n));if(s){deferred.splice(d--,1);var o=a();void 0!==o&&(e=o)}}return e}n=n||0;for(var d=deferred.length;d>0&&deferred[d-1][2]>n;d--)deferred[d]=deferred[d-1];deferred[d]=[t,a,n]},__webpack_require__.n=e=>{var t=e&&e.__esModule?()=>e.default:()=>e;return __webpack_require__.d(t,{a:t}),t},__webpack_require__.d=(e,t)=>{for(var a in t)__webpack_require__.o(t,a)&&!__webpack_require__.o(e,a)&&Object.defineProperty(e,a,{enumerable:!0,get:t[a]})},__webpack_require__.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),__webpack_require__.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{var e={589:0,336:0,976:0,877:0,220:0,939:0,278:0,378:0};__webpack_require__.O.j=t=>0===e[t];var t=(t,a)=>{var n,i,[s,r,o]=a,d=0;for(n in r)__webpack_require__.o(r,n)&&(__webpack_require__.m[n]=r[n]);if(o)var l=o(__webpack_require__);for(t&&t(a);d<s.length;d++)i=s[d],__webpack_require__.o(e,i)&&e[i]&&e[i][0](),e[s[d]]=0;return __webpack_require__.O(l)},a=self.webpackChunk=self.webpackChunk||[];a.forEach(t.bind(null,0)),a.push=t.bind(null,a.push.bind(a))})(),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3878))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1848))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4532))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7957))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1112))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8174))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3737))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3949))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1832))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3747))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3021))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5579))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(6117))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7138))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3853))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2509))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2228))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4381))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8847))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2642))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4898))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2708))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8089))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(6610))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9946))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3950))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2880))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1648))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3879))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(350))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9474))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9434))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7225))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2425))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3751))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7254))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(2984))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(6619))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1710))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4012))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9083))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9438))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7534))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(234))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4212))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9044))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3305))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3713))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3980))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8421))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5595))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5954))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(3273))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7447))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9411))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1381))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(874))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4304))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(6095))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9704))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(397))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5518))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(48))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8283))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(6345))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1554))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4166))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(4117))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5919))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5908))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9425))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(5462))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1939))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(8819))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(289))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(7888))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1457))),__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(9356)));var __webpack_exports__=__webpack_require__.O(void 0,[336,976,877,220,939,278,378],(()=>__webpack_require__(1770)));__webpack_exports__=__webpack_require__.O(__webpack_exports__)})();
+      `, element.outerHTML);
+        }
+    }
+})();
+
+window.Turbo = Turbo;
+start();
+
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/turbo.js":
+/*!**************************************!*\
+  !*** ./resources/assets/js/turbo.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hotwired_turbo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/turbo */ "./node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js");
+
+window.Turbo = _hotwired_turbo__WEBPACK_IMPORTED_MODULE_0__;
+_hotwired_turbo__WEBPACK_IMPORTED_MODULE_0__.start();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_hotwired_turbo__WEBPACK_IMPORTED_MODULE_0__);
+
+/***/ }),
+
+/***/ "./resources/assets/scss/custom-pages-dark.scss":
+/*!******************************************************!*\
+  !*** ./resources/assets/scss/custom-pages-dark.scss ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/pages.scss":
+/*!******************************************!*\
+  !*** ./resources/assets/scss/pages.scss ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/bill-pdf.scss":
+/*!*********************************************!*\
+  !*** ./resources/assets/scss/bill-pdf.scss ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/prescription-pdf.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/prescription-pdf.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/js/pages": 0,
+/******/ 			"assets/css/prescription-pdf": 0,
+/******/ 			"assets/css/bill-pdf": 0,
+/******/ 			"assets/css/pages": 0,
+/******/ 			"assets/css/custom-pages-dark": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) var result = runtime(__webpack_require__);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["assets/css/prescription-pdf","assets/css/bill-pdf","assets/css/pages","assets/css/custom-pages-dark"], () => (__webpack_require__("./resources/assets/js/turbo.js")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/prescription-pdf","assets/css/bill-pdf","assets/css/pages","assets/css/custom-pages-dark"], () => (__webpack_require__("./resources/assets/scss/custom-pages-dark.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/prescription-pdf","assets/css/bill-pdf","assets/css/pages","assets/css/custom-pages-dark"], () => (__webpack_require__("./resources/assets/scss/pages.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/prescription-pdf","assets/css/bill-pdf","assets/css/pages","assets/css/custom-pages-dark"], () => (__webpack_require__("./resources/assets/scss/bill-pdf.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/css/prescription-pdf","assets/css/bill-pdf","assets/css/pages","assets/css/custom-pages-dark"], () => (__webpack_require__("./resources/assets/scss/prescription-pdf.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;

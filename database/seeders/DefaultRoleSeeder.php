@@ -43,7 +43,7 @@ class DefaultRoleSeeder extends Seeder
         $adminRole = Role::whereName('clinic_admin')->first();
 
         /** @var User $user */
-        $user = User::whereEmail('admin@infycare.com')->first();
+        $user = User::whereEmail('admin@mydent.in')->first();
 
         $allPermission = Permission::pluck('name', 'id');
         $adminRole->givePermissionTo($allPermission);
@@ -52,13 +52,13 @@ class DefaultRoleSeeder extends Seeder
         }
 
         $doctorRole = Role::whereName('doctor')->first();
-        $doctor = User::whereEmail('doctor@infycare.com')->first();
+        $doctor = User::whereEmail('doctor@mydent.in')->first();
         if ($doctor) {
             $doctor->assignRole($doctorRole);
         }
 
         $patientRole = Role::whereName('patient')->first();
-        $doctor = User::whereEmail('patient@infycare.com')->first();
+        $doctor = User::whereEmail('patient@mydent.in')->first();
         if ($doctor) {
             $doctor->assignRole($patientRole);
         }

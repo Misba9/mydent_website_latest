@@ -1,11 +1,11 @@
 <div class="d-flex align-items-center">
     <div class="image image-circle image-mini me-3">
         <a href="javascript:void(0)">
-            <img src="{{ $row->doctor->user->profile_image ?? asset('assets/image/infycare-logo.png') }}" 
+            <img src="{{ $row->doctor->user->profile_image ?? asset('assets/image/mydent-logo.png') }}" 
                  alt="{{ $row->doctor->user->full_name ?? 'Doctor' }}" 
                  class="user-img rounded-circle object-cover" 
                  width="40" height="40"
-                 onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+                 onerror="this.src='{{ asset('assets/image/mydent-logo.png') }}'">
         </a>
     </div>
     <div class="d-flex flex-column">

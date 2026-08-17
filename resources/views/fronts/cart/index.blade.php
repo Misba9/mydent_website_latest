@@ -39,7 +39,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             @if(!empty($item['image']))
-                                                                <img src="{{ asset($item['image']) }}" width="65" height="65" class="rounded me-3 object-cover" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+                                                                <img src="{{ asset($item['image']) }}" width="65" height="65" class="rounded me-3 object-cover" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('assets/image/mydent-logo.png') }}'">
                                                             @else
                                                                 <div class="bg-secondary rounded me-3 d-flex align-items-center justify-content-center" style="width: 65px; height: 65px;">
                                                                     <i class="fa-solid fa-box text-muted fs-3"></i>

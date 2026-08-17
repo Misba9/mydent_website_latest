@@ -505,7 +505,7 @@ care - everything in one place
       @foreach ($blogs as $blog)
       <div class="blog-card">
         <div style="width: 100%; height: 200px; position: relative;">
-          <img src="{{ getMediaUrl($blog->thumbnail, 'assets/image/infycare-logo.png') }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+          <img src="{{ getMediaUrl($blog->thumbnail, 'assets/image/mydent-logo.png') }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/mydent-logo.png') }}'">
 
 
 

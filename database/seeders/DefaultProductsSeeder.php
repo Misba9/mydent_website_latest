@@ -21,7 +21,7 @@ class DefaultProductsSeeder extends Seeder
                 'price' => 24999,
                 'discount_price' => 19999,
                 'quantity' => 50,
-                'thumbnail' => 'assets/image/infycare-logo.png',
+                'thumbnail' => 'assets/image/mydent-logo.png',
             ],
             [
                 'id' => 2,
@@ -31,7 +31,7 @@ class DefaultProductsSeeder extends Seeder
                 'price' => 1199,
                 'discount_price' => 899,
                 'quantity' => 100,
-                'thumbnail' => 'assets/image/infycare-logo.png',
+                'thumbnail' => 'assets/image/mydent-logo.png',
             ],
             [
                 'id' => 3,
@@ -41,7 +41,7 @@ class DefaultProductsSeeder extends Seeder
                 'price' => 699,
                 'discount_price' => 499,
                 'quantity' => 150,
-                'thumbnail' => 'assets/image/infycare-logo.png',
+                'thumbnail' => 'assets/image/mydent-logo.png',
             ],
             [
                 'id' => 4,
@@ -51,7 +51,7 @@ class DefaultProductsSeeder extends Seeder
                 'price' => 3499,
                 'discount_price' => 2499,
                 'quantity' => 40,
-                'thumbnail' => 'assets/image/infycare-logo.png',
+                'thumbnail' => 'assets/image/mydent-logo.png',
             ]
         ];
 

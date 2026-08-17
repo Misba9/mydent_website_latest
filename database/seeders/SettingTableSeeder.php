@@ -12,12 +12,12 @@ class SettingTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $logoUrl = ('assets/image/infycare-logo.png');
-        $favicon = ('assets/image/infyCare-favicon.ico');
+        $logoUrl = ('assets/image/mydent-logo.png');
+        $favicon = ('assets/image/mydent-favicon.ico');
 
-        Setting::create(['key' => 'clinic_name', 'value' => 'Clinic Appointment Management']);
+        Setting::create(['key' => 'clinic_name', 'value' => 'MyDent Clinic']);
         Setting::create(['key' => 'contact_no', 'value' => '1234567890']);
-        Setting::create(['key' => 'email', 'value' => 'infycare@email.com']);
+        Setting::create(['key' => 'email', 'value' => 'support@mydent.in']);
         Setting::create(['key' => 'specialities', 'value' => '1']);
         Setting::create(['key' => 'currency', 'value' => '1']);
         Setting::create([

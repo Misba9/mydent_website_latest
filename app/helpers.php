@@ -75,7 +75,7 @@ function getAppLogo()
  */
 function getAppFavicon()
 {
-    return optional(getSettingsKeyedByKey()->get('favicon'))->value ?? 'assets/image/infyCare-favicon.ico';
+    return optional(getSettingsKeyedByKey()->get('favicon'))->value ?? 'assets/image/mydent-favicon.ico';
 }
 
 /**
@@ -90,7 +90,7 @@ function getAppFavicon()
 function getMediaUrl($path, $defaultFallback = null)
 {
     if (empty($path)) {
-        return $defaultFallback ? asset($defaultFallback) : asset('assets/image/infycare-logo.png');
+        return $defaultFallback ? asset($defaultFallback) : asset('assets/image/mydent-logo.png');
     }
 
     // If path is a full HTTP/HTTPS URL, extract path component
