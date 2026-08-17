@@ -29,8 +29,10 @@
 
     <link href="{{ mix('css/front-third-party.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ mix('css/front-pages.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/front/css/front-custom.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('assets/css/bootstrap-datepicker/bootstrap-datepicker.css') }}">
+
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/intlTelInput.css') }}">
 
     <!-- Document Title ===================== -->
