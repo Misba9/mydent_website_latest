@@ -1,3 +1,7 @@
+.env
+.env.*
+!.env.example
+.env.before-hostinger
 /node_modules
 /vendor
 *.zip
@@ -19,3 +23,4 @@ yarn-error.log
 .idea
 
 /DEVSENSE/packages-cache/authorizenet
+

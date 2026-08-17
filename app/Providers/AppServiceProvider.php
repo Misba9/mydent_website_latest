@@ -44,5 +44,10 @@ class AppServiceProvider extends ServiceProvider
     {
         error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
         Paginator::useBootstrap();
+
+        if ($this->app->environment('production') || env('FORCE_HTTPS', false)) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
+
 }
