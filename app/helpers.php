@@ -56,8 +56,19 @@ function getAppName()
  */
 function getAppLogo()
 {
-    return optional(getSettingsKeyedByKey()->get('logo'))->value ?? 'assets/image/infycare-logo.png';
+    $logo = optional(getSettingsKeyedByKey()->get('logo'))->value;
+    if (!empty($logo)) {
+        if (str_starts_with($logo, 'http://') || str_starts_with($logo, 'https://')) {
+            $parsed = parse_url($logo, PHP_URL_PATH);
+            $logo = ltrim($parsed, '/');
+        }
+        if (file_exists(public_path($logo))) {
+            return $logo;
+        }
+    }
+    return 'storage/imgs/logo.png';
 }
+
 
 /**
  * @return mixed

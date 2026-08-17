@@ -1,8 +1,9 @@
 <div class="aside-menu-container" id="sidebar">
     <div class="aside-menu-container__aside-logo flex-column-auto">
         <a href="{{ url('/') }}" class="text-decoration-none sidebar-logo" data-turbo="false" target="_blank">
-            <img src="{{ asset(getAppLogo()) }}" alt="Logo" class="object-cover sidebar-app-logo"/>
+            <img src="{{ asset(getAppLogo()) }}" alt="Logo" class="object-cover sidebar-app-logo" onerror="this.src='{{ asset('storage/imgs/logo.png') }}'"/>
         </a>
+
         <button type="button" class="btn px-0 aside-menu-container__aside-menubar d-lg-block d-none sidebar-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" fill="#6C757D" class="bi bi-list"
                  viewBox="0 0 16 16">

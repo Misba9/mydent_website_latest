@@ -3,11 +3,12 @@
         <div class="row align-items-center">
             <div class="col-lg-2 col-6">
                 <a href="{{ url('/') }}" class="header-logo d-inline-block">
-                    <img src="{{ asset('storage/imgs/logo.png') }}" 
+                    <img src="{{ asset(getAppLogo()) }}" 
                          alt="MyDent"
                          class="front-app-logo img-fluid" 
                          style="max-height: 48px; width: auto; object-fit: contain;"
-                         onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'" />
+                         onerror="this.src='{{ asset('storage/imgs/logo.png') }}'" />
+
                 </a> 
             </div>
             <div class="col-lg-10 col-6">

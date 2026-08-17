@@ -7,6 +7,9 @@
         <div class="container-fluid">
             <div class="navbar-collapse">
                 <div class="d-flex align-items-center">
+                    <a href="{{ url('/') }}" class="me-3 d-flex align-items-center text-decoration-none" data-turbo="false">
+                        <img src="{{ asset(getAppLogo()) }}" alt="MyDent Logo" class="img-fluid mydent-navbar-logo" style="max-height: 38px; width: auto; object-fit: contain;" onerror="this.src='{{ asset('storage/imgs/logo.png') }}'">
+                    </a>
                     @if(Auth::check())
                         @if(isRole('patient'))
                             <h3 class="text-gray-900 fw-bold mb-0 me-4 fs-3">Patient Panel</h3>
@@ -16,6 +19,7 @@
                             <h3 class="text-gray-900 fw-bold mb-0 me-4 fs-3">Admin Panel</h3>
                         @endif
                     @endif
+
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         @include('layouts.sub_menu')
                     </ul>
