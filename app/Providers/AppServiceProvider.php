@@ -48,6 +48,14 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production') || env('FORCE_HTTPS', false)) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('products') && \Illuminate\Support\Facades\DB::table('products')->count() === 0) {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            }
+        } catch (\Throwable $e) {
+            // Silently swallow any database boot connection errors if database is initializing
+        }
     }
 
 }

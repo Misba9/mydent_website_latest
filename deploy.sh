@@ -20,7 +20,10 @@ fi
 # 3. Create Storage Symlink if missing
 php artisan storage:link || true
 
-# 4. Clear and Cache Configurations, Routes, Views, and Events
+# 4. Run Database Migrations safely
+php artisan migrate --force
+
+# 5. Clear and Cache Configurations, Routes, Views, and Events
 php artisan optimize:clear
 php artisan config:cache
 php artisan route:cache
