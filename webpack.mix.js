@@ -194,10 +194,11 @@ mix.js([
 // front css
 
 mix.sass('resources/assets/front/scss/front-custom.scss',
-    'assets/front/css/front-custom.css')
+    'public/assets/front/css/front-custom.css')
     .sass('resources/assets/front/scss/about.scss',
-        'assets/front/css/about.css')
+        'public/assets/front/css/about.css')
     .version();
+
 
 mix.sass('resources/assets/front/scss/main.scss',
     'public/css/front-pages.css'

@@ -29,7 +29,9 @@
 
     <link href="{{ mix('css/front-third-party.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ mix('css/front-pages.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/front/css/front-custom.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/front/style.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <link rel="stylesheet" type="text/css"
         href="{{ asset('assets/css/bootstrap-datepicker/bootstrap-datepicker.css') }}">
 
@@ -37,11 +39,14 @@
 
     <!-- Document Title ===================== -->
     <title>@yield('front-title') | {{ getAppName() }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="{{ asset('messages.js') }}"></script>
     <script src="{{ asset('assets/front/vendor/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ mix('js/front-third-party.js') }}"></script>
     <script src="{{ mix('js/front-pages.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+
     <!-- JavaScript Bundle with Popper -->
     <script data-turbo-eval="false">
         let currencyIcon = '{{ getCurrencyIcon() }}'
