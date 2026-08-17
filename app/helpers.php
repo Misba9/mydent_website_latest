@@ -79,6 +79,57 @@ function getAppFavicon()
 }
 
 /**
+ * Centralized, environment-safe media URL generator.
+ * Normalizes stored paths, eliminates duplicate upload prefixes (uploads/uploads),
+ * handles full URLs, decodes/encodes spaces properly, and resolves relative to APP_URL.
+ *
+ * @param string|null $path
+ * @param string|null $defaultFallback
+ * @return string
+ */
+function getMediaUrl($path, $defaultFallback = null)
+{
+    if (empty($path)) {
+        return $defaultFallback ? asset($defaultFallback) : asset('assets/image/infycare-logo.png');
+    }
+
+    // If path is a full HTTP/HTTPS URL, extract path component
+    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+        $parsedPath = parse_url($path, PHP_URL_PATH);
+        $path = ltrim($parsedPath ?? '', '/');
+    }
+
+    // Strip leading slash
+    $path = ltrim($path, '/');
+
+    // Fix duplicate uploads/uploads/ prefix
+    while (str_starts_with($path, 'uploads/uploads/')) {
+        $path = substr($path, strlen('uploads/'));
+    }
+
+    // Fix storage/public/ or public/storage/ prefixes
+    if (str_starts_with($path, 'public/storage/')) {
+        $path = substr($path, strlen('public/'));
+    }
+
+    // Decode URL-encoded components (e.g. %20) to check local filesystem existence
+    $decodedPath = rawurldecode($path);
+
+    // If file exists on disk, return asset URL
+    if (file_exists(public_path($decodedPath))) {
+        return asset($decodedPath);
+    }
+
+    // Fallback handling for missing upload assets
+    if ($defaultFallback && file_exists(public_path($defaultFallback))) {
+        return asset($defaultFallback);
+    }
+
+    return asset($decodedPath);
+}
+
+
+/**
  * @return int
  */
 function getLogInUserId()

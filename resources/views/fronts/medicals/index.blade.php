@@ -216,7 +216,8 @@
                                     @if($section2Video)
                                         <video class="w-100 h-100" style=" object-fit: cover;border-radius: 20px;
                                                 box-shadow: 0 8px 20px rgba(26, 24, 27, 0.4);" autoplay loop muted playsinline>
-                                            <source src="{{ $section2Video->video_path }}" type="video/mp4">
+                                            <source src="{{ getMediaUrl($section2Video->video_path, 'storage/vids/heroandchat.mp4') }}" type="video/mp4">
+
                                             Your browser does not support the video tag.
                                         </video>
                                     @else
@@ -378,7 +379,8 @@ care - everything in one place
                 @foreach($cards as $card)
                     <div class="card border shadow-sm text-center p-3"
                          style="min-width: 180px; max-width: 180px; height: 250px; flex: 0 0 auto; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between;">
-                        <img src="{{ asset($card->image_path) }}" alt="{{ $card->title }}"
+                        <img src="{{ getMediaUrl($card->image_path, 'storage/imgs/logo.png') }}" alt="{{ $card->title }}"
+
                              class="img-fluid"
                              style="height: 200px; max-width: 100%; object-fit: contain;" />
                         <h5 class="fw-bold mt-3">{{ $card->title }}</h5>
@@ -403,7 +405,8 @@ care - everything in one place
                 <div class="col-md-4 mb-4">
                     <div class="card border rounded p-3 shadow-sm text-center" style="height: 320px;">
                         <video class="w-100" style="height: 180px; object-fit: cover;" autoplay loop muted playsinline>
-                            <source src="{{ $video->video_path }}" type="video/mp4">
+                            <source src="{{ getMediaUrl($video->video_path, 'storage/vids/p1c1vi' . (($index % 6) + 1) . '.mp4') }}" type="video/mp4">
+
                             Your browser does not support the video tag.
                         </video>
                         <div class="mt-3">
@@ -500,7 +503,8 @@ care - everything in one place
       @foreach ($blogs as $blog)
       <div class="blog-card">
         <div style="width: 100%; height: 200px; position: relative;">
-          <img src="{{ asset($blog->thumbnail) }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+          <img src="{{ getMediaUrl($blog->thumbnail, 'assets/image/infycare-logo.png') }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+
 
 
           <span style="position: absolute; bottom: 10px; left: 10px; background: rgba(0, 0, 0, 0.7); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">Before</span>

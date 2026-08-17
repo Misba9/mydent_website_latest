@@ -43,12 +43,19 @@ class HomepageVideoController extends Controller
     $imagePath = null;
 
     if ($request->hasFile('video')) {
-        $videoPath = Storage::url($request->file('video')->store('public/vids'));
+        $videoFile = $request->file('video');
+        $videoName = time() . '_' . $videoFile->getClientOriginalName();
+        $videoFile->move(public_path('uploads/vids'), $videoName);
+        $videoPath = 'uploads/vids/' . $videoName;
     }
 
     if ($request->hasFile('image')) {
-        $imagePath = Storage::url($request->file('image')->store('public/images'));
+        $imageFile = $request->file('image');
+        $imageName = time() . '_' . $imageFile->getClientOriginalName();
+        $imageFile->move(public_path('uploads/images'), $imageName);
+        $imagePath = 'uploads/images/' . $imageName;
     }
+
 
     HomepageVideo::create([
         'title' => $request->title,

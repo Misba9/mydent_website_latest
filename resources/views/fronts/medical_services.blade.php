@@ -151,7 +151,8 @@ hold you back— shine confidently with Mydent</strong></p>
         @if($section4Video)
             <video class="w-100 h-100" style=" object-fit: cover;border-radius: 20px;
                                                 box-shadow: 0 8px 20px rgba(26, 24, 27, 0.4);" autoplay loop muted playsinline>
-                <source src="{{ $section4Video->video_path }}" type="video/mp4">
+                <source src="{{ getMediaUrl($section4Video->video_path, 'storage/vids/heroandchat.mp4') }}" type="video/mp4">
+
                 Your browser does not support the video tag.
             </video>
         @else
