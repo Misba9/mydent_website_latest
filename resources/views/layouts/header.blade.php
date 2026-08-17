@@ -87,40 +87,59 @@
 
         @if(Auth::check())
         <li class="px-sm-3 px-2">
-            <div class="dropdown d-flex align-items-center py-4">
-                <div class="image image-circle image-mini">
-                    @if(getLogInUser()->hasRole('patient'))
-                        <img class="img-fluid" alt="img-fluid"
-                             src="{{ getLogInUser()->patient->profile }}"/>
-                    @elseif(getLogInUser()->hasRole('doctor'))
-                        <img class="img-fluid" alt="img-fluid"
-                             src="{{ getLogInUser()->profile_image }}"/>
+            <div class="dropdown d-flex align-items-center py-2">
+                @php
+                    $user = getLogInUser();
+                    $profileUrl = null;
+                    if ($user) {
+                        if ($user->hasRole('patient') && $user->patient) {
+                            $profileUrl = $user->patient->profile ?? null;
+                        } else {
+                            $profileUrl = $user->profile_image ?? null;
+                        }
+                    }
+                    $initial = $user ? strtoupper(substr($user->first_name, 0, 1)) : 'U';
+                @endphp
+                <div class="image image-circle image-mini me-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px;">
+                    @if($profileUrl)
+                        <img class="img-fluid rounded-circle" alt="{{ $user ? $user->full_name : 'Profile' }}"
+                             src="{{ $profileUrl }}"
+                             style="width: 38px; height: 38px; object-fit: cover;"
+                             onerror="this.style.display='none'; if(this.nextElementSibling) { this.nextElementSibling.classList.remove('d-none'); this.nextElementSibling.classList.add('d-flex'); }" />
+                        <span class="avatar-fallback rounded-circle bg-primary text-white d-none align-items-center justify-content-center fw-bold fs-6" style="width: 38px; height: 38px; min-width: 38px; line-height: 38px; text-align: center;">
+                            {{ $initial }}
+                        </span>
                     @else
-                        <img class="img-fluid" alt="img-fluid"
-                             src="{{ getLogInUser()->profile_image }}"/>
+                        <span class="avatar-fallback rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-6" style="width: 38px; height: 38px; min-width: 38px; line-height: 38px; text-align: center;">
+                            {{ $initial }}
+                        </span>
                     @endif
                 </div>
-                <button class="btn dropdown-toggle ps-2 pe-0" type="button" id="menuDropDown"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    {{ getLogInUser()->full_name }}
+                <button class="btn dropdown-toggle ps-1 pe-0 text-truncate text-gray-900 fw-bold border-0 bg-transparent" type="button" id="menuDropDown"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="max-width: 180px;">
+                    <span class="d-none d-sm-inline-block">{{ $user->full_name }}</span>
                 </button>
                 <div class="dropdown-menu py-7 pb-4 my-2" aria-labelledby="menuDropDown">
                     <div class="text-center border-bottom pb-5">
-                        <div class="image image-circle image-tiny mb-5">
-                            @if(getLogInUser()->hasRole('patient'))
-                                <img class="img-fluid" alt="img-fluid"
-                                     src="{{ getLogInUser()->patient->profile }}"/>
-                            @elseif(getLogInUser()->hasRole('doctor'))
-                                <img class="img-fluid" alt="img-fluid"
-                                     src="{{ getLogInUser()->profile_image }}"/>
+                        <div class="image image-circle image-tiny mb-3 d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px;">
+                            @if($profileUrl)
+                                <img class="img-fluid rounded-circle" alt="{{ $user->full_name }}"
+                                     src="{{ $profileUrl }}"
+                                     style="width: 60px; height: 60px; object-fit: cover;"
+                                     onerror="this.style.display='none'; if(this.nextElementSibling) { this.nextElementSibling.classList.remove('d-none'); this.nextElementSibling.classList.add('d-flex'); }" />
+                                <span class="avatar-fallback rounded-circle bg-primary text-white d-none align-items-center justify-content-center fw-bold fs-3" style="width: 60px; height: 60px; min-width: 60px; line-height: 60px; text-align: center;">
+                                    {{ $initial }}
+                                </span>
                             @else
-                                <img class="img-fluid" alt="img-fluid"
-                                     src="{{ getLogInUser()->profile_image }}"/>
+                                <span class="avatar-fallback rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-3" style="width: 60px; height: 60px; min-width: 60px; line-height: 60px; text-align: center;">
+                                    {{ $initial }}
+                                </span>
                             @endif
                         </div>
-                        <h3 class="text-gray-900">{{ getLogInUser()->full_name }}</h3>
-                        <h4 class="mb-0 fw-400 fs-6">{{ getLogInUser()->email }}</h4>
+                        <h3 class="text-gray-900 mb-1">{{ getLogInUser()->full_name }}</h3>
+                        <h4 class="mb-0 fw-400 fs-6 text-muted">{{ getLogInUser()->email }}</h4>
                     </div>
+
                     <ul class="pt-4">
                         <li>
                             <a class="dropdown-item text-gray-900" href="{{ route('profile.setting') }}">

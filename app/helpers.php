@@ -46,8 +46,10 @@ function getSettingsKeyedByKey()
  */
 function getAppName()
 {
-    return optional(getSettingsKeyedByKey()->get('clinic_name'))->value ?? config('app.name');
+    $name = optional(getSettingsKeyedByKey()->get('clinic_name'))->value ?? config('app.name');
+    return ($name === 'Laravel' || empty($name)) ? 'MyDent' : $name;
 }
+
 
 /**
  * @return mixed
