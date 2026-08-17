@@ -500,7 +500,8 @@ care - everything in one place
       @foreach ($blogs as $blog)
       <div class="blog-card">
         <div style="width: 100%; height: 200px; position: relative;">
-          <img src="{{ asset(preg_replace('#^uploads/uploads/#', 'uploads/', $blog->thumbnail)) }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+          <img src="{{ asset($blog->thumbnail) }}" alt="{{ $blog->title }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('assets/image/infycare-logo.png') }}'">
+
 
           <span style="position: absolute; bottom: 10px; left: 10px; background: rgba(0, 0, 0, 0.7); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">Before</span>
           <span style="position: absolute; bottom: 10px; right: 10px; background: rgba(0, 0, 0, 0.7); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">After</span>

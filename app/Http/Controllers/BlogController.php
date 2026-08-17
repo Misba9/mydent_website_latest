@@ -35,10 +35,10 @@ public function store(Request $request)
     ]);
 
     // Handle image upload
-$thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
-$request->file('thumbnail')->move(public_path('uploads/uploads/blogs'), $thumbnailName);
+    $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
+    $request->file('thumbnail')->move(public_path('uploads/blogs'), $thumbnailName);
+    $thumbnailPath = 'uploads/blogs/' . $thumbnailName;
 
-$thumbnailPath = 'uploads/uploads/blogs/' . $thumbnailName;
 
     // Create the blog
     Blog::create([

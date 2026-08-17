@@ -39,13 +39,12 @@
 
     <!-- Document Title ===================== -->
     <title>@yield('front-title') | {{ getAppName() }}</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="{{ asset('messages.js') }}"></script>
     <script src="{{ asset('assets/front/vendor/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ mix('js/front-third-party.js') }}"></script>
     <script src="{{ mix('js/front-pages.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+
 
     <!-- JavaScript Bundle with Popper -->
     <script data-turbo-eval="false">

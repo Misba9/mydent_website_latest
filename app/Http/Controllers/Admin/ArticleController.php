@@ -32,8 +32,9 @@ class ArticleController extends Controller
 
     if ($request->hasFile('thumbnail')) {
         $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
-        $request->file('thumbnail')->move(public_path('uploads/uploads/blogs'), $thumbnailName);
-        $data['thumbnail'] = 'uploads/uploads/blogs/' . $thumbnailName;
+        $request->file('thumbnail')->move(public_path('uploads/blogs'), $thumbnailName);
+        $data['thumbnail'] = 'uploads/blogs/' . $thumbnailName;
+
     }
 
     Article::create($data);
@@ -64,8 +65,9 @@ class ArticleController extends Controller
         }
 
         $thumbnailName = time() . '_' . $request->file('thumbnail')->getClientOriginalName();
-        $request->file('thumbnail')->move(public_path('uploads/uploads/blogs'), $thumbnailName);
-        $data['thumbnail'] = 'uploads/uploads/blogs/' . $thumbnailName;
+        $request->file('thumbnail')->move(public_path('uploads/blogs'), $thumbnailName);
+        $data['thumbnail'] = 'uploads/blogs/' . $thumbnailName;
+
     }
 
     $article->update($data);
