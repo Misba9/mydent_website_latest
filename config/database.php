@@ -15,7 +15,9 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => (env('DB_CONNECTION') === 'sqlite' && env('DB_DATABASE') && !file_exists(env('DB_DATABASE')))
+        ? 'mysql'
+        : env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -48,9 +50,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => (env('DB_DATABASE') && !str_contains(env('DB_DATABASE'), 'database.sqlite')) ? env('DB_DATABASE') : 'u793007606_mydent',
+            'username' => env('DB_USERNAME') ?: 'u793007606_ahmed',
+            'password' => env('DB_PASSWORD') ?: 'Mydent@1234*',
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
