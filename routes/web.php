@@ -66,25 +66,6 @@ use App\Http\Controllers\HomepageVideoController;
 Route::post('/checkout/buy-now/{id}', [CartController::class, 'buyNow'])->name('checkout.buyNow');
 Route::get('/checkout/buy-now', [CartController::class, 'buyNowCheckout'])->name('checkout.buy.now');
 
-Route::get('/sys-sync-run-migrate-now', function () {
-    try {
-        $exitCode = \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $output = \Illuminate\Support\Facades\Artisan::output();
-        return response()->json([
-            'status' => 'success',
-            'exit_code' => $exitCode,
-            'output' => $output,
-            'products_count' => \Illuminate\Support\Facades\Schema::hasTable('products') ? \Illuminate\Support\Facades\DB::table('products')->count() : -1,
-            'users_count' => \Illuminate\Support\Facades\Schema::hasTable('users') ? \Illuminate\Support\Facades\DB::table('users')->count() : -1,
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ], 500);
-    }
-});
 // 
 
 // 
