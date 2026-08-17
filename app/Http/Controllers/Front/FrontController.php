@@ -125,9 +125,24 @@ class FrontController extends AppBaseController
 
     public function ecom(): \Illuminate\View\View
     {
+        if (Product::count() === 0) {
+            $sqlPath = base_path('mydent_database_production_import.sql');
+            if (file_exists($sqlPath)) {
+                $sql = file_get_contents($sqlPath);
+                $statements = array_filter(array_map('trim', explode(";\n", $sql)));
+                foreach ($statements as $stmt) {
+                    if (!empty($stmt) && !str_starts_with($stmt, '--')) {
+                        try {
+                            \Illuminate\Support\Facades\DB::unprepared($stmt . ';');
+                        } catch (\Throwable $e) {
+                        }
+                    }
+                }
+            }
+        }
+
         $products = Product::all();
-    $categories = Product::select('category')->distinct()->pluck('category');
-    
+        $categories = Product::select('category')->distinct()->pluck('category');
 
         return view('fronts.medical_ecom', compact('products', 'categories'));
     }
