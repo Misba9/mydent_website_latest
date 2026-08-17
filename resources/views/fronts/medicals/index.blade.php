@@ -399,13 +399,15 @@ care - everything in one place
         <div class="row justify-content-center">
             @php
                 $section1Videos = \App\Models\HomepageVideo::where('section', 'section-1')->orderBy('order')->get();
+                $validSection1Vids = ['p1c1vi1.mp4', 'p1c1vi2.mp4', 'p1c1vi4.mp4', 'p1c1vi5.mp4', 'p1c1vi6.mp4', 'p1c1vi7.mp4'];
             @endphp
 
             @foreach($section1Videos as $index => $video)
                 <div class="col-md-4 mb-4">
                     <div class="card border rounded p-3 shadow-sm text-center" style="height: 320px;">
                         <video class="w-100" style="height: 180px; object-fit: cover;" autoplay loop muted playsinline>
-                            <source src="{{ getMediaUrl($video->video_path, 'storage/vids/p1c1vi' . (($index % 6) + 1) . '.mp4') }}" type="video/mp4">
+                            <source src="{{ getMediaUrl($video->video_path, 'storage/vids/' . $validSection1Vids[$index % count($validSection1Vids)]) }}" type="video/mp4">
+
 
                             Your browser does not support the video tag.
                         </video>
