@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         try {
-            if (\Illuminate\Support\Facades\Schema::hasTable('products') && \Illuminate\Support\Facades\DB::table('products')->count() === 0) {
+            if (\Illuminate\Support\Facades\Schema::hasTable('users')) {
                 \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
             }
             if (\Illuminate\Support\Facades\Schema::hasTable('model_has_roles')) {

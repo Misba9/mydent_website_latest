@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Super Admin
-        $admin = User::find(1);
+        $admin = User::where('email', 'admin@mydent.in')->orWhere('id', 1)->first();
         if ($admin) {
             $admin->update([
                 'email' => 'admin@mydent.in',
@@ -29,7 +29,7 @@ return new class extends Migration
         }
 
         // 2. Doctor
-        $doctor = User::find(2);
+        $doctor = User::where('email', 'doctor@mydent.in')->orWhere('id', 2)->first();
         if ($doctor) {
             $doctor->update([
                 'email' => 'doctor@mydent.in',
@@ -45,7 +45,7 @@ return new class extends Migration
         }
 
         // 3. Patient
-        $patient = User::find(3);
+        $patient = User::where('email', 'patient@mydent.in')->orWhere('email', 'p@mydent.com')->orWhere('id', 3)->first();
         if ($patient) {
             $patient->update([
                 'email' => 'patient@mydent.in',
