@@ -11,6 +11,7 @@
             </div>
 
             @include('layouts.errors')
+            <div id="checkout-message-container" class="mb-4"></div>
 
             <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
                 @csrf
@@ -121,3 +122,127 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        const checkoutForm = $('#checkout-form');
+        const submitBtn = checkoutForm.find('button[type="submit"]');
+        const messageContainer = $('#checkout-message-container');
+
+        function showMessage(msg, type = 'danger') {
+            messageContainer.html(`
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${msg}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `);
+            $('html, body').animate({
+                scrollTop: $(".checkout-page").offset().top - 50
+            }, 200);
+        }
+
+        checkoutForm.on('submit', function (e) {
+            const paymentMethod = $('input[name="payment_method"]:checked').val();
+
+            if (paymentMethod === 'COD') {
+                return true;
+            }
+
+            e.preventDefault();
+
+            const name = $('input[name="name"]').val().trim();
+            const email = $('input[name="email"]').val().trim();
+            const phone = $('input[name="phone"]').val().trim();
+            const address = $('input[name="address"]').val().trim();
+            const country = $('input[name="country"]').val().trim();
+            const state = $('input[name="state"]').val().trim();
+            const city = $('input[name="city"]').val().trim();
+            const pincode = $('input[name="pincode"]').val().trim();
+
+            if (!name || !email || !phone || !address || !country || !state || !city || !pincode) {
+                showMessage('Please fill in all the required shipping fields.');
+                return false;
+            }
+
+            if (!/^\d{10}$/.test(phone)) {
+                showMessage('Please enter a valid 10-digit phone number.');
+                return false;
+            }
+
+            submitBtn.prop('disabled', true).html('Processing Payment... <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>');
+            messageContainer.empty();
+
+            $.ajax({
+                url: "{{ route('checkout.razorpay.order') }}",
+                type: "POST",
+                data: checkoutForm.serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    const options = {
+                        key: response.key,
+                        amount: response.amount,
+                        currency: response.currency,
+                        name: "MyDent",
+                        description: "Teeth Aligners & Products Purchase",
+                        order_id: response.razorpay_order_id,
+                        prefill: {
+                            name: response.name,
+                            email: response.email,
+                            contact: response.phone
+                        },
+                        handler: function (paymentResult) {
+                            submitBtn.html('Verifying Payment... <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>');
+
+                            $.ajax({
+                                url: "{{ route('checkout.razorpay.verify') }}",
+                                type: "POST",
+                                data: {
+                                    razorpay_payment_id: paymentResult.razorpay_payment_id,
+                                    razorpay_order_id: paymentResult.razorpay_order_id,
+                                    razorpay_signature: paymentResult.razorpay_signature
+                                },
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function (verifyResponse) {
+                                    if (verifyResponse.success) {
+                                        window.location.href = verifyResponse.redirect;
+                                    } else {
+                                        showMessage(verifyResponse.error || 'Payment verification failed.');
+                                        submitBtn.prop('disabled', false).html('Place Order Now <i class="fa-solid fa-check-circle ms-2"></i>');
+                                    }
+                                },
+                                error: function (xhr) {
+                                    const errMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Payment verification failed.';
+                                    showMessage(errMsg);
+                                    submitBtn.prop('disabled', false).html('Place Order Now <i class="fa-solid fa-check-circle ms-2"></i>');
+                                }
+                            });
+                        },
+                        modal: {
+                            ondismiss: function () {
+                                showMessage('Payment was cancelled. You can try again.');
+                                submitBtn.prop('disabled', false).html('Place Order Now <i class="fa-solid fa-check-circle ms-2"></i>');
+                            }
+                        },
+                        theme: {
+                            color: "#4FB281"
+                        }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                },
+                error: function (xhr) {
+                    const errMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Could not initiate online payment.';
+                    showMessage(errMsg);
+                    submitBtn.prop('disabled', false).html('Place Order Now <i class="fa-solid fa-check-circle ms-2"></i>');
+                }
+            });
+        });
+    });
+</script>
+@endpush

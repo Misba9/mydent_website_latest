@@ -83,6 +83,11 @@ Route::get('/articles', [ArticleController::class, 'ind'])->name('articles.index
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success', [CheckoutController::class, 'paymentSuccess'])->name('checkout.success');
+// Razorpay server-side order creation (AJAX) — returns razorpay_order_id to frontend
+Route::post('/checkout/razorpay-order', [CheckoutController::class, 'createRazorpayOrder'])->name('checkout.razorpay.order');
+// Razorpay payment signature verification (AJAX) — verifies and marks order paid
+Route::post('/checkout/razorpay-verify', [CheckoutController::class, 'verifyRazorpayPayment'])->name('checkout.razorpay.verify');
+
 
 
 Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'showOrders'])->middleware(['auth', 'role:clinic_admin'])->name('orders.front');

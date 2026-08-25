@@ -28,7 +28,6 @@ You can test different user roles on the login page ([http://127.0.0.1:8000/logi
 | **Super Admin** | `admin@mydent.in` | `123456` |
 | **Doctor** | `doctor@mydent.in` | `123456` |
 | **Patient** | `patient@mydent.in` | `123456` |
-| **Staff** | `john@gamil.com` | `123456` |
 
 ---
 

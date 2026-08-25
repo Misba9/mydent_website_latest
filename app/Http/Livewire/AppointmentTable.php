@@ -79,17 +79,13 @@ class AppointmentTable extends LivewireTableComponent
                 }
             });
 
-        if ($this->dateFilter != '' && $this->dateFilter != getWeekDate()) {
+        if ($this->dateFilter != '') {
             $timeEntryDate = explode(' - ', $this->dateFilter);
             $startDate = Carbon::parse($timeEntryDate[0])->format('Y-m-d');
             $endDate = Carbon::parse($timeEntryDate[1])->format('Y-m-d');
             $query->whereBetween('date', [$startDate, $endDate]);
-        } else {
-            $timeEntryDate = explode(' - ', getWeekDate());
-            $startDate = Carbon::parse($timeEntryDate[0])->format('Y-m-d');
-            $endDate = Carbon::parse($timeEntryDate[1])->format('Y-m-d');
-            $query->whereBetween('date', [$startDate, $endDate]);
         }
+        // No date filter applied by default — show all appointments
 
         if (getLoginUser()->hasRole('patient')) {
             $query->where('patient_id', getLoginUser()->patient->id);
