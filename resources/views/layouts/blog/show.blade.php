@@ -1,7 +1,9 @@
 @extends('fronts.layouts.app')
-@section('title')
+@section('front-title')
     {{ $blog->title }}
 @endsection
+@section('meta_description', Str::limit(strip_tags($blog->content), 150))
+@section('meta_og_image', asset($blog->thumbnail))
 @section('content')
     <div class="blog-details-page py-10 bg-light">
         <div class="container">

@@ -94,6 +94,9 @@ Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'showOrders
 Route::post('/admin/orders/{order}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus'])->middleware(['auth', 'role:clinic_admin'])->name('orders.updateStatus');
 
 
+// Sitemap Route
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 // Blog Routes
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show');

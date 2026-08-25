@@ -3,6 +3,9 @@
 @section('front-title')
     {{ $product->name }} | {{ getAppName() }}
 @endsection
+@section('meta_description', Str::limit(strip_tags($product->description), 150))
+@section('meta_og_image', asset($product->thumbnail))
+
 
 @section('front-content')
 <div class="product-detail-page py-6 bg-light" style="margin-top: 80px;">

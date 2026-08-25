@@ -2,6 +2,8 @@
 @section('front-title')
     {{ __('messages.web.medical') }}
 @endsection
+@section('meta_description', 'Experience India\'s premium clear aligners with MyDent. Get custom-made invisible braces starting with a free 3D scan at home or at our clinics.')
+
 
 @php
     use App\Models\Blog;

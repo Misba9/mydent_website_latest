@@ -2,6 +2,8 @@
 @section('front-title')
     {{ __('messages.web.medical_doctors') }}
 @endsection
+@section('meta_description', 'Learn how MyDent clear aligners compare to traditional ceramic braces. Meet our certified orthodontists and view our transparent pricing plans.')
+
 
 @section('front-content')
 

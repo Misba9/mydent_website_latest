@@ -2,6 +2,8 @@
 @section('front-title')
     {{ __('messages.web.medical_about_us') }}
 @endsection
+@section('meta_description', 'Discover the MyDent journey. Our in-house Indian labs design FDA-cleared, highly comfortable aligners to deliver perfect smiles under orthodontic supervision.')
+
 
 <!-- Banner Image -->
  <style>

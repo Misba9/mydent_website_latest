@@ -7,12 +7,62 @@
     <link rel="icon" href="{{ asset(getAppFavicon()) }}" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- META ============== -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('meta_description', 'MyDent offers premium quality invisible clear aligners and modern dental solutions. Order aligners online, consult with certified orthodontists, and get a beautiful smile comfortably.')" />
+    <meta name="keywords" content="@yield('meta_keywords', 'clear aligners, invisible braces, teeth straightening, dental clinic, dental care, MyDent aligners, orthodontist Bangalore, orthodontist Hyderabad')" />
+    <link rel="canonical" href="@yield('canonical_url', request()->url())" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@yield('canonical_url', request()->url())" />
+    <meta property="og:title" content="@yield('front-title') | {{ getAppName() }}" />
+    <meta property="og:description" content="@yield('meta_description', 'MyDent offers premium quality invisible clear aligners and modern dental solutions. Order aligners online, consult with certified orthodontists, and get a beautiful smile comfortably.')" />
+    <meta property="og:image" content="@yield('meta_og_image', asset(getAppLogo()))" />
+    <meta property="og:site_name" content="{{ getAppName() }}" />
 
-    <!-- OG -->
-    <meta name="robots" content="index, follow">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="@yield('canonical_url', request()->url())" />
+    <meta property="twitter:title" content="@yield('front-title') | {{ getAppName() }}" />
+    <meta property="twitter:description" content="@yield('meta_description', 'MyDent offers premium quality invisible clear aligners and modern dental solutions. Order aligners online, consult with certified orthodontists, and get a beautiful smile comfortably.')" />
+    <meta property="twitter:image" content="@yield('meta_og_image', asset(getAppLogo()))" />
+
+    <meta name="robots" content="index, follow" />
+
+    <!-- JSON-LD Structured Schema Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dentist",
+      "name": "MyDent Clear Aligners & Dental Clinic",
+      "image": "{{ asset(getAppLogo()) }}",
+      "url": "https://mydent.in",
+      "telephone": "9381590963",
+      "priceRange": "$$",
+      "address": [
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Dhanvantari 2B 80 ft road KHB colony, 2nd stage Basaveshwarnagar",
+          "addressLocality": "Bengaluru",
+          "addressRegion": "Karnataka",
+          "postalCode": "560079",
+          "addressCountry": "IN"
+        },
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "H no: 1-1-534, opp Post Office, y junction, Gandhinagar",
+          "addressLocality": "Hyderabad",
+          "addressRegion": "Telangana",
+          "postalCode": "500080",
+          "addressCountry": "IN"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/mydent.in",
+        "https://www.instagram.com/mydent.in"
+      ]
+    }
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="//fonts.googleapis.com">
