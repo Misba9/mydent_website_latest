@@ -26,63 +26,61 @@
 }
 
 .bg-primary {
-    background: linear-gradient(117.85deg, #fe8065 0%, #f74d6c 100%);
+    background: var(--md-forest, #1B5E4A) !important;
 }
 
 .bg-secondary {
-    background-color: #f3f5f8 !important;
+    background-color: var(--md-warm-deep, #EFEBE3) !important;
 }
 
 .btn-light {
-    border: 1px solid transparent;
-    background: linear-gradient(#ffffff 0 0) padding-box,
-        /*this is your grey background*/
-            linear-gradient(to right, #fe8065, #f74d6c) border-box;
-    color: #f74d6c;
+    border: 1px solid var(--md-mint, #7DCFB6);
+    background: var(--md-white, #fff);
+    color: var(--md-forest, #1B5E4A);
+
+    &:hover {
+        background: var(--md-mint-soft, #E8F7F2);
+        color: var(--md-forest-deep, #0F3D30);
+        border-color: var(--md-forest, #1B5E4A);
+    }
 }
 
 .btn-primary {
-    background: linear-gradient(117.85deg, #fe8065 0%, #f74d6c 100%);
-    border-color: transparent;
+    background: var(--md-forest, #1B5E4A);
+    border-color: var(--md-forest, #1B5E4A);
     color: #ffffff;
-    transition: all 0.3s ease-in-out;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
 
-    &:hover {
-        border: 1px solid transparent;
-        background: linear-gradient(#ffffff 0 0) padding-box,
-            /*this is your grey background*/
-                linear-gradient(to right, #fe8065, #f74d6c) border-box;
-        color: #f74d6c;
-        transition: all 0.3s ease-in-out;
+    &:hover,
+    &:focus,
+    &:active {
+        background: var(--md-forest-deep, #0F3D30) !important;
+        border-color: var(--md-forest-deep, #0F3D30) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(27, 94, 74, 0.28);
     }
 }
 
 .btn-outline-primary {
-    border: 1px solid transparent;
-    background: linear-gradient(#ffffff 0 0) padding-box,
-        /*this is your grey background*/
-            linear-gradient(to right, #fe8065, #f74d6c) border-box;
-    color: #f74d6c;
-    transition: all 0.3s ease-in-out;
+    border: 1.5px solid var(--md-forest, #1B5E4A);
+    background: transparent;
+    color: var(--md-forest, #1B5E4A);
+    transition: background 0.25s ease, color 0.25s ease;
 
-    &:hover {
-        background: linear-gradient(117.85deg, #fe8065 0%, #f74d6c 100%);
-        border-color: transparent;
-        color: #ffffff;
-    }
-
+    &:hover,
+    &:focus,
     &:active {
-        background: linear-gradient(#ffffff 0 0) padding-box,
-            /*this is your grey background*/
-                linear-gradient(to right, #fe8065, #f74d6c) border-box;
-        color: #f74d6c;
+        background: var(--md-forest, #1B5E4A) !important;
+        border-color: var(--md-forest, #1B5E4A) !important;
+        color: #ffffff !important;
     }
 }
 
 .text-primary {
-    background: -webkit-linear-gradient(#fe8065, #f74d6c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--md-forest, #1B5E4A) !important;
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 .text-gray-100 {
@@ -100,9 +98,9 @@
 
         &.active,
         a {
-            background: -webkit-linear-gradient(#fe8065, #f74d6c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--md-forest, #1B5E4A);
+            background: none;
+            -webkit-text-fill-color: unset;
         }
     }
 }
@@ -332,7 +330,7 @@ h6,
 }
 
 .border-top-primary {
-    border-top: 1px solid #fe8065;
+    border-top: 1px solid var(--md-forest, #1B5E4A);
 }
 
 .z-index-1 {
@@ -397,14 +395,14 @@ h6,
 .language-padding {
     padding: 10px !important;
     &:hover {
-        background: -webkit-linear-gradient(#fe8065, #f74d6c);
+        background: -webkit-linear-gradient(var(--md-forest, #1B5E4A), var(--md-mint, #7DCFB6));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 }
 
 .language-padding.active {
-    background: -webkit-linear-gradient(#fe8065, #f74d6c);
+    background: -webkit-linear-gradient(var(--md-forest, #1B5E4A), var(--md-mint, #7DCFB6));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

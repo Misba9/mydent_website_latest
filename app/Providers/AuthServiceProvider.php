@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
+use App\Models\Prescription;
+use App\Policies\AppointmentPolicy;
+use App\Policies\PrescriptionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -12,7 +16,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        //
+        Appointment::class => AppointmentPolicy::class,
+        Prescription::class => PrescriptionPolicy::class,
     ];
 
     /**
@@ -20,6 +25,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }

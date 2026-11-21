@@ -8,9 +8,8 @@
 
 
 @section('front-content')
-<div class="product-detail-page py-6 bg-light" style="margin-top: 80px;">
+<div class="product-detail-page md-commerce">
     <div class="container">
-        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-decoration-none text-muted">Home</a></li>
@@ -21,12 +20,11 @@
 
         @include('flash::message')
 
-        <div class="card shadow-sm border-0 rounded-15 overflow-hidden">
-            <div class="card-body p-4 p-md-8">
+        <div class="card overflow-hidden">
+            <div class="card-body p-4 p-md-5">
                 <div class="row g-5 align-items-center">
-                    <!-- Product Image -->
                     <div class="col-lg-6">
-                        <div class="product-main-image bg-secondary rounded-15 overflow-hidden text-center p-4">
+                        <div class="product-main-image overflow-hidden text-center p-4 rounded" style="background: var(--md-mint-soft);">
                             @if(!empty($product->thumbnail))
                                 <img src="{{ asset($product->thumbnail) }}" 
                                      alt="{{ $product->name }}" 

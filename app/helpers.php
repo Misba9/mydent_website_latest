@@ -717,12 +717,47 @@ function getAmountToWord(float $amount): string
  */
 function canAccessRecord($model, $id)
 {
-    $recordExists = $model::where('id', $id)->exists();
+    $user = getLogInUser();
+    if (! $user) {
+        return false;
+    }
 
-    if ($recordExists) {
+    $record = $model::find($id);
+    if (! $record) {
+        return false;
+    }
+
+    if ($user->hasRole('clinic_admin')) {
         return true;
     }
 
+    if ($model === \App\Models\Medicine::class) {
+        return $user->hasRole(['clinic_admin', 'doctor']);
+    }
+
+    if ($model === \App\Models\Prescription::class) {
+        if ($user->hasRole('doctor') && $user->doctor) {
+            return (int) $record->doctor_id === (int) $user->doctor->id;
+        }
+        if ($user->hasRole('patient') && $user->patient) {
+            return (int) $record->patient_id === (int) $user->patient->id;
+        }
+
+        return false;
+    }
+
+    if ($model === \App\Models\Appointment::class) {
+        if ($user->hasRole('doctor') && $user->doctor) {
+            return (int) $record->doctor_id === (int) $user->doctor->id;
+        }
+        if ($user->hasRole('patient') && $user->patient) {
+            return (int) $record->patient_id === (int) $user->patient->id;
+        }
+
+        return false;
+    }
+
+    // Unknown models: deny by default (existence is not authorization).
     return false;
 }
 
@@ -731,7 +766,7 @@ function canAccessRecord($model, $id)
  */
 function getLoggedinDoctor()
 {
-    return Auth::check() ? Auth::user()->hasRole(['Doctor']) : false;
+    return Auth::check() ? Auth::user()->hasRole(['doctor']) : false;
 }
 
 function isRole(string $role)

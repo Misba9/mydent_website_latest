@@ -58,31 +58,35 @@ class PaystackController extends Controller
         $appointment = Appointment::whereId($appointmentId)->first();
         $patientId = User::whereEmail($paymentDetails['data']['customer']['email'])->pluck('id')->first();
 
-        $transaction = [
-            'user_id' => $patientId,
-            'transaction_id' => $paymentDetails['data']['reference'],
-            'appointment_id' => $appointment['appointment_unique_id'],
-            'amount' => intval($appointment['payable_amount']),
-            'type' => Appointment::PAYSTACK,
-            'meta' => json_encode($paymentDetails['data']),
-        ];
+        $reference = $paymentDetails['data']['reference'];
 
-        Transaction::create($transaction);
+        if (! Transaction::where('transaction_id', $reference)->exists()
+            && (int) $appointment->payment_type !== Appointment::PAID) {
+            Transaction::create([
+                'user_id' => $patientId,
+                'transaction_id' => $reference,
+                'appointment_id' => $appointment['appointment_unique_id'],
+                'amount' => intval($appointment['payable_amount']),
+                'type' => Appointment::PAYSTACK,
+                'meta' => json_encode($paymentDetails['data']),
+            ]);
 
-        $appointment->update([
-            'payment_method' => Appointment::PAYSTACK,
-            'payment_type' => Appointment::PAID,
-        ]);
+            $appointment->update([
+                'payment_method' => Appointment::PAYSTACK,
+                'payment_type' => Appointment::PAID,
+            ]);
+
+            $patient = Patient::whereUserId($patientId)->with('user')->first();
+            if ($patient) {
+                Notification::create([
+                    'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
+                    'type' => Notification::PAYMENT_DONE,
+                    'user_id' => $patient->user_id,
+                ]);
+            }
+        }
 
         Flash::success(__('messages.flash.appointment_created_payment_complete'));
-
-        $patient = Patient::whereUserId($patientId)->with('user')->first();
-
-        Notification::create([
-            'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
-            'type' => Notification::PAYMENT_DONE,
-            'user_id' => $patient->user_id,
-        ]);
 
         if (parse_url(url()->previous(), PHP_URL_PATH) == '/medical-appointment') {
             return redirect(route('medicalAppointment'));

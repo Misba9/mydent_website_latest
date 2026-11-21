@@ -134,8 +134,8 @@ class PrescriptionController extends AppBaseController
             return Redirect::back();
         }
 
-        if (getLogInUser()->hasRole('Doctor')) {
-            $patientPrescriptionHasDoctor = Prescription::whereId($prescription->id)->whereDoctorId(getLogInUser()->owner_id)->exists();
+        if (getLogInUser()->hasRole('doctor')) {
+            $patientPrescriptionHasDoctor = Prescription::whereId($prescription->id)->whereDoctorId(optional(getLogInUser()->doctor)->id)->exists();
             if (! $patientPrescriptionHasDoctor) {
                 return Redirect::back();
             }
@@ -225,8 +225,8 @@ class PrescriptionController extends AppBaseController
             return $this->sendError(__('messages.flash.prescription_not_found'));
         }
 
-        if (getLogInUser()->hasRole('Doctor')) {
-            $patientPrescriptionHasDoctor = Prescription::whereId($prescription->id)->whereDoctorId(getLogInUser()->owner_id)->exists();
+        if (getLogInUser()->hasRole('doctor')) {
+            $patientPrescriptionHasDoctor = Prescription::whereId($prescription->id)->whereDoctorId(optional(getLogInUser()->doctor)->id)->exists();
             if (! $patientPrescriptionHasDoctor) {
                 return $this->sendError(__('messages.flash.prescription_not_found'));
             }
@@ -254,8 +254,8 @@ class PrescriptionController extends AppBaseController
 
     public function showModal($id): JsonResponse
     {
-        if (getLogInUser()->hasRole('Doctor')) {
-            $patientPrescriptionHasDoctor = Prescription::whereId($id)->whereDoctorId(getLogInUser()->owner_id)->exists();
+        if (getLogInUser()->hasRole('doctor')) {
+            $patientPrescriptionHasDoctor = Prescription::whereId($id)->whereDoctorId(optional(getLogInUser()->doctor)->id)->exists();
             if (! $patientPrescriptionHasDoctor) {
                 return $this->sendError(__('messages.flash.prescription_not_found'));
             }
@@ -283,8 +283,8 @@ class PrescriptionController extends AppBaseController
      */
     public function prescriptionMedicineShowFunction($id)
     {
-        if (getLogInUser()->hasRole('Doctor')) {
-            $patientPrescriptionHasDoctor = Prescription::whereId($id)->whereDoctorId(getLogInUser()->owner_id)->exists();
+        if (getLogInUser()->hasRole('doctor')) {
+            $patientPrescriptionHasDoctor = Prescription::whereId($id)->whereDoctorId(optional(getLogInUser()->doctor)->id)->exists();
             if (! $patientPrescriptionHasDoctor) {
                 return Redirect::back();
             }
@@ -301,6 +301,9 @@ class PrescriptionController extends AppBaseController
 
     public function convertToPDF($id): \Illuminate\Http\Response
     {
+        $prescriptionModel = Prescription::findOrFail($id);
+        $this->authorize('view', $prescriptionModel);
+
         $data = $this->prescriptionRepository->getSettingList();
 
         $prescription = $this->prescriptionRepository->getData($id);

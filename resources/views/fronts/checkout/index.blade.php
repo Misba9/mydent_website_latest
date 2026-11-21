@@ -1,13 +1,13 @@
 @extends('fronts.layouts.app')
-@section('title')
+@section('front-title')
     Checkout
 @endsection
-@section('content')
-    <div class="checkout-page py-10 bg-light">
+@section('front-content')
+    <div class="checkout-page md-commerce">
         <div class="container">
-            <div class="text-center mb-8">
-                <h1 class="text-primary fw-bold mb-2">Checkout</h1>
-                <p class="text-gray-600">Complete your shipping and payment details.</p>
+            <div class="text-center mb-5">
+                <h1 class="md-section__title">Checkout</h1>
+                <p class="md-section__lead">Complete your shipping and payment details.</p>
             </div>
 
             @include('layouts.errors')
@@ -229,7 +229,7 @@
                             }
                         },
                         theme: {
-                            color: "#4FB281"
+                            color: "#1B5E4A"
                         }
                     };
 

@@ -67,11 +67,16 @@ class TransactionController extends AppBaseController
         $transaction = Transaction::findOrFail($input['id']);
         $appointment = Appointment::where('appointment_unique_id', $transaction->appointment_id)->first();
 
-        if (getLogInUser()->hasrole('doctor')) {
-            $doctor = Appointment::where('appointment_unique_id', $transaction->appointment_id)->whereDoctorId(getLogInUser()->doctor->id);
-            if (! $doctor->exists()) {
+        if (! $appointment) {
+            return $this->sendError('Appointment not found.');
+        }
+
+        if (getLogInUser()->hasRole('doctor')) {
+            if (! getLogInUser()->doctor || (int) $appointment->doctor_id !== (int) getLogInUser()->doctor->id) {
                 return $this->sendError('Seems, you are not allowed to access this record.');
             }
+        } elseif (! getLogInUser()->hasRole('clinic_admin')) {
+            return $this->sendError('Seems, you are not allowed to access this record.', 403);
         }
 
         $appointment->update([
@@ -81,7 +86,7 @@ class TransactionController extends AppBaseController
 
         $transaction->update([
             'status' => ! $transaction->status,
-            'accepted_by' => $input['acceptPaymentUserId'],
+            'accepted_by' => getLogInUserId(),
         ]);
 
         $appointmentNotification = Transaction::with('acceptedPaymentUser')->whereAppointmentId($appointment['appointment_unique_id'])->first();

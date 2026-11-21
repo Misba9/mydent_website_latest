@@ -69,8 +69,8 @@ class PrescriptionRepository extends BaseRepository
     public function getPatients(): \Illuminate\Support\Collection
     {
         $user = Auth::user();
-        if ($user->hasRole('Doctor')) {
-            $patients = getPatientsList($user->owner_id);
+        if ($user->hasRole('doctor')) {
+            $patients = getPatientsList(optional($user->doctor)->id);
         } else {
             $patients = Patient::with('user')
                 ->whereHas('user', function (Builder $query) {

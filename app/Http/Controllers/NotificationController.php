@@ -10,6 +10,10 @@ class NotificationController extends AppBaseController
 {
     public function readNotification(Notification $notification): JsonResponse
     {
+        if ((int) $notification->user_id !== (int) getLogInUserId()) {
+            return $this->sendError('Seems, you are not allowed to access this record.', 403);
+        }
+
         $notification->read_at = Carbon::now();
         $notification->save();
 

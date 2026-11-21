@@ -28,90 +28,11 @@
 
 
 
-  <!-- Banner Section -->
-@php
-    $banners = \App\Models\MainBanner::where('page', 'centre')->get(); // or dynamic slug
-@endphp
-
-
-@if($banners->count())
-<section class="main-banner mb-4" style="margin-top: 90px;">
-    <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach($banners as $key => $banner)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <img src="{{ asset($banner->image) }}" alt="{{ $banner->title }}" class="d-block w-100 banner-image">
-                    
-                    @if($banner->title)
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5 class="banner-title">{{ $banner->title }}</h5>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-    </div>
-
-    <!-- Styles -->
-    <style>
-        .banner-image {
-            width: 100%;
-            height: 600px;
-            object-fit: cover;
-        }
-
-        .banner-title {
-            font-size: 2rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .banner-image {
-                height: 400px;
-            }
-
-            .banner-title {
-                font-size: 1.25rem;
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .banner-image {
-                height: 250px;
-            }
-
-            .carousel-caption {
-                bottom: 10px;
-            }
-
-            .banner-title {
-                font-size: 1rem;
-                padding: 6px 12px;
-            }
-        }
-    </style>
-</section>
-@endif
-
-
-
-      
-      
-      
-      
+  @include('fronts.partials.banner-carousel', [
+    'page' => 'centre',
+    'fallbackImage' => 'images/Supervision.jpeg',
+    'fallbackTitle' => 'Visit our centre',
+])
 <section style="padding: 40px 20px; background-color: #ffffff; font-family: Arial, sans-serif;text-align: center;">
   <h2 style="color: #e63946; font-size: 35px; margin-bottom: 10px; ">
     Find a mydent Experience Centre Near You
@@ -133,33 +54,40 @@ advanced technology and personalized care from skilled orthodontists.  </p>
         <div id="store-container" class="row g-4">
             @php
                 $stores = [
-                    'Delhi' => [
-                        ['name' => 'Banglore', 'image' => 'Banglore.png', 'location' => 'Banglore', 'timing' => '10am - 9pm', 'phone' => '+91 9381590963,', 'gmap' => '#'],
-                                            ['name' => 'The Lucknowgrapher Studio', 'image' => 'Hyderabad.png', 'location' => 'Hyderabad', 'timing' => '9am - 9pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                        ['name' => 'Chennai', 'image' => 'chenni.png', 'location' => 'Chennai', 'timing' => '9am - 9pm', 'phone' => '9123456780', 'gmap' => '#'],
+                    'Hyderabad' => [
+                        [
+                            'name' => 'mydent Hyderabad',
+                            'image' => 'Hyderabad.png',
+                            'location' => 'Hyderabad',
+                            'address' => 'mydent, H.No 8, No:36 Pillar, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033',
+                            'timing' => '9am - 9pm',
+                            'phone' => '9381590963',
+                            'gmap' => '#',
+                        ],
                     ],
-                    'Mumbai' => [
-                        ['name' => 'Smile Zone Mumbai', 'image' => 'Delhi.png', 'location' => 'Delhi', 'timing' => '10am - 9pm', 'phone' => '9988776655', 'gmap' => '#'],
+                    'Bangalore' => [
+                        [
+                            'name' => 'mydent Bangalore',
+                            'image' => 'Banglore.png',
+                            'location' => 'Bangalore',
+                            'address' => 'Dhanvantari 2B 80 ft road KHB colony, 2nd stage Basaveshwarnagar, Bengaluru, Karnataka 560079',
+                            'timing' => '10am - 9pm',
+                            'phone' => '9381590963',
+                            'gmap' => '#',
+                        ],
                     ],
-                    'Lucknow' => [
-
-                        ['name' => 'The Lucknowgrapher Studio', 'image' => 'kochin.png', 'location' => 'Kochin', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                        ['name' => 'The Lucknowgrapher Studio', 'image' => 'Kolkata.png', 'location' => 'Kolkata', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                        ['name' => 'The Lucknowgrapher Studio', 'image' => 'mumbai.png', 'location' => 'Mumbai', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                        ['name' => 'The Lucknowgrapher Studio', 'image' => 'Nellore.png', 'location' => 'Nellore', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                                                ['name' => 'The Lucknowgrapher Studio', 'image' => 'pondicherry.png', 'location' => 'Pondicherry', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-                              ['name' => 'The Lucknowgrapher Studio', 'image' => 'pune.png', 'location' => 'Pune', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-                                                ['name' => 'The Lucknowgrapher Studio', 'image' => 'Vijayawada.png', 'location' => 'Vijayawada', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-                                                ['name' => 'The Lucknowgrapher Studio', 'image' => 'Vishakapatnam.png', 'location' => 'Vishakapatnam', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
-
-
-                        ['name' => 'The Lucknowgrapher Studio', 'image' => 'Goa.png', 'location' => 'Goa', 'timing' => '11am - 6pm', 'phone' => '9123456789', 'gmap' => '#'],
+                    'Other Cities' => [
+                        ['name' => 'Chennai', 'image' => 'chenni.png', 'location' => 'Chennai', 'timing' => '9am - 9pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Delhi', 'image' => 'Delhi.png', 'location' => 'Delhi', 'timing' => '10am - 9pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Kochi', 'image' => 'kochin.png', 'location' => 'Kochi', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Kolkata', 'image' => 'Kolkata.png', 'location' => 'Kolkata', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Mumbai', 'image' => 'mumbai.png', 'location' => 'Mumbai', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Nellore', 'image' => 'Nellore.png', 'location' => 'Nellore', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Pondicherry', 'image' => 'pondicherry.png', 'location' => 'Pondicherry', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Pune', 'image' => 'pune.png', 'location' => 'Pune', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Vijayawada', 'image' => 'Vijayawada.png', 'location' => 'Vijayawada', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Visakhapatnam', 'image' => 'Vishakapatnam.png', 'location' => 'Visakhapatnam', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
+                        ['name' => 'Goa', 'image' => 'Goa.png', 'location' => 'Goa', 'timing' => '11am - 6pm', 'phone' => '9381590963', 'gmap' => '#'],
                     ],
                 ];
             @endphp
@@ -175,8 +103,10 @@ advanced technology and personalized care from skilled orthodontists.  </p>
                            alt="{{ $store['name'] }}"
                            style="width: 100%; height: 200px; object-fit: cover;">
                               <div class="card-body" style="flex: 1; overflow-y: auto; padding: 10px;">
-                                <!--<p class="card-text mb-2"><strong>City:</strong> {{ $city }}</p>-->
                                 <p class="card-text mb-2"><strong>Location:</strong> {{ $store['location'] }}</p>
+                                @if(!empty($store['address']))
+                                <p class="card-text mb-2" style="font-size: 13px;"><strong>Address:</strong> {{ $store['address'] }}</p>
+                                @endif
                                 <p class="card-text mb-2"><strong>Timing:</strong> {{ $store['timing'] }}</p>
                               </div>
                             <div class="card-footer d-flex gap-2" style="padding: 8px; background-color: #f8f9fa; border-top: 1px solid #ddd;">
@@ -213,7 +143,7 @@ advanced technology and personalized care from skilled orthodontists.  </p>
 
     /* Limit card body height and enable scrolling if content overflows */
     .store-card .card-body {
-      max-height: 120px;
+      max-height: 180px;
     }
   </style>
 </section>
@@ -224,19 +154,17 @@ advanced technology and personalized care from skilled orthodontists.  </p>
 <!-- end stores section -->
       
 
-   <section class="services-section py-5">
+<section class="md-section md-section--warm md-reveal">
     <div class="container">
-        <h2 class="text-center mb-4">Services Available at Our Centers</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-6 text-center">
-                <div class="service-image mb-4">
-<img src="{{ asset('storage/imgs/c1.jpeg') }}" alt="Service 1" class="img-fluid" style="max-height: 500px; border-radius: 20px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
-                </div>
+        <h2 class="md-section__title text-center">Services available at our centres</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-6 text-center">
+                <img src="{{ asset('images/Supervision.jpeg') }}" alt="Expert Supervision at mydent" class="img-fluid rounded" style="max-height: 420px; width: 100%; object-fit: cover; box-shadow: var(--md-shadow-soft);">
+                <p class="mt-3 fw-semibold mb-0">Expert supervision</p>
             </div>
-            <div class="col-md-6 col-lg-6 text-center">
-                <div class="service-image mb-4">
-                    <img src="{{ asset('storage/imgs/c2.jpeg') }}" alt="Service 2" class="img-fluid" style="max-height: 500px;border-radius: 20px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
-                </div>
+            <div class="col-md-6 text-center">
+                <img src="{{ asset('images/mydent-care.jpeg') }}" alt="mydent aligner care consultation" class="img-fluid rounded" style="max-height: 420px; width: 100%; object-fit: cover; box-shadow: var(--md-shadow-soft);">
+                <p class="mt-3 fw-semibold mb-0">Aligner care consultation</p>
             </div>
         </div>
     </div>
@@ -244,8 +172,8 @@ advanced technology and personalized care from skilled orthodontists.  </p>
 
 
 
- <!-- start contact form section -->
- <section class="contact-section bg-secondary p-t-100 p-b-100">
+<!-- start contact form section -->
+ <section class="contact-section md-section md-section--mint">
             <div class="container">
                 <div class="bg-white rounded-20 box-shadow main-box">
                     <div class="row">
@@ -258,7 +186,7 @@ advanced technology and personalized care from skilled orthodontists.  </p>
                                         <p class="paragraph text-white">
                                              <!-- {{ getSettingValue('address_one') }} -->
                                             <!--Delhi, India-->
-                                           Dhanvantari 2B 80 ft road KHB colony, 2, stage Basaveshwarnagar, Bengaluru, Karnataka 560079
+                                           mydent, H.No 8, No:36 Pillar, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033
 
                                             </p>
                                     </div>
@@ -370,7 +298,7 @@ advanced technology and personalized care from skilled orthodontists.  </p>
                                 <h4 class="mb-3 pt-2">{{__('messages.setting.address')}}</h4>
                                 <p class="paragraph mb-0">
                                     <!-- {{ getSettingValue('address_one') }} -->
-                                      Delhi , India
+                                      mydent, H.No 8, No:36 Pillar, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033
                                 </p>
                             </div>
                         </div>

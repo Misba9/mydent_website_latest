@@ -1,0 +1,63 @@
+// MyDent Phase 3 design tokens — forest / mint / warm white
+:root {
+    --md-forest: #1B5E4A;
+    --md-forest-deep: #0F3D30;
+    --md-mint: #7DCFB6;
+    --md-mint-soft: #E8F7F2;
+    --md-warm: #F7F5F0;
+    --md-warm-deep: #EFEBE3;
+    --md-ink: #1A2421;
+    --md-muted: #5C6B66;
+    --md-danger: #C45C4A;
+    --md-success: #2F8F6B;
+    --md-white: #FFFFFF;
+    --md-radius: 0.75rem;
+    --md-radius-lg: 1.25rem;
+    --md-space-1: 0.5rem;
+    --md-space-2: 1rem;
+    --md-space-3: 1.5rem;
+    --md-space-4: 2rem;
+    --md-space-5: 3rem;
+    --md-space-6: 4.5rem;
+    --md-font-display: 'Syne', sans-serif;
+    --md-font-body: 'DM Sans', sans-serif;
+    --md-shadow-soft: 0 12px 40px rgba(26, 36, 33, 0.08);
+    --md-header-h: 72px;
+}
+
+body {
+    font-family: var(--md-font-body);
+    color: var(--md-ink);
+    background-color: var(--md-warm);
+}
+
+h1, h2, h3, .md-display {
+    font-family: var(--md-font-display);
+    letter-spacing: -0.02em;
+}
+
+.md-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.md-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.md-hero-rise {
+    animation: mdHeroRise 0.8s ease both;
+}
+
+@keyframes mdHeroRise {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

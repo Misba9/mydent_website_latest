@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 
 class PatientAppointmentBookMail extends Mailable
 {
@@ -31,13 +31,20 @@ class PatientAppointmentBookMail extends Mailable
     {
         $name = $this->data['patient_name'];
         $patientId = $this->data['patient_id'];
-        $appointmentUniqueId = Crypt::encryptString($this->data['appointment_unique_id']);
         $time = $this->data['original_from_time'].' - '.$this->data['original_to_time'];
         $date = Carbon::createFromFormat('Y-m-d', $this->data['date'])->format('dS,M Y');
         $subject = 'Appointment Booked Successfully';
+        $cancelUrl = URL::temporarySignedRoute(
+            'cancelAppointment',
+            now()->addDays(7),
+            [
+                'patient_id' => $patientId,
+                'appointment_unique_id' => $this->data['appointment_unique_id'],
+            ]
+        );
 
         return $this->view('emails.patient_appointment_booked_mail',
-            compact('name', 'time', 'date', 'appointmentUniqueId', 'patientId'))
+            compact('name', 'time', 'date', 'cancelUrl'))
             ->markdown('emails.patient_appointment_booked_mail')
             ->subject($subject);
     }

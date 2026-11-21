@@ -72,6 +72,8 @@ class AppointmentRepository extends BaseRepository
         try {
             DB::beginTransaction();
 
+            $this->assertSlotAvailable($input);
+
             $input['appointment_unique_id'] = strtoupper(Appointment::generateAppointmentUniqueId());
             $fromTime = explode(' ', $input['from_time']);
             $toTime = explode(' ', $input['to_time']);
@@ -173,7 +175,11 @@ class AppointmentRepository extends BaseRepository
             $input['to_time'] = $toTime[0];
             $input['to_time_type'] = $toTime[1];
             $input['status'] = Appointment::BOOKED;
-            $input['payment_type'] = Appointment::MANUALLY;
+            $input['payable_amount'] = 0;
+            // Free front consults are unpaid/manual — do not mark PAID.
+            $input['payment_type'] = Appointment::PENDING;
+            $input['payment_method'] = Appointment::MANUALLY;
+            $this->assertSlotAvailable($input);
             $appointment = Appointment::create($input);
 
             Mail::to($input['email'])->send(new AppointmentBookedMail($input));
@@ -208,6 +214,40 @@ class AppointmentRepository extends BaseRepository
         } catch (Exception $e) {
             DB::rollBack();
             throw new UnprocessableEntityHttpException($e->getMessage());
+        }
+    }
+
+
+    /**
+     * Prevent double-booking the same doctor slot for active appointments.
+     */
+    protected function assertSlotAvailable(array $input): void
+    {
+        $fromTime = $input['from_time'];
+        $fromType = $input['from_time_type'] ?? null;
+        $toTime = $input['to_time'];
+        $toType = $input['to_time_type'] ?? null;
+
+        // Support both pre-split and "h:i A" combined values during front booking.
+        if ($fromType === null && is_string($fromTime) && str_contains($fromTime, ' ')) {
+            [$fromTime, $fromType] = explode(' ', $fromTime, 2);
+        }
+        if ($toType === null && is_string($toTime) && str_contains($toTime, ' ')) {
+            [$toTime, $toType] = explode(' ', $toTime, 2);
+        }
+
+        $exists = Appointment::where('doctor_id', $input['doctor_id'])
+            ->where('date', $input['date'])
+            ->where('from_time', $fromTime)
+            ->where('from_time_type', $fromType)
+            ->where('to_time', $toTime)
+            ->where('to_time_type', $toType)
+            ->whereIn('status', [Appointment::BOOKED, Appointment::CHECK_IN, Appointment::CHECK_OUT])
+            ->lockForUpdate()
+            ->exists();
+
+        if ($exists) {
+            throw new UnprocessableEntityHttpException('This appointment slot is already booked. Please choose another time.');
         }
     }
 

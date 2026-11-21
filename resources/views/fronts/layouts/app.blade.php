@@ -9,7 +9,7 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="@yield('meta_description', 'MyDent offers premium quality invisible clear aligners and modern dental solutions. Order aligners online, consult with certified orthodontists, and get a beautiful smile comfortably.')" />
-    <meta name="keywords" content="@yield('meta_keywords', 'clear aligners, invisible braces, teeth straightening, dental clinic, dental care, MyDent aligners, orthodontist Bangalore, orthodontist Hyderabad')" />
+    <meta name="keywords" content="@yield('meta_keywords', 'clear aligners, invisible braces, teeth straightening, dental clinic, dental care, MyDent aligners, orthodontist Hyderabad, orthodontist Bangalore')" />
     <link rel="canonical" href="@yield('canonical_url', request()->url())" />
     
     <!-- Open Graph / Facebook -->
@@ -42,18 +42,18 @@
       "address": [
         {
           "@type": "PostalAddress",
-          "streetAddress": "Dhanvantari 2B 80 ft road KHB colony, 2nd stage Basaveshwarnagar",
-          "addressLocality": "Bengaluru",
-          "addressRegion": "Karnataka",
-          "postalCode": "560079",
+          "streetAddress": "mydent, H.No 8, No:36 Pillar, 2-293/82/a/787, Road, Jubilee Hills",
+          "addressLocality": "Hyderabad",
+          "addressRegion": "Telangana",
+          "postalCode": "500033",
           "addressCountry": "IN"
         },
         {
           "@type": "PostalAddress",
-          "streetAddress": "H no: 1-1-534, opp Post Office, y junction, Gandhinagar",
-          "addressLocality": "Hyderabad",
-          "addressRegion": "Telangana",
-          "postalCode": "500080",
+          "streetAddress": "Dhanvantari 2B 80 ft road KHB colony, 2nd stage Basaveshwarnagar",
+          "addressLocality": "Bengaluru",
+          "addressRegion": "Karnataka",
+          "postalCode": "560079",
           "addressCountry": "IN"
         }
       ],
@@ -64,18 +64,14 @@
     }
     </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="//fonts.googleapis.com">
-    <link rel="preconnect" href="//fonts.gstatic.com" crossorigin>
-    <link
-        href="//fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <!-- Google Fonts — Syne (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="{{ mix('css/front-third-party.css') }}" rel="stylesheet" type="text/css">
@@ -85,8 +81,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <link rel="stylesheet" type="text/css"
         href="{{ asset('assets/css/bootstrap-datepicker/bootstrap-datepicker.css') }}">
-
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/intlTelInput.css') }}">
+    @stack('styles')
 
     <!-- Document Title ===================== -->
     <title>@yield('front-title') | {{ getAppName() }}</title>
@@ -147,7 +143,7 @@
                 'contact': 'true',
             },
             'theme': {
-                'color': '#4FB281',
+                'color': '#1B5E4A',
             },
             'modal': {
                 'ondismiss': function() {
@@ -171,7 +167,24 @@
     </main>
     @include('fronts.layouts.footer')
     @stack('scripts')
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var nodes = document.querySelectorAll('.md-reveal');
+            if (!('IntersectionObserver' in window) || !nodes.length) {
+                nodes.forEach(function (el) { el.classList.add('is-visible'); });
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            nodes.forEach(function (el) { io.observe(el); });
+        });
+    </script>
 </body>
 
 

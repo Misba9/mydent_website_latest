@@ -1,30 +1,34 @@
+// MyDent Phase 3 brand colors (forest / mint / warm)
+$forest: #1B5E4A !default;
+$forest-deep: #0F3D30 !default;
+$mint: #7DCFB6 !default;
+$warm: #F7F5F0 !default;
+$ink: #1A2421 !default;
 
-//colors
-$green: linear-gradient(to right, #FE8065, #F64D6C) !default;
-$gray: #18232D!default;
-$blue: #002879 !default;
+$green: $forest !default;
+$gray: $ink !default;
+$blue: #0F3D30 !default;
 $white: #ffffff !default;
 $black: #000000 !default;
 
-//theme color variable
-$primary: $green !default;
-$secondary: $gray !default;
-$success: $blue !default;
+// theme color variable — solid forest (no coral gradient)
+$primary: $forest !default;
+$secondary: $ink !default;
+$success: #2F8F6B !default;
 
 $gray-100: #747b81 !default;
 $gray-200: #5d656c !default;
 $gray-300: #464f57 !default;
 $gray-400: #2f3942 !default;
 
-$blue-100: #CCD4E4 !default;
-$blue-200: #99A9C9 !default;
+$blue-100: #E8F7F2 !default;
+$blue-200: #7DCFB6 !default;
 
 // border-radius-variables
-$border-radius:                     0.625rem !default;
-$border-radius-lg:                  1.25rem !default;
+$border-radius: 0.75rem !default;
+$border-radius-lg: 1.25rem !default;
 
 // buttons
-$btn-padding-y:                  0.75rem !default;
-$btn-padding-x:                  1.563rem !default;
-$btn-focus-box-shadow:              0 !default;
-
+$btn-padding-y: 0.75rem !default;
+$btn-padding-x: 1.563rem !default;
+$btn-focus-box-shadow: 0 !default;

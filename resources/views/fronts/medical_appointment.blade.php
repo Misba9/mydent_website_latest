@@ -3,48 +3,26 @@
     {{ __('messages.web.medical_appointment') }}
 @endsection
 @section('front-content')
-    @php
-        $styleCss = 'style';
-    @endphp
-    <div class="book-appointment-page">
-        <!-- start hero section -->
-        <section class="hero-content-section bg-white p-t-100 p-b-100">
-            <div class="container p-t-30">
-                <div class="col-12">
-                    <div class="hero-content text-center">
-                        <h1 class="mb-3">
-                            <!--{{ __('messages.web.book_appointment') }}-->
-                            Clear Aligners
-                        </h1>
-                        <!--<nav aria-label="breadcrumb">-->
-                        <!--    <ol class="breadcrumb justify-content-center mb-0">-->
-                        <!--        <li class="breadcrumb-item"><a href="{{ route('medical') }}">  {{ __('messages.web.home') }}</a></li>-->
-                        <!--        <li class="breadcrumb-item active" aria-current="page">  {{ __('messages.web.book_appointment') }}</li>-->
-                        <!--    </ol>-->
-                        <!--</nav>-->
-                        <h5>Begin Your Smile Transformation With a 3D Scan </h5>
-                         <h4>Please give us some basic information about yourself</h4>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- end hero section -->
+    <div class="book-appointment-page md-book-wrap">
+        <x-front.page-hero
+            title="Book your 3D scan"
+            lead="Begin your smile transformation. Share a few details and our team will guide your personalized plan."
+            image="images/3d-dental-scan.jpg"
+        />
 
-        <!-- start book appointment section -->
-        <section class="book-appointment-section bg-secondary p-t-100 p-b-100">
+        <section class="md-section md-section--warm">
             <div class="container">
-                <div class="row">
-                    <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
                         <div class="appointment-form form-wraper">
-                       <form class="book-appointment-form bg-white rounded-20 box-shadow" id="frontAppointmentBook" action="{{ route('front.appointment.book') }}" method="post">
-                           @csrf
-                            @include('fronts.common.book_appointment')
-                       </form>
+                            <form class="book-appointment-form bg-white p-4 p-md-5" id="frontAppointmentBook" action="{{ route('front.appointment.book') }}" method="post">
+                                @csrf
+                                @include('fronts.common.book_appointment')
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- end book appointment section -->
     </div>
 @endsection

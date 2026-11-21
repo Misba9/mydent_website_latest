@@ -82,13 +82,8 @@
                     </div>
                 </div>
             </div>
-    <div class="col-lg-6">
-        <div class="form-group">
-            <label class="form-label" for="Payment Type">{{ __('messages.appointment.payment_method')}}: <span
-                    class="required"></span></label>
-            {{ Form::select('payment_type', getAllPaymentStatus(), null,['class' => 'form-select', 'id'=>'paymentMethod', 'data-control'=>"select2",'placeholder' => __('messages.appointment.Select_payment_method') ]) }}
-        </div>
-    </div>
+    {{ Form::hidden('payment_type', \App\Models\Appointment::MANUALLY, ['id' => 'paymentMethod']) }}
+    {{ Form::hidden('payable_amount', 0, ['id' => 'payableAmountInput']) }}
     @php
         $styleCss = 'style';
     @endphp
@@ -127,9 +122,10 @@
                 </div>
             </div>
             <div class="text-center col-12">
-                <p class="text-uppercase mb-sm-4 mb-0 d-none"
-                   id="payableAmountText">{{__('messages.appointment.payable_amount')}} : <span class="fw-bold" id="payableAmount">{{__('messages.common.n/a')}}</span>
+                <p class="text-uppercase mb-sm-4 mb-0 text-success fw-semibold" id="payableAmountText">
+                    Free Consultation — No Payment Required
                 </p>
+                <p class="d-none" id="payableAmount">0</p>
             </div>
 
             <div class="col-12 text-center">

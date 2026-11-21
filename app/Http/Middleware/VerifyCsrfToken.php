@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'razorpay-payment-success',
         'razorpay-payment-failed',
+        'razorpay-payment-webhook',
         'paytm-callback',
     ];
 }

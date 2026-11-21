@@ -4,8 +4,8 @@ let frontTimezoneOffsetMinutes = new Date().getTimezoneOffset();
 frontTimezoneOffsetMinutes =
     frontTimezoneOffsetMinutes === 0 ? 0 : -frontTimezoneOffsetMinutes;
 let frontSelectedDate;
-let frontCharge = "";
-let frontPayableAmount = "";
+let frontCharge = 0;
+let frontPayableAmount = 0;
 let dateEle = "#templateAppointmentDate";
 
 function loadFrontDateData() {
@@ -57,30 +57,8 @@ function loadFrontAppointmentData() {
         });
     }
 
-    if (
-        !($("#FrontAppointmentServiceId").val() == "") &&
-        $("#FrontAppointmentServiceId").length
-    ) {
-        $.ajax({
-            url: route("get-charge"),
-            type: "GET",
-            data: {
-                chargeId: $("#FrontAppointmentServiceId").val(),
-            },
-            success: function (result) {
-                if (result.success) {
-                    $("#payableAmountText").removeClass("d-none");
-                    $("#payableAmount").text(
-                        currencyIcon +
-                            " " +
-                            getFormattedPrice(result.data.charges)
-                    );
-                    frontPayableAmount = result.data.charges;
-                    frontCharge = result.data.charges;
-                }
-            },
-        });
-    }
+    frontPayableAmount = 0;
+    frontCharge = 0;
 
     if (!frontSelectedDate) {
         return false;
@@ -259,11 +237,11 @@ let serviceIdExist = $("#FrontAppointmentServiceId").val();
 
 listenChange("#appointmentDoctorId", function (e) {
     e.preventDefault();
-    $("#payableAmountText").addClass("d-none");
     $("#chargeId").val("");
-    $("#payableAmount").val("");
     $("#templateAppointmentDate").val("");
     $("#addFees").val("");
+    frontPayableAmount = 0;
+    frontCharge = 0;
     $(".appointment-slot-data").html("");
     $(".no-time-slot").removeClass("d-none");
     $(dateEle).removeAttr("disabled");
@@ -275,7 +253,6 @@ listenChange("#appointmentDoctorId", function (e) {
         },
         success: function (result) {
             if (result.success) {
-                console.log(Lang.get("messages.common.select_service"));
                 $(dateEle).removeAttr("disabled");
                 $("#FrontAppointmentServiceId").empty();
                 $("#FrontAppointmentServiceId").append(
@@ -291,36 +268,14 @@ listenChange("#appointmentDoctorId", function (e) {
                             .text(v.name)
                     );
                 });
-                if (serviceIdExist && $("#FrontAppointmentServiceId").val()) {
-                    $("#payableAmountText").removeClass("d-none");
-                }
             }
         },
     });
 });
 
 listenChange("#FrontAppointmentServiceId", function () {
-    if ($(this).val() == "") {
-        $("#payableAmountText").addClass("d-none");
-        return;
-    }
-    $.ajax({
-        url: route("get-charge"),
-        type: "GET",
-        data: {
-            chargeId: $(this).val(),
-        },
-        success: function (result) {
-            if (result.success) {
-                $("#payableAmountText").removeClass("d-none");
-                $("#payableAmount").text(
-                    currencyIcon + " " + getFormattedPrice(result.data.charges)
-                );
-                frontPayableAmount = result.data.charges;
-                frontCharge = result.data.charges;
-            }
-        },
-    });
+    frontPayableAmount = 0;
+    frontCharge = 0;
 });
 
 listenSubmit("#frontAppointmentBook", function (e) {
@@ -332,7 +287,6 @@ listenSubmit("#frontAppointmentBook", function (e) {
     let doctor = $("#appointmentDoctorId").val().trim();
     let services = $("#FrontAppointmentServiceId").val().trim();
     let appointmentDate = $("#templateAppointmentDate").val().trim();
-    let paymentType = $("#paymentMethod").val().trim();
     $(".book-appointment-message").css("display", "block");
     if (!$("#isPatientAccount").is(":checked")) {
         if (firstName == "") {
@@ -397,21 +351,13 @@ listenSubmit("#frontAppointmentBook", function (e) {
         $(window).scrollTop($(".appointment-form").offset().top);
         return false;
     }
-    if (paymentType == "") {
-        response =
-            '<div class="gen alert alert-danger">' +
-            Lang.get("messages.common.payment_type_required") +
-            "</div>";
-        $(".book-appointment-message").html(response).delay(5000).hide("slow");
-        $(window).scrollTop($(".appointment-form").offset().top);
-        return false;
-    }
 
     let btnSaveEle = $(this).find("#saveBtn");
     setFrontBtnLoader(btnSaveEle);
 
     let frontAppointmentFormData = new FormData($(this)[0]);
-    frontAppointmentFormData.append("payable_amount", frontPayableAmount);
+    frontAppointmentFormData.set("payable_amount", 0);
+    frontAppointmentFormData.set("payment_type", manually);
     let response =
         '<div class="alert alert-warning alert-dismissable"> ' +
         Lang.get("messages.common.processing") +
@@ -425,8 +371,6 @@ listenSubmit("#frontAppointmentBook", function (e) {
         contentType: false,
         success: function (result) {
             if (result.success) {
-                let appointmentID = result.data.appointmentId;
-
                 response =
                     '<div class="gen alert alert-success">' +
                     result.message +
@@ -439,113 +383,9 @@ listenSubmit("#frontAppointmentBook", function (e) {
                 $(window).scrollTop($(".appointment-form").offset().top);
                 $("#frontAppointmentBook")[0].reset();
 
-                if (result.data.payment_type == manually) {
-                    Turbo.visit(
-                        route("manually-payment", {
-                            appointmentId: appointmentID,
-                        })
-                    );
-                }
-
-                if (result.data.payment_type == paystack) {
-                    return (location.href = result.data.redirect_url);
-                }
-
-                if (result.data.payment_type == authorizeMethod) {
-                    window.location.replace(
-                        route("authorize.init", {
-                            appointmentId: appointmentID,
-                        })
-                    );
-                }
-
-                if (result.data.payment_type == paytmMethod) {
-                    window.location.replace(
-                        route("paytm.init", { appointmentId: appointmentID })
-                    );
-                }
-
-                if (result.data.payment_type == paypal) {
-                    $.ajax({
-                        type: "GET",
-                        url: route("paypal.init"),
-                        data: { appointmentId: appointmentID },
-                        success: function (result) {
-                            if (result.status == 200) {
-                                let redirectTo = "";
-                                location.href = result.link;
-                                $.each(
-                                    result.result.links,
-                                    function (key, val) {
-                                        if (val.rel == "approve") {
-                                            redirectTo = val.href;
-                                        }
-                                    }
-                                );
-                                location.href = redirectTo;
-                            }
-                        },
-                        error: function (result) {},
-                        complete: function () {},
-                    });
-                }
-
-                if (result.data.payment_type == razorpayMethod) {
-                    $.ajax({
-                        type: "POST",
-                        url: route("razorpay.init"),
-                        data: {
-                            _token: csrfToken,
-                            appointmentId: appointmentID,
-                        },
-                        success: function (result) {
-                            if (result.success) {
-                                let {
-                                    id,
-                                    amount,
-                                    name,
-                                    email,
-                                    contact,
-                                    region_code,
-                                } = result.data;
-
-                                options.amount = amount;
-                                options.order_id = id;
-                                options.prefill.name = name;
-                                options.prefill.email = email;
-                                options.prefill.contact = contact;
-                                options.prefill.contact = region_code;
-                                options.prefill.appointmentID = appointmentID;
-
-                                let razorPay = new Razorpay(options);
-                                razorPay.open();
-                                razorPay.on(
-                                    "payment.failed",
-                                    storeFailedPayment
-                                );
-                            }
-                        },
-                        error: function (result) {},
-                        complete: function () {},
-                    });
-                }
-
-                if (result.data.payment_type == stripeMethod) {
-                    let sessionId = result.data[0].sessionId;
-                    stripe
-                        .redirectToCheckout({
-                            sessionId: sessionId,
-                        })
-                        .then(function (result) {
-                            manageAjaxErrors(result);
-                        });
-                }
-
-                if (result.data === manually) {
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1200);
-                }
+                setTimeout(function () {
+                    location.reload();
+                }, 1200);
             }
         },
         error: function (result) {

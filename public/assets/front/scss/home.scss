@@ -4,7 +4,7 @@
     
         .card {
             .card-number {
-                background: linear-gradient(#FE8065, #F74D6C);
+                background: linear-gradient(var(--md-forest, #1B5E4A), var(--md-mint, #7DCFB6));
                 background-size: cover;
                 -webkit-background-clip: text;
                 -webkit-text-stroke: 6px transparent;
@@ -107,7 +107,7 @@
     
         .slick-prev,
         .slick-next {
-            background: linear-gradient(117.85deg, #FE8065 0%, #F74D6C 100%);
+            background: linear-gradient(117.85deg, var(--md-forest, #1B5E4A) 0%, var(--md-mint, #7DCFB6) 100%);
             border-color: transparent;
             color: #ffffff;
             width: 60px;

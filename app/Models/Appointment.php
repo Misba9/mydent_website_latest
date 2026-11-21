@@ -199,14 +199,9 @@ class Appointment extends Model
 
     public static function generateAppointmentUniqueId(): string
     {
-        $appointmentUniqueId = Str::random(10);
-        while (true) {
-            $isExist = self::whereAppointmentUniqueId($appointmentUniqueId)->exists();
-            if ($isExist) {
-                self::generateAppointmentUniqueId();
-            }
-            break;
-        }
+        do {
+            $appointmentUniqueId = Str::random(10);
+        } while (self::whereAppointmentUniqueId($appointmentUniqueId)->exists());
 
         return $appointmentUniqueId;
     }

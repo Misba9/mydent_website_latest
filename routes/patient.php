@@ -59,12 +59,8 @@ Route::prefix('patients')->name('patients.')->middleware('auth', 'xss', 'checkUs
     Route::get('live-consultation/{liveConsultation}/start',
         [LiveConsultationController::class, 'getLiveStatus'])->name('live.consultation.get.live.status');
 
-    // Route for Prescription
-    Route::resource('prescriptions', PrescriptionController::class)->except('create', 'edit', 'index');
-    Route::get('appointments/{appointmentId}/prescription-create', [PrescriptionController::class, 'create'])->name('prescriptions.create');
-    Route::get('appointments/{appointmentId}/prescription-edit/{prescription}', [PrescriptionController::class, 'edit'])->name('prescriptions.edit');
-    Route::post('prescription-medicine', [PrescriptionController::class, 'prescreptionMedicineStore'])->name('prescription.medicine.store');
-    Route::post('prescriptions/{prescription}/active-deactive', [PrescriptionController::class, 'activeDeactiveStatus'])->name('prescription.status');
+    // Patients may view/download prescriptions only — no create/update/delete.
+    Route::get('prescriptions/{prescription}', [PrescriptionController::class, 'show'])->name('prescriptions.show');
     Route::get('prescription-medicine-show/{id}', [PrescriptionController::class, 'prescriptionMedicineShowFunction'])->name('prescription.medicine.show');
     Route::get('prescription-pdf/{id}', [PrescriptionController::class, 'convertToPDF'])->name('prescriptions.pdf');
 });

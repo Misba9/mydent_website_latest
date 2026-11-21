@@ -6,45 +6,15 @@
 
 @section('front-content')
 
-<!-- Banner Section -->
-@php
-    $banners = \App\Models\MainBanner::where('page', 'products')->get();
-@endphp
-
-@if($banners->count())
-<section class="main-banner mb-4" style="margin-top: 90px;">
-    <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach($banners as $key => $banner)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <img src="{{ asset($banner->image) }}" alt="{{ $banner->title }}" class="d-block w-100 banner-image">
-                    
-                    @if($banner->title)
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5 class="banner-title">{{ $banner->title }}</h5>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-    </div>
-</section>
-@endif
-
-<div class="container-fluid px-4 py-5" style="margin-top: 70px;">
-    <!-- Section Header -->
+@include('fronts.partials.banner-carousel', [
+    'page' => 'products',
+    'fallbackImage' => 'images/mydent-care.jpeg',
+    'fallbackTitle' => 'Shop mydent',
+])
+<div class="container-fluid px-4 md-section md-section--warm">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-dark mb-3">Our Products</h1>
-        <div class="section-underline mx-auto mb-4"></div>
-        <p class="lead text-muted">Discover our premium collection of mydent aligner accessories</p>
+        <h1 class="md-section__title">Our products</h1>
+        <p class="md-section__lead">Discover our premium collection of mydent aligner accessories</p>
     </div>
 
     <!-- Enhanced Category Filter -->

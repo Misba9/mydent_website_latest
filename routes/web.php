@@ -126,14 +126,7 @@ Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
 });
 
 
-// Cart routes
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
-Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
-// Buy now checkout routes
-//Route::post('/checkout/buy-now/{id}', [CheckoutController::class, 'buyNow'])->name('checkout.buyNow');
-
+// Cart routes (single definitions — avoid duplicate named routes)
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add/{id}', [CartController::class, 'add'])->name('cart.add');
@@ -141,6 +134,8 @@ Route::prefix('cart')->group(function () {
     Route::get('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::get('/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
+// Backward-compatible alias for older links/Ziggy refs.
+Route::redirect('/cart-view', '/cart')->name('cart.show');
 
 
 Route::get('google-auth', [GoogleCalendarController::class, 'oauth'])->name('googleAuth');
@@ -192,9 +187,11 @@ Route::get(
     [AppointmentController::class, 'handleFailedPayment']
 )->name('medical-appointment-failed-payment');
 
-// Manually payment route
-Route::get('/manually-payment', [AppointmentController::class, 'manuallyPayment'])->name('manually-payment');
-Route::put('transaction-status', [TransactionController::class, 'changeTransactionStatus'])->name('transaction.status');
+// Manual payment + transaction status require authenticated clinic staff (not public).
+Route::middleware(['auth', 'xss', 'checkUserStatus', 'role:clinic_admin|doctor'])->group(function () {
+    Route::get('/manually-payment', [AppointmentController::class, 'manuallyPayment'])->name('manually-payment');
+    Route::put('transaction-status', [TransactionController::class, 'changeTransactionStatus'])->name('transaction.status');
+});
 
 //Paystack Route
 Route::get('paystack-onboard', [PaystackController::class, 'redirectToGateway'])->name('paystack.init');
@@ -214,7 +211,7 @@ Route::post('razorpay-payment-success', [RazorpayController::class, 'paymentSucc
     ->name('razorpay.success');
 Route::post('razorpay-payment-failed', [RazorpayController::class, 'paymentFailed'])
     ->name('razorpay.failed');
-Route::get('razorpay-payment-webhook', [RazorpayController::class, 'paymentSuccessWebHook'])
+Route::post('razorpay-payment-webhook', [RazorpayController::class, 'paymentSuccessWebHook'])
     ->name('razorpay.webhook');
 
 Route::get('paypal-onboard', [PaypalController::class, 'onBoard'])->name('paypal.init');
@@ -255,21 +252,21 @@ Route::post('update-language', [UserController::class, 'updateLanguage'])->name(
 Route::get('doctor-appointment/{doctor}', [AppointmentController::class, 'doctorBookAppointment'])->name('doctorBookAppointment');
 Route::get('service-appointment/{service}', [AppointmentController::class, 'serviceBookAppointment'])->name('serviceBookAppointment');
 
-Route::post(
-    '/notification/{notification}/read',
-    [NotificationController::class, 'readNotification']
-)->name('notifications.read');
-Route::post(
-    '/read-all-notification',
-    [NotificationController::class, 'readAllNotification']
-)->name('notifications.read.all');
-
 Route::middleware('auth', 'xss', 'checkUserStatus')->group(function () {
     // Update profile
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.setting');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('update.profile.setting');
     Route::put('/change-user-password', [UserController::class, 'changePassword'])->name('user.changePassword');
     Route::put('/email-notification', [UserController::class, 'emailNotification'])->name('emailNotification');
+
+    Route::post(
+        '/notification/{notification}/read',
+        [NotificationController::class, 'readNotification']
+    )->name('notifications.read');
+    Route::post(
+        '/read-all-notification',
+        [NotificationController::class, 'readAllNotification']
+    )->name('notifications.read.all');
 });
 
 Route::get('cancel-appointment/{patient_id}/{appointment_unique_id}', [AppointmentController::class, 'cancelAppointment'])->name('cancelAppointment');

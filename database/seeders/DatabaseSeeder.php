@@ -34,7 +34,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultMedicinePermissionSeeder::class);
         $this->call(DefaultAssignPermissionSeeder::class);
         $this->call(DefaultProductsSeeder::class);
-
-
+        $this->call(WebsiteBrandImagesSeeder::class);
     }
 }

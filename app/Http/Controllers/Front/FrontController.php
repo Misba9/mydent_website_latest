@@ -7,7 +7,6 @@ use App\Models\ClinicSchedule;
 use App\Models\Doctor;
 use App\Models\DoctorSession;
 use App\Models\Faq;
-use App\Models\FrontPatientTestimonial;
 use App\Models\Patient;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -15,6 +14,9 @@ use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Specialization;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\Blog;
+use App\Models\HomepageVideo;
 use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -30,18 +32,39 @@ class FrontController extends AppBaseController
      */
     public function medical(): \Illuminate\View\View
     {
-        $doctors = Doctor::with('user', 'specializations')->whereHas('user', function (Builder $query) {
+        $doctorsList = Doctor::with('user', 'specializations')->whereHas('user', function (Builder $query) {
             $query->where('status', User::ACTIVE);
-        })->latest()->take(10)->get()->pluck('user.full_name', 'id');
+        })->latest()->take(10)->get();
+
+        $doctors = $doctorsList->pluck('user.full_name', 'id');
         $sliders = Slider::with('media')->first() ?? new Slider();
         $frontMedicalServicesArray = Service::with('media')->whereStatus(Service::ACTIVE)->latest()->get()->toArray();
         $frontMedicalServices = array_chunk($frontMedicalServicesArray, 2);
-        $frontPatientTestimonials = FrontPatientTestimonial::with('media')->latest()->take(6)->get();
         $aboutExperience = Setting::where('key', 'about_experience')->first();
 
-        return view('fronts.medicals.index',
-            compact('doctors', 'sliders', 'frontMedicalServices', 'frontPatientTestimonials',
-                'aboutExperience'));
+        $blogs = Blog::latest()->get();
+        $articles = Article::latest()->take(6)->get();
+        $categories = Product::select('category', 'category_thumbnail')
+            ->whereNotNull('category')
+            ->distinct()
+            ->get();
+        $characteristicCards = HomepageVideo::where('section', 'characteristics')->orderBy('order')->get();
+        $section1Videos = HomepageVideo::where('section', 'section-1')->orderBy('order')->get();
+        $section2Video = HomepageVideo::where('section', 'section-2')->latest()->first();
+
+        return view('fronts.medicals.index', compact(
+            'doctors',
+            'doctorsList',
+            'sliders',
+            'frontMedicalServices',
+            'aboutExperience',
+            'blogs',
+            'articles',
+            'categories',
+            'characteristicCards',
+            'section1Videos',
+            'section2Video'
+        ));
     }
 
     /**
@@ -58,13 +81,12 @@ class FrontController extends AppBaseController
         $data['specializationsCount'] = Specialization::count();
         $clinicSchedules = ClinicSchedule::all();
         $setting = Setting::where('key', 'about_us_image')->first();
-        $frontPatientTestimonials = FrontPatientTestimonial::with('media')->latest()->take(6)->get();
         $doctors = Doctor::with('user', 'appointments', 'specializations')->whereHas('user', function (Builder $query) {
             $query->where('status', User::ACTIVE);
         })->withCount('appointments')->orderBy('appointments_count', 'desc')->take(3)->get();
 
         return view('fronts.medical_about_us',
-            compact('doctors', 'data', 'setting', 'clinicSchedules', 'frontPatientTestimonials'));
+            compact('doctors', 'data', 'setting', 'clinicSchedules'));
     }
 
     /**
@@ -125,22 +147,7 @@ class FrontController extends AppBaseController
 
     public function ecom(): \Illuminate\View\View
     {
-        if (Product::count() === 0) {
-            $sqlPath = base_path('mydent_database_production_import.sql');
-            if (file_exists($sqlPath)) {
-                $sql = file_get_contents($sqlPath);
-                $statements = array_filter(array_map('trim', explode(";\n", $sql)));
-                foreach ($statements as $stmt) {
-                    if (!empty($stmt) && !str_starts_with($stmt, '--')) {
-                        try {
-                            \Illuminate\Support\Facades\DB::unprepared($stmt . ';');
-                        } catch (\Throwable $e) {
-                        }
-                    }
-                }
-            }
-        }
-
+        // Products must be seeded via Artisan/admin — never import SQL over HTTP.
         $products = Product::all();
         $categories = Product::select('category')->distinct()->pluck('category');
 

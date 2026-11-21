@@ -26,6 +26,7 @@ return [
     'razorpay' => [
         'key' => env('RAZOR_KEY'),
         'secret' => env('RAZOR_SECRET'),
+        'webhook_secret' => env('RAZOR_WEBHOOK_SECRET', env('RAZOR_SECRET')),
     ],
 
     'authorize' => [

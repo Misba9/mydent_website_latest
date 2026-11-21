@@ -18,7 +18,24 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label required">Page</label>
-                                <input type="text" name="page" class="form-control" value="{{ old('page', $mainBanner->page) }}" required>
+                                <select name="page" class="form-select" required>
+                                    @php
+                                        $pages = [
+                                            'why-mydent' => 'Why mydent (About)',
+                                            'smileverse' => 'Smileverse (Services)',
+                                            'alligners' => 'Aligners (Doctors)',
+                                            'centre' => 'Centre (Contact)',
+                                            'products' => 'Products (Shop)',
+                                        ];
+                                        $selected = old('page', $mainBanner->page);
+                                    @endphp
+                                    @foreach($pages as $value => $label)
+                                        <option value="{{ $value }}" {{ $selected === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                    @if(!array_key_exists($selected, $pages))
+                                        <option value="{{ $selected }}" selected>{{ $selected }}</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">

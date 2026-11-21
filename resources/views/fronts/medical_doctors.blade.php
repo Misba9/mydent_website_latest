@@ -13,89 +13,12 @@
     }
 </style>
 <div class="alligners">
-   <!-- Banner Image -->
+   @include('fronts.partials.banner-carousel', [
+    'page' => 'alligners',
+    'fallbackImage' => 'images/invisible.jpeg',
+    'fallbackTitle' => 'Clear Aligners',
+])
 @php
-    $banners = \App\Models\MainBanner::where('page', 'alligners')->get(); // or dynamic slug
-@endphp
-
-
-@if($banners->count())
-<section class="main-banner mb-4" style="margin-top: 90px;">
-    <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach($banners as $key => $banner)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <img src="{{ asset($banner->image) }}" alt="{{ $banner->title }}" class="d-block w-100 banner-image">
-                    
-                    @if($banner->title)
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5 class="banner-title">{{ $banner->title }}</h5>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-    </div>
-
-    <!-- Styles -->
-    <style>
-        .banner-image {
-            width: 100%;
-            height: 600px;
-            object-fit: cover;
-        }
-
-        .banner-title {
-            font-size: 2rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .banner-image {
-                height: 400px;
-            }
-
-            .banner-title {
-                font-size: 1.25rem;
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .banner-image {
-                height: 250px;
-            }
-
-            .carousel-caption {
-                bottom: 10px;
-            }
-
-            .banner-title {
-                font-size: 1rem;
-                padding: 6px 12px;
-            }
-        }
-    </style>
-</section>
-@endif
-
-
-
-
-
-    @php
         $styleCss = 'style';
     @endphp
     <!-- <div class="our-team-page"> -->
@@ -222,17 +145,17 @@
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div class="d-flex flex-column gap-4">
                     <div class="text-center">
-                        <img src="https://cdn-icons-png.flaticon.com/512/13730/13730911.png" alt="Icon 1" class="mb-2" style="height: 60px;" />
+                        <img src="{{ asset('images/mydent-care.jpeg') }}" alt="Removable and Convenient" class="mb-2 rounded" style="height: 90px; width: 90px; object-fit: cover;" />
                         <h5 class="fw-bold">Removable and Convenient</h5>
                         <p class="text-muted">You can remove them while eating or brushing.</p>
                     </div>
                     <div class="text-center">
-                        <img src="https://static.vecteezy.com/system/resources/previews/026/183/901/non_2x/hide-icon-eyes-hidden-symbol-invisible-icon-dead-invisible-sign-no-view-blind-icon-can-t-see-hidden-visibility-vector.jpg" alt="Icon 2" class="mb-2" style="height: 60px;" />
+                        <img src="{{ asset('images/invisible.jpeg') }}" alt="Virtually Invisible" class="mb-2 rounded" style="height: 90px; width: 90px; object-fit: cover;" />
                         <h5 class="fw-bold">Virtually Invisible</h5>
                         <p class="text-muted">No metal brackets or wires, just a confident smile.</p>
                     </div>
                     <div class="text-center">
-                        <img src="https://media.istockphoto.com/id/1162803307/vector/configuration-customize-icon.jpg?s=612x612&w=0&k=20&c=zw3JYxa43A1juJ58aq58cM5IRLZJhD1swSZAkkQO2mU=" alt="Icon 3" class="mb-2" style="height: 60px;" />
+                        <img src="{{ asset('images/3d-dental-scan.jpg') }}" alt="Custom-Made for You" class="mb-2 rounded" style="height: 90px; width: 90px; object-fit: cover;" />
                         <h5 class="fw-bold">Custom-Made for You</h5>
                         <p class="text-muted">Each aligner is crafted based on your dental needs.</p>
                     </div>
@@ -455,7 +378,7 @@
 
     <!-- Right Side -->
     <div class="aligner-right" style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center;">
-      <img src="https://www.future-doctor.de/wp-content/uploads/2024/08/shutterstock_2480850611.jpg" alt="mydent Aligners" style="width: 100%; max-width: 400px; height: auto; border-radius: 10px; margin-bottom: 30px; object-fit: cover;">
+      <img src="{{ asset('images/invisible.jpeg') }}" alt="mydent Clear Aligners" style="width: 100%; max-width: 400px; height: auto; border-radius: 10px; margin-bottom: 30px; object-fit: cover;">
 
       <div class="aligner-cards" style="display: flex; width: 100%; max-width: 400px; flex-wrap: wrap;">
         <!-- Card 1 -->
@@ -613,30 +536,7 @@
 
 
 
-<section class="p-t-50 p-b-100 mt-25" style="background-color: #F9FAFB;">
-    <div class="container" >
-        <h2 class="mb-5 text-center" style="margin-top:50px">Our Testimonials</h2>
-        <div class="row justify-content-center">
-            @php
-                $section1Videos = \App\Models\HomepageVideo::where('section', 'section-5')->orderBy('order')->get();
-            @endphp
-
-            @foreach($section1Videos as $index => $video)
-                <div class="col-md-4 mb-4">
-                    <div class="card border rounded p-3 shadow-sm text-center" style="height: 320px;">
-                        <video class="w-100" style="height: 180px; object-fit: cover;" autoplay loop muted playsinline>
-                            <source src="{{ $video->video_path }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="mt-3">
-                            <h5 class="fw-bold mt-2">{{ $video->title }}</h5>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
+{{-- Testimonials removed from public website --}}
       
       
       

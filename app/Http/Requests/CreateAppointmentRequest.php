@@ -15,6 +15,15 @@ class CreateAppointmentRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (auth()->check() && auth()->user()->hasRole('patient') && auth()->user()->patient) {
+            $this->merge([
+                'patient_id' => auth()->user()->patient->id,
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      */

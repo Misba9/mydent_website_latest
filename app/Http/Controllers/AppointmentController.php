@@ -75,6 +75,21 @@ class AppointmentController extends AppBaseController
     public function store(CreateAppointmentRequest $request): JsonResponse
     {
         $input = $request->all();
+
+        // Patients cannot book on behalf of another patient or forge charges.
+        if (getLogInUser() && getLogInUser()->hasRole('patient')) {
+            if (! getLogInUser()->patient) {
+                return $this->sendError('Patient profile not found.', 403);
+            }
+            $input['patient_id'] = getLogInUser()->patient->id;
+            if (! empty($input['service_id'])) {
+                $service = Service::find($input['service_id']);
+                if ($service) {
+                    $input['payable_amount'] = $service->charges;
+                }
+            }
+        }
+
         $appointment = $this->appointmentRepository->store($input);
 
         if ($input['payment_type'] == Appointment::STRIPE) {
@@ -374,62 +389,16 @@ class AppointmentController extends AppBaseController
     {
         app()->setLocale(checkLanguageSession());
         $input = $request->all();
+        // Front booking is free — no payment gateway flow
+        $input['payable_amount'] = 0;
+        $input['payment_type'] = Appointment::MANUALLY;
         $appointment = $this->appointmentRepository->frontSideStore($input);
-        if ($input['payment_type'] == Appointment::STRIPE) {
-            $result = $this->appointmentRepository->createSession($appointment);
 
-            return $this->sendResponse([
-                'payment_type' => $input['payment_type'],
-                $result,
-            ], 'Stripe '.__('messages.appointment.session_created_successfully'));
-        }
-
-        if ($input['payment_type'] == Appointment::PAYPAL) {
-            if ($request->isXmlHttpRequest()) {
-                return $this->sendResponse([
-                    'redirect_url' => route('paypal.index', ['appointmentData' => $appointment]),
-                    'payment_type' => $input['payment_type'],
-                    'appointmentId' => $appointment->id,
-                ], 'Paypal '.__('messages.appointment.session_created_successfully'));
-            }
-        }
-
-        if ($input['payment_type'] == Appointment::PAYSTACK) {
-            if ($request->isXmlHttpRequest()) {
-                return $this->sendResponse([
-                    'redirect_url' => route('paystack.init', ['appointmentData' => $appointment]),
-                    'payment_type' => $input['payment_type'],
-                ], 'Paystck '.__('messages.appointment.session_created_successfully'));
-            }
-
-            return redirect(route('paystack.init'));
-        }
-
-        if ($input['payment_type'] == Appointment::RAZORPAY) {
-            return $this->sendResponse([
-                'payment_type' => $input['payment_type'],
-                'appointmentId' => $appointment->id,
-            ], 'Razorpay '.__('messages.appointment.session_created_successfully'));
-        }
-
-        if ($input['payment_type'] == Appointment::PAYTM) {
-            return $this->sendResponse([
-                'payment_type' => $input['payment_type'],
-                'appointmentId' => $appointment->id,
-            ], 'Paytm '.__('messages.appointment.session_created_successfully'));
-        }
-
-        if ($input['payment_type'] == Appointment::AUTHORIZE) {
-            return $this->sendResponse([
-                'payment_type' => $input['payment_type'],
-                'appointmentId' => $appointment->id,
-            ], 'Authorize session created successfully.');
-        }
-
-        $data['payment_type'] = $input['payment_type'];
-        $data['appointmentId'] = $appointment->id;
-
-        return $this->sendResponse($data, __('messages.flash.appointment_booked'));
+        return $this->sendResponse([
+            'payment_type' => Appointment::MANUALLY,
+            'appointmentId' => $appointment->id,
+            'free' => true,
+        ], __('messages.flash.appointment_booked'));
     }
 
     public function frontHomeAppointmentBook(Request $request): RedirectResponse
@@ -469,33 +438,49 @@ class AppointmentController extends AppBaseController
         setStripeApiKey();
 
         $sessionData = \Stripe\Checkout\Session::retrieve($sessionId);
+
+        if (($sessionData->payment_status ?? null) !== 'paid') {
+            Flash::error(__('messages.flash.appointment_created_payment_not_complete'));
+
+            return redirect(route('medicalAppointment'));
+        }
+
         $appointment = Appointment::whereAppointmentUniqueId($sessionData->client_reference_id)->first();
+        if (! $appointment) {
+            Flash::error(__('messages.flash.appointment_not_found'));
+
+            return redirect(route('medical'));
+        }
+
         $patientId = User::whereEmail($sessionData->customer_details->email)->pluck('id')->first();
 
-        $transaction = [
-            'user_id' => $patientId,
-            'transaction_id' => $sessionData->id,
-            'appointment_id' => $sessionData->client_reference_id,
-            'amount' => intval($sessionData->amount_total / 100),
-            'type' => Appointment::STRIPE,
-            'meta' => $sessionData,
-        ];
+        if (! Transaction::where('transaction_id', $sessionData->id)->exists()
+            && (int) $appointment->payment_type !== Appointment::PAID) {
+            Transaction::create([
+                'user_id' => $patientId,
+                'transaction_id' => $sessionData->id,
+                'appointment_id' => $sessionData->client_reference_id,
+                'amount' => intval($sessionData->amount_total / 100),
+                'type' => Appointment::STRIPE,
+                'meta' => $sessionData,
+            ]);
 
-        Transaction::create($transaction);
+            $appointment->update([
+                'payment_method' => Appointment::STRIPE,
+                'payment_type' => Appointment::PAID,
+            ]);
 
-        $appointment->update([
-            'payment_method' => Appointment::STRIPE,
-            'payment_type' => Appointment::PAID,
-        ]);
+            $patient = Patient::whereUserId($patientId)->with('user')->first();
+            if ($patient) {
+                Notification::create([
+                    'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
+                    'type' => Notification::PAYMENT_DONE,
+                    'user_id' => $patient->user_id,
+                ]);
+            }
+        }
 
         Flash::success(__('messages.flash.appointment_created_payment_complete'));
-
-        $patient = Patient::whereUserId($patientId)->with('user')->first();
-        Notification::create([
-            'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
-            'type' => Notification::PAYMENT_DONE,
-            'user_id' => $patient->user_id,
-        ]);
 
         if (parse_url(url()->previous(), PHP_URL_PATH) == '/medical-appointment') {
             return redirect(route('medicalAppointment'));
@@ -600,12 +585,32 @@ class AppointmentController extends AppBaseController
         return $this->sendSuccess(__('messages.flash.payment_status_updated'));
     }
 
-    public function cancelAppointment($patient_id, $appointment_unique_id): RedirectResponse
+    public function cancelAppointment(Request $request, $patient_id, $appointment_unique_id): RedirectResponse
     {
-        $uniqueId = Crypt::decryptString($appointment_unique_id);
-        $appointment = Appointment::whereAppointmentUniqueId($uniqueId)->wherePatientId($patient_id)->first();
+        // Prefer signed temporary URLs. Keep Crypt decrypt fallback for older emails.
+        $uniqueId = $appointment_unique_id;
+        try {
+            if (! $request->hasValidSignature()) {
+                $uniqueId = Crypt::decryptString($appointment_unique_id);
+            }
+        } catch (\Throwable $e) {
+            Flash::error(__('messages.flash.appointment_not_found'));
 
-        $appointment->update(['status' => Appointment::CANCELLED]);
+            return redirect(route('medical'));
+        }
+
+        $appointment = Appointment::whereAppointmentUniqueId($uniqueId)->wherePatientId($patient_id)->first();
+        if (! $appointment) {
+            Flash::error(__('messages.flash.appointment_not_found'));
+
+            return redirect(route('medical'));
+        }
+
+        if ((int) $appointment->status !== Appointment::CANCELLED) {
+            $appointment->update(['status' => Appointment::CANCELLED]);
+        }
+
+        Flash::success(__('messages.flash.appointment_cancel'));
 
         return redirect(route('medical'));
     }
@@ -655,6 +660,30 @@ class AppointmentController extends AppBaseController
     {
         $input = $request->all();
         $appointment = Appointment::findOrFail($input['appointmentId'])->load('patient');
+
+        if (getLogInUser()->hasRole('doctor')) {
+            if (! getLogInUser()->doctor || (int) $appointment->doctor_id !== (int) getLogInUser()->doctor->id) {
+                Flash::error(__('messages.flash.not_allow_access_record'));
+
+                return redirect()->back();
+            }
+        } elseif (! getLogInUser()->hasRole('clinic_admin')) {
+            Flash::error(__('messages.flash.not_allow_access_record'));
+
+            return redirect()->back();
+        }
+
+        $existingPending = Transaction::whereAppointmentId($appointment->appointment_unique_id)
+            ->where('type', Appointment::MANUALLY)
+            ->where('status', Transaction::PENDING)
+            ->exists();
+
+        if ($existingPending) {
+            Flash::success(__('messages.flash.appointment_created_payment_not_complete'));
+
+            return redirect()->back();
+        }
+
         $transaction = [
             'user_id' => $appointment->patient->user_id,
             'transaction_id' => Str::random(10),
@@ -689,6 +718,7 @@ class AppointmentController extends AppBaseController
     public function appointmentPdf($id)
     {
         $datas = Appointment::with(['patient.user', 'doctor.user', 'services'])->findOrFail($id);
+        $this->authorize('view', $datas);
         $pdf = Pdf::loadView('appointment_pdf.invoice', ['datas' => $datas]);
 
         return $pdf->download('invoice.pdf');

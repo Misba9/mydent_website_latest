@@ -6,89 +6,12 @@
 @section('front-content')
 
 
-   <!-- Banner Section -->
-
-@php
-    $banners = \App\Models\MainBanner::where('page', 'smileverse')->get(); // or dynamic slug
-@endphp
-
-@if($banners->count())
-<section class="main-banner mb-4" style="margin-top: 90px;">
-    <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach($banners as $key => $banner)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <img src="{{ asset($banner->image) }}" alt="{{ $banner->title }}" class="d-block w-100 banner-image">
-                    
-                    @if($banner->title)
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5 class="banner-title">{{ $banner->title }}</h5>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
-    </div>
-
-    <!-- Styles -->
-    <style>
-        .banner-image {
-            width: 100%;
-            height: 600px;
-            object-fit: cover;
-        }
-
-        .banner-title {
-            font-size: 2rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .banner-image {
-                height: 400px;
-            }
-
-            .banner-title {
-                font-size: 1.25rem;
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .banner-image {
-                height: 250px;
-            }
-
-            .carousel-caption {
-                bottom: 10px;
-            }
-
-            .banner-title {
-                font-size: 1rem;
-                padding: 6px 12px;
-            }
-        }
-    </style>
-</section>
-@endif
-
-
-
-
-
-    <div class="services-page">
+   @include('fronts.partials.banner-carousel', [
+    'page' => 'smileverse',
+    'fallbackImage' => 'images/mydent-care.jpeg',
+    'fallbackTitle' => 'Smileverse',
+])
+<div class="services-page">
         <!-- start hero section -->
         <!-- <section class="hero-content-section bg-white p-t-100 p-b-100">
             <div class="container p-t-30">
@@ -165,27 +88,30 @@ hold you back— shine confidently with Mydent</strong></p>
 </section>
 
 <!-- Types of Braces Section -->
-<section class="types-of-braces-section p-t-100 p-b-100 bg-light">
+<section class="md-section md-section--warm md-reveal">
     <div class="container">
-        <h2 class="text-center mb-5">Types of Braces</h2>
-        <div class="row">
+        <h2 class="md-section__title text-center">Types of braces & aligners</h2>
+        <p class="md-section__lead text-center">Find the right path to your smile — from invisible trays to traditional braces.</p>
+        <div class="row g-4">
             @php
                 $braces = [
-                    ['img' => 'https://zaradental.com/wp-content/uploads/2021/02/ZA-Blog-053.jpg', 'title' => 'Metal Braces', 'desc' => 'Traditional and highly effective braces.'],
-                    ['img' => 'https://happysmile.in/wp-content/uploads/2021/04/ceramic-braces-e1619251565587.jpg', 'title' => 'Ceramic Braces', 'desc' => 'Tooth-colored braces for a less visible appearance.'],
-                    ['img' => 'https://gloorthodontics.ca/wp-content/uploads/2023/02/metal-braces-glo-orthodontics-west-bedford.jpg', 'title' => 'Self-Ligating Braces', 'desc' => 'Uses clips instead of elastic bands.'],
-                    ['img' => 'https://www.didsburydentalpractice.dentist/wp-content/uploads/2022/11/shutterstock_1305039190.jpg', 'title' => 'Lingual Braces', 'desc' => 'Placed behind the teeth, completely hidden.'],
-                    ['img' => 'https://www.indiadens.com/blog/wp-content/uploads/2022/01/clear-aligners-invisible-braces-cost-delhi.jpg', 'title' => 'Clear Aligners', 'desc' => 'Removable and invisible option for teeth alignment.'],
-                    ['img' => 'https://3.imimg.com/data3/HR/RH/MY-9086783/2-500x500.jpg', 'title' => 'Mini Braces', 'desc' => 'Smaller than traditional braces with a sleek look.'],
+                    ['img' => asset('images/invisible.jpeg'), 'title' => 'Invisible Clear Aligners', 'desc' => 'Removable and virtually invisible trays for discreet alignment.'],
+                    ['img' => asset('images/mydent-care.jpeg'), 'title' => 'Aligner Care Kit', 'desc' => 'Clean, store and protect your aligners every day.'],
+                    ['img' => asset('images/Supervision.jpeg'), 'title' => 'Expert Supervision', 'desc' => 'Remote monitoring with certified orthodontists.'],
+                    ['img' => asset('images/Metal-braces.png'), 'title' => 'Metal Braces', 'desc' => 'Traditional and highly effective braces.'],
+                    ['img' => asset('images/Self-ligation-braces.jpeg'), 'title' => 'Self-Ligating Braces', 'desc' => 'Uses clips instead of elastic bands.'],
+                    ['img' => asset('images/confident-smile.jpg'), 'title' => 'Confident Smile Results', 'desc' => 'A healthier, straighter smile you can feel proud of.'],
                 ];
             @endphp
 
             @foreach($braces as $brace)
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 text-center p-3 shadow-sm">
-                    <img src="{{ asset($brace['img']) }}" class="img-fluid mb-3" alt="{{ $brace['title'] }}">
-                    <h5 class="mb-2">{{ $brace['title'] }}</h5>
-                    <p>{{ $brace['desc'] }}</p>
+            <div class="col-md-4">
+                <div class="md-product-card text-center h-100">
+                    <img src="{{ $brace['img'] }}" alt="{{ $brace['title'] }}">
+                    <div class="p-3">
+                        <h5 class="mb-2" style="font-family: var(--md-font-display);">{{ $brace['title'] }}</h5>
+                        <p class="text-muted mb-0">{{ $brace['desc'] }}</p>
+                    </div>
                 </div>
             </div>
             @endforeach
@@ -195,30 +121,30 @@ hold you back— shine confidently with Mydent</strong></p>
 
 
 <!-- Fact Check Section -->
-<section style="padding: 50px 0; background-color: #f9f9f9;">
+<section class="md-section md-section--mint md-reveal">
     <div class="container">
-        <h2 style="text-align: center; color: #dc3545; font-size: 32px; font-weight: bold; margin-bottom: 40px;">
-            The Braces Struggle – Painful bites, hidden smiles, snack restrictions
+        <h2 class="md-section__title text-center">
+            The braces struggle — pain, hidden smiles, snack restrictions
         </h2>
         <div class="row">
             <!-- Box 1 -->
             <div class="col-md-6">
-                <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #4eb1ba;">
+                <div class="md-info-tile">
                     <div style="display: flex; align-items: center;">
-                        <h4 style="margin: 0; font-size: 20px; color: #333;">Pain & Discomfort</h4>
+                        <h4 class="mb-0">Pain & Discomfort</h4>
                     </div>
-                    <p style="margin-top: 15px; font-size: 16px; color: #555;">
+                    <p class="mt-3 mb-0">
                        Braces can cause soreness especially after tightening. It's temporary, but definitely noticeable
                     </p>
                 </div>
             </div>
             <!-- Box 2 -->
             <div class="col-md-6">
-                <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #ff9f43;">
+                <div class="md-info-tile">
                     <div style="display: flex; align-items: center;">
-                        <h4 style="margin: 0; font-size: 20px; color: #333;">Staining & Yellowing</h4>
+                        <h4 class="mb-0">Staining & Yellowing</h4>
                     </div>
-                    <p style="margin-top: 15px; font-size: 16px; color: #555;">
+                    <p class="mt-3 mb-0">
                         Foods with strong pigments like turmeric, tomato paste, or colored candies can stain braces and teeth.
                     </p>
                 </div>
@@ -229,22 +155,22 @@ hold you back— shine confidently with Mydent</strong></p>
 <div class="row">
     <!-- Box 3 -->
     <div class="col-md-6">
-        <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #ffc107;">
+        <div class="md-info-tile">
             <div style="display: flex; align-items: center;">
-                <h4 style="margin: 0; font-size: 20px; color: #333;">Oral Hygiene Challenges</h4>
+                <h4 class="mb-0">Oral Hygiene Challenges</h4>
             </div>
-            <p style="margin-top: 15px; font-size: 16px; color: #555;">
+            <p class="mt-3 mb-0">
                 Brushing and flossing around brackets takes extra effort, increasing the risk of cavities and gum issues.
             </p>
         </div>
     </div>
     <!-- Box 4 -->
     <div class="col-md-6">
-        <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #e74c3c;">
+        <div class="md-info-tile">
             <div style="display: flex; align-items: center;">
-                <h4 style="margin: 0; font-size: 20px; color: #333;">Food Restrictions</h4>
+                <h4 class="mb-0">Food Restrictions</h4>
             </div>
-            <p style="margin-top: 15px; font-size: 16px; color: #555;">
+            <p class="mt-3 mb-0">
                 Crunchy, sticky, or chewy foods (like caramel, chips, gum, or soda) can damage braces and are best avoided
             </p>
         </div>
@@ -255,22 +181,22 @@ hold you back— shine confidently with Mydent</strong></p>
 <div class="row">
     <!-- Box 5 -->
     <div class="col-md-6">
-        <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #28a745;">
+        <div class="md-info-tile">
             <div style="display: flex; align-items: center;">
-                <h4 style="margin: 0; font-size: 20px; color: #333;">Frequent Clinic Visits</h4>
+                <h4 class="mb-0">Frequent Clinic Visits</h4>
             </div>
-            <p style="margin-top: 15px; font-size: 16px; color: #555;">
+            <p class="mt-3 mb-0">
                Braces need regular tightening and monitoring, meaning more appointments and time in the chair.
             </p>
         </div>
     </div>
     <!-- Box 6 -->
     <div class="col-md-6">
-        <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); margin-bottom: 20px; border-left: 8px solid #6f42c1;">
+        <div class="md-info-tile">
             <div style="display: flex; align-items: center;">
-                <h4 style="margin: 0; font-size: 20px; color: #333;">Speech Difficulty</h4>
+                <h4 class="mb-0">Speech Difficulty</h4>
             </div>
-            <p style="margin-top: 15px; font-size: 16px; color: #555;">
+            <p class="mt-3 mb-0">
                 Braces can tempporarily affect speech, causing minor lisps or discomfort while talking during the adjustment phase.
             </p>
         </div>

@@ -1,10 +1,15 @@
 .env.before-hostinger
+e2e/.env
+e2e/.auth/
+e2e/test-results/
+e2e/playwright-report/
 
 /node_modules
 /vendor
 *.zip
 *.mov
 u919945289_*.sql
+mydent_database_production_import.sql
 *client_secret*.json
 /storage/*.log
 /storage/logs/*.log

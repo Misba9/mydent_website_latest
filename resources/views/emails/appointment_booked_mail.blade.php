@@ -20,7 +20,7 @@
         </div>
         <p style="margin-top: 10px">Click the below button to cancel the appointment.</p>
         <div style="display: flex;justify-content: center">
-        <a href="{{ route('cancelAppointment',['patient_id'=>$patientId,'appointment_unique_id'=>$appointmentUniqueId]) }}" style="padding: 7px 15px;text-decoration: none;font-size: 14px;background-color: #df4645;font-weight: 500;border: none;border-radius: 8px;color: white">
+        <a href="{{ $cancelUrl }}" style="padding: 7px 15px;text-decoration: none;font-size: 14px;background-color: #df4645;font-weight: 500;border: none;border-radius: 8px;color: white">
             Cancel Appointment
         </a>
         </div>

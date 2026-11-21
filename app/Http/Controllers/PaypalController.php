@@ -80,34 +80,40 @@ class PaypalController extends Controller
             // If call returns body in response, you can get the deserialized version from the result attribute of the response
 
             $appointmentID = $response['purchase_units'][0]['reference_id'];
-
-            //            $transactionID = $response->result->id;
+            $captureId = $response['purchase_units'][0]['payments']['captures'][0]['id'];
             $appointment = Appointment::whereId($appointmentID)->first();
+            if (! $appointment) {
+                Flash::error(__('messages.flash.appointment_not_found'));
+
+                return redirect(route('medical'));
+            }
+
             $patient = Patient::with('user')->whereId($appointment->patient_id)->first();
 
-            $transaction = [
-                'user_id' => $patient->user->id,
-                'transaction_id' => $response['purchase_units'][0]['payments']['captures'][0]['id'],
-                'appointment_id' => $appointment['appointment_unique_id'],
-                'amount' => intval($appointment['payable_amount']),
-                'type' => Appointment::PAYPAL,
-                'meta' => json_encode($response),
-            ];
+            if (! Transaction::where('transaction_id', $captureId)->exists()
+                && (int) $appointment->payment_type !== Appointment::PAID) {
+                Transaction::create([
+                    'user_id' => $patient->user->id,
+                    'transaction_id' => $captureId,
+                    'appointment_id' => $appointment['appointment_unique_id'],
+                    'amount' => intval($appointment['payable_amount']),
+                    'type' => Appointment::PAYPAL,
+                    'meta' => json_encode($response),
+                ]);
 
-            Transaction::create($transaction);
+                $appointment->update([
+                    'payment_method' => Appointment::PAYPAL,
+                    'payment_type' => Appointment::PAID,
+                ]);
 
-            $appointment->update([
-                'payment_method' => Appointment::PAYPAL,
-                'payment_type' => Appointment::PAID,
-            ]);
+                Notification::create([
+                    'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
+                    'type' => Notification::PAYMENT_DONE,
+                    'user_id' => $patient->user->id,
+                ]);
+            }
 
             Flash::success(__('messages.flash.appointment_created_payment_complete'));
-
-            Notification::create([
-                'title' => Notification::APPOINTMENT_PAYMENT_DONE_PATIENT_MSG,
-                'type' => Notification::PAYMENT_DONE,
-                'user_id' => $patient->user->id,
-            ]);
 
             if (! getLogInUser()) {
                 return redirect(route('medicalAppointment'));
@@ -119,8 +125,13 @@ class PaypalController extends Controller
 
             return redirect(route('appointments.index'));
         } catch (HttpException $ex) {
-            echo $ex->statusCode;
-            print_r($ex->getMessage());
+            \Illuminate\Support\Facades\Log::error('PayPal capture failed', [
+                'status' => $ex->statusCode,
+                'message' => $ex->getMessage(),
+            ]);
+            Flash::error(__('messages.flash.appointment_created_payment_not_complete'));
+
+            return redirect(route('medicalAppointment'));
         }
     }
 }

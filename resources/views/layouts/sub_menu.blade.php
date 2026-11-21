@@ -209,10 +209,7 @@
         <a class="nav-link p-0 {{ Request::is('admin/faqs*') ? 'active' : '' }}"
            href="{{ route('faqs.index') }}">{{ __('messages.faqs') }}</a>
     </li>
-    <li class="nav-item position-relative mx-xl-3 mb-3 mb-xl-0 {{ !Request::is('admin/front-services*','admin/faqs*','admin/front-patient-testimonials*','admin/cms*','admin/banner*') ? 'd-none' : '' }}">
-        <a class="nav-link p-0 {{ Request::is('admin/front-patient-testimonials*') ? 'active' : '' }}"
-           href="{{ route('front-patient-testimonials.index') }}">{{ __('messages.front_patient_testimonials') }}</a>
-    </li>
+    {{-- Front patient testimonials removed from public website; admin entry hidden. --}}
     <li class="nav-item position-relative mx-xl-3 mb-3 mb-xl-0 {{ !Request::is('admin/enquiries*') ? 'd-none' : '' }}">
         <a class="nav-link p-0 {{ Request::is('admin/enquiries*') ? 'active' : '' }}"
            href="{{ route('enquiries.index') }}">{{ __('messages.enquiries') }}</a>

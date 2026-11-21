@@ -202,16 +202,19 @@ class UserController extends AppBaseController
 
     public function changePassword(UpdateChangePasswordRequest $request): JsonResponse
     {
-        $input = $request->all();
+        $validated = $request->validated();
 
         try {
             /** @var User $user */
             $user = Auth::user();
-            if (! Hash::check($input['current_password'], $user->password)) {
+            if (! Hash::check($validated['current_password'], $user->password)) {
                 return $this->sendError(__('messages.flash.current_invalid'));
             }
-            $input['password'] = Hash::make($input['new_password']);
-            $user->update($input);
+
+            // Only update password — never mass-assign type/status/email_verified_at from request.
+            $user->update([
+                'password' => Hash::make($validated['new_password']),
+            ]);
 
             return $this->sendSuccess(__('messages.flash.password_update'));
         } catch (Exception $e) {
