@@ -7,35 +7,33 @@
         "laravel"
     ],
     "license": "MIT",
-    "version": "8.0.0",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "anandsiddharth/laravel-paytm-wallet": "^2.0",
         "authorizenet/authorizenet": "^2.0",
-        "barryvdh/laravel-debugbar": "^3.8",
-        "barryvdh/laravel-dompdf": "^2.0",
-        "firebase/php-jwt": "^5.5",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "firebase/php-jwt": "^6.10",
         "gerardojbaez/money": "^0.3.1",
-        "google/apiclient": "^2.6",
+        "google/apiclient": "^2.18",
         "guzzlehttp/guzzle": "^7.4",
         "lab404/laravel-impersonate": "^1.7.4",
         "laracasts/flash": "^3.2",
-        "laravel/framework": "^10.21",
+        "laravel/framework": "^10.50.4",
         "laravel/tinker": "^2.8",
         "laravelcollective/html": "^6.4",
         "league/flysystem-aws-s3-v3": "^3.0",
-        "livewire/livewire": "^2.11",
+        "livewire/livewire": "^2.12.7",
         "maatwebsite/excel": "^3.1",
-        "macsidigital/laravel-zoom": "^7.0",
+        "macsidigital/laravel-zoom": "^8.0",
         "mariuzzo/laravel-js-localization": "^1.10",
         "mews/purifier": "^3.4",
         "opcodesio/log-viewer": "^1.9",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
-        "rappasoft/laravel-livewire-tables": "dev-master",
+        "rappasoft/laravel-livewire-tables": "^2.15",
         "razorpay/razorpay": "^2.9",
         "spatie/laravel-google-calendar": "^3.5",
-        "spatie/laravel-medialibrary": "^10.7",
+        "spatie/laravel-medialibrary": "^11.23",
         "spatie/laravel-permission": "^5.8",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^7.98",
@@ -43,6 +41,7 @@
         "unicodeveloper/laravel-paystack": "^1.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
         "barryvdh/laravel-ide-helper": "^2.13",
         "beyondcode/laravel-query-detector": "^1.7",
         "fakerphp/faker": "^1.9.1",
@@ -91,7 +90,19 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": [
+                "PKSA-mdq4-51ck-6kdq",
+                "PKSA-y2cr-5h3j-g3ys",
+                "PKSA-pg71-gz29-h5sq"
+            ]
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": ["PKSA-mdq4-51ck-6kdq", "PKSA-y2cr-5h3j-g3ys", "PKSA-pg71-gz29-h5sq", "PKSA-yxbx-3c9s-cjt9", "PKSA-d5tc-s1qs-h781", "PKSA-m5cs-t1y6-qpcs", "PKSA-3r5d-mb8f-1qw9"]
+            }
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
