@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" class="md-js md-page-loading">
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="{{ getAppName() }}" />
     <link rel="icon" href="{{ asset(getAppFavicon()) }}" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>document.documentElement.classList.add('md-js','md-page-loading');</script>
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="@yield('meta_description', 'MyDent offers premium quality invisible clear aligners and modern dental solutions. Order aligners online, consult with certified orthodontists, and get a beautiful smile comfortably.')" />
@@ -64,19 +65,26 @@
     }
     </script>
 
-    <!-- Google Fonts — Syne (display) + DM Sans (body) -->
+    <!-- Google Fonts — Plus Jakarta Sans (display) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="{{ mix('css/front-third-party.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ mix('css/front-pages.css') }}" rel="stylesheet" type="text/css">
+    @php
+        try { $mdFrontThirdPartyCss = mix('css/front-third-party.css'); } catch (\Throwable $e) { $mdFrontThirdPartyCss = asset('css/front-third-party.css'); }
+        try { $mdFrontPagesCss = mix('css/front-pages.css'); } catch (\Throwable $e) { $mdFrontPagesCss = asset('css/front-pages.css'); }
+        try { $mdFrontThirdPartyJs = mix('js/front-third-party.js'); } catch (\Throwable $e) { $mdFrontThirdPartyJs = asset('js/front-third-party.js'); }
+        try { $mdFrontPagesJs = mix('js/front-pages.js'); } catch (\Throwable $e) { $mdFrontPagesJs = asset('js/front-pages.js'); }
+    @endphp
+    <link href="{{ $mdFrontThirdPartyCss }}" rel="stylesheet" type="text/css">
+    <link href="{{ $mdFrontPagesCss }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/front/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/front/responsive.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <link rel="stylesheet" type="text/css"
@@ -88,9 +96,9 @@
     <title>@yield('front-title') | {{ getAppName() }}</title>
     <script src="{{ asset('messages.js') }}"></script>
     <script src="{{ asset('assets/front/vendor/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ mix('js/front-third-party.js') }}"></script>
+    <script src="{{ $mdFrontThirdPartyJs }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script src="{{ mix('js/front-pages.js') }}"></script>
+    <script src="{{ $mdFrontPagesJs }}"></script>
 
     <script src="{{ asset('assets/js/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
 
@@ -104,7 +112,9 @@
     </script>
     <script src="//js.stripe.com/v3/"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    @if(!empty(config('app.google_recaptcha_site_key')))
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
     @routes
 
     <script data-turbo-eval="false">
@@ -143,7 +153,7 @@
                 'contact': 'true',
             },
             'theme': {
-                'color': '#1B5E4A',
+                'color': '#E83D45',
             },
             'modal': {
                 'ondismiss': function() {
@@ -161,28 +171,85 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+    <div id="mdPageLoader" class="md-page-loader" role="status" aria-live="polite" aria-label="Loading MyDent">
+        <div class="md-page-loader__inner">
+            <img src="{{ asset('assets/image/mydent-logo-transparent.png') }}"
+                 alt="MyDent"
+                 class="md-page-loader__logo"
+                 width="180"
+                 height="60">
+            <div class="md-page-loader__bar" aria-hidden="true"><span></span></div>
+            <p class="md-page-loader__text mb-0">Preparing your smile experience…</p>
+        </div>
+    </div>
+
     @include('fronts.layouts.header')
+    @include('fronts.layouts.mobile-nav')
     <main class="flex-grow-1">
         @yield('front-content')
     </main>
     @include('fronts.layouts.footer')
     @stack('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var nodes = document.querySelectorAll('.md-reveal');
-            if (!('IntersectionObserver' in window) || !nodes.length) {
-                nodes.forEach(function (el) { el.classList.add('is-visible'); });
+        (function () {
+            var root = document.documentElement;
+            var loader = document.getElementById('mdPageLoader');
+            var done = false;
+            var hideLoader = function () {
+                if (done) return;
+                done = true;
+                root.classList.remove('md-page-loading');
+                root.classList.add('md-page-ready');
+                document.body.classList.add('md-page-ready');
+                // Never leave content hidden
+                document.querySelectorAll('.md-reveal').forEach(function (el) {
+                    el.classList.add('is-visible');
+                });
+                if (!loader) return;
+                loader.classList.add('is-done');
+                setTimeout(function () {
+                    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+                }, 280);
+            };
+
+            // Hide as soon as DOM is ready — don't wait for videos/images (window.load).
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(hideLoader, 180);
+                });
+            } else {
+                setTimeout(hideLoader, 180);
+            }
+            // Hard cap so a slow asset never blocks the UI
+            setTimeout(hideLoader, 900);
+            window.addEventListener('load', hideLoader);
+        })();
+
+        // Hard stop for broken image fallback loops (e.g. missing mydent-logo.png)
+        document.addEventListener('error', function (event) {
+            var el = event.target;
+            if (!el || el.tagName !== 'IMG' || el.dataset.mdFallbackApplied === '1') {
                 return;
             }
-            var io = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        io.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.12 });
-            nodes.forEach(function (el) { io.observe(el); });
+            el.dataset.mdFallbackApplied = '1';
+            el.onerror = null;
+            el.src = @json(asset('assets/image/mydent-logo-transparent.png'));
+        }, true);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var header = document.getElementById('mdHeader');
+            if (header) {
+                var onScroll = function () {
+                    header.classList.toggle('is-scrolled', window.scrollY > 8);
+                };
+                onScroll();
+                window.addEventListener('scroll', onScroll, { passive: true });
+            }
+
+            // Mark all sections visible immediately (CSS also forces opacity:1).
+            document.querySelectorAll('.md-reveal').forEach(function (el) {
+                el.classList.add('is-visible');
+            });
         });
     </script>
 </body>

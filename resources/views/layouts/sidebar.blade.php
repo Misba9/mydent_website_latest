@@ -1,7 +1,7 @@
 <div class="aside-menu-container" id="sidebar">
     <div class="aside-menu-container__aside-logo flex-column-auto">
         <a href="{{ url('/') }}" class="text-decoration-none sidebar-logo" data-turbo="false" target="_blank">
-            <img src="{{ asset(getAppLogo()) }}" alt="Logo" class="object-cover sidebar-app-logo" onerror="this.src='{{ asset('storage/imgs/logo.png') }}'"/>
+            <img src="{{ asset(getAppLogo()) }}" alt="Logo" class="object-cover sidebar-app-logo" onerror="{!! imgOnErrorFallback('storage/imgs/logo.png') !!}"/>
         </a>
 
         <button type="button" class="btn px-0 aside-menu-container__aside-menubar d-lg-block d-none sidebar-btn">

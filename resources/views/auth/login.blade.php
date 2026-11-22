@@ -6,7 +6,11 @@
     <div class="d-flex flex-column flex-column-fluid align-items-center justify-content-center p-4">
         <div class="col-12 text-center">
             <a href="{{ route('medical') }}" class="image mb-7 mb-sm-10">
-                <img alt="Logo" src="{{ asset(getAppLogo()) }}" class="img-fluid" style="width:90px;">
+                <img alt="MyDent"
+                     src="{{ asset('assets/image/mydent-logo-transparent.png') }}"
+                     class="img-fluid"
+                     style="width:140px; height:auto; object-fit:contain;"
+                     onerror="{!! imgOnErrorFallback('assets/image/mydent-logo-transparent.png') !!}">
             </a>
         </div>
         <div class="width-540">
@@ -34,7 +38,18 @@
                             </a>
                         @endif
                     </div>
-                    <input name="password" type="password" class="form-control" id="password" required placeholder="Enter Password">
+                    <div class="md-password-field">
+                        <input name="password" type="password" class="form-control" id="password" required placeholder="Enter Password" autocomplete="current-password">
+                        <button type="button" class="md-password-toggle" data-target="#password" aria-label="Show password" aria-pressed="false" tabindex="0">
+                            <svg class="md-eye" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12s-3.75 6.75-9.75 6.75S2.25 12 2.25 12z"/>
+                                <circle cx="12" cy="12" r="2.75"/>
+                            </svg>
+                            <svg class="md-eye-off" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M10.5 10.6a2.75 2.75 0 003.9 3.9M9.4 5.5A10.3 10.3 0 0112 5.25c6 0 9.75 6.75 9.75 6.75a17.7 17.7 0 01-3.2 3.7M6.1 6.3A17.4 17.4 0 002.25 12S6 18.75 12 18.75c1.1 0 2.14-.2 3.12-.55"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mb-sm-7 mb-4 form-check">

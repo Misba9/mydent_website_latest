@@ -8,7 +8,7 @@
             <div class="navbar-collapse">
                 <div class="d-flex align-items-center">
                     <a href="{{ url('/') }}" class="me-3 d-flex align-items-center text-decoration-none" data-turbo="false">
-                        <img src="{{ asset(getAppLogo()) }}" alt="MyDent Logo" class="img-fluid mydent-navbar-logo" style="max-height: 38px; width: auto; object-fit: contain;" onerror="this.src='{{ asset('storage/imgs/logo.png') }}'">
+                        <img src="{{ asset(getAppLogo()) }}" alt="MyDent Logo" class="img-fluid mydent-navbar-logo" style="max-height: 38px; width: auto; object-fit: contain;" onerror="{!! imgOnErrorFallback('storage/imgs/logo.png') !!}">
                     </a>
                     @if(Auth::check())
                         @if(isRole('patient'))

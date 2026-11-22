@@ -10,7 +10,7 @@
             image="images/3d-dental-scan.jpg"
         />
 
-        <section class="md-section md-section--warm">
+        <section class="md-section md-section--soft">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">

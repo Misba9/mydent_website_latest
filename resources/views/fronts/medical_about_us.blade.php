@@ -11,11 +11,12 @@
         'fallbackTitle' => 'Why mydent?',
     ])
 
-    <section class="md-section md-section--warm md-reveal">
+    <section class="md-section md-section--soft md-reveal">
         <div class="container">
             <div class="text-center mb-5">
+                <span class="md-section__eyebrow">Why MyDent?</span>
                 <h2 class="md-section__title">Why choose our aligners?</h2>
-                <p class="md-section__lead">
+                <p class="md-section__lead mx-auto">
                     Experience the future of dental care with premium clear aligners designed for comfort and confidence.
                 </p>
             </div>

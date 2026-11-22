@@ -1,15 +1,14 @@
-// MyDent Phase 3 design tokens — forest / mint / warm white
+// MyDent design tokens — coral / soft dental blue
 :root {
-    --md-forest: #1B5E4A;
-    --md-forest-deep: #0F3D30;
-    --md-mint: #7DCFB6;
-    --md-mint-soft: #E8F7F2;
-    --md-warm: #F7F5F0;
-    --md-warm-deep: #EFEBE3;
-    --md-ink: #1A2421;
-    --md-muted: #5C6B66;
-    --md-danger: #C45C4A;
-    --md-success: #2F8F6B;
+    --md-coral: #E83D45;
+    --md-coral-deep: #C92F37;
+    --md-blue: #76B9C8;
+    --md-blue-deep: #4F9AAB;
+    --md-soft: #F5F9FA;
+    --md-accent: #DFF1F4;
+    --md-ink: #182B35;
+    --md-muted: #667780;
+    --md-border: #E7EEF0;
     --md-white: #FFFFFF;
     --md-radius: 0.75rem;
     --md-radius-lg: 1.25rem;
@@ -19,45 +18,143 @@
     --md-space-4: 2rem;
     --md-space-5: 3rem;
     --md-space-6: 4.5rem;
-    --md-font-display: 'Syne', sans-serif;
-    --md-font-body: 'DM Sans', sans-serif;
-    --md-shadow-soft: 0 12px 40px rgba(26, 36, 33, 0.08);
-    --md-header-h: 72px;
+    --md-font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --md-font-body: 'Inter', system-ui, sans-serif;
+    --md-shadow-soft: 0 10px 30px rgba(24, 43, 53, 0.08);
+    --md-shadow-header: 0 4px 20px rgba(24, 43, 53, 0.06);
+    --md-header-h: 80px;
+    --md-container: min(1120px, calc(100% - 2rem));
+
+    // Bootstrap bridge
+    --bs-primary: #E83D45;
+    --bs-primary-rgb: 232, 61, 69;
+    --bs-link-color: #E83D45;
+    --bs-link-hover-color: #C92F37;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    // Use clip (not hidden) so overflow-y stays visible — avoids dual scrollbars.
+    overflow-x: clip;
+    overflow-y: scroll;
+    width: 100%;
+    max-width: 100%;
 }
 
 body {
     font-family: var(--md-font-body);
     color: var(--md-ink);
-    background-color: var(--md-warm);
+    background-color: var(--md-white);
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+    line-height: 1.6;
+    overflow-x: clip;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
-h1, h2, h3, .md-display {
+h1, h2, h3, h4, h5, .md-display {
     font-family: var(--md-font-display);
     letter-spacing: -0.02em;
+    color: var(--md-ink);
+    line-height: 1.2;
 }
 
+a {
+    color: var(--md-coral);
+
+    &:hover {
+        color: var(--md-coral-deep);
+    }
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--md-coral);
+    --bs-btn-border-color: var(--md-coral);
+    --bs-btn-hover-bg: var(--md-coral-deep);
+    --bs-btn-hover-border-color: var(--md-coral-deep);
+    --bs-btn-active-bg: var(--md-coral-deep);
+    --bs-btn-active-border-color: var(--md-coral-deep);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--md-coral);
+    --bs-btn-border-color: var(--md-coral);
+    --bs-btn-hover-bg: var(--md-coral);
+    --bs-btn-hover-border-color: var(--md-coral);
+    --bs-btn-hover-color: #fff;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+}
+
+.btn-outline-secondary {
+    border-radius: 999px;
+}
+
+.text-primary {
+    color: var(--md-coral) !important;
+}
+
+.bg-primary {
+    background-color: var(--md-coral) !important;
+}
+
+.md-container {
+    width: var(--md-container);
+    margin-inline: auto;
+}
+
+// Always visible — never blank-out sections waiting for JS / IO.
 .md-reveal {
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
+    opacity: 1 !important;
+    transform: none !important;
 }
 
-.md-reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+html.md-js .md-reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 .md-hero-rise {
-    animation: mdHeroRise 0.8s ease both;
+    animation: mdHeroRise 0.75s ease both;
 }
 
 @keyframes mdHeroRise {
     from {
         opacity: 0;
-        transform: translateY(24px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .md-reveal,
+    .md-hero-rise,
+    .md-product-card,
+    .md-benefit-card,
+    .md-gallery-item img {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
     }
 }

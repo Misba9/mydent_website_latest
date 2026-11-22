@@ -11,12 +11,16 @@
     <!-- General CSS Files -->
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/third-party.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/pages.css') }}">
+    @php
+        try { $mdPagesCss = mix('assets/css/pages.css'); } catch (\Throwable $e) { $mdPagesCss = asset('assets/css/pages.css'); }
+        try { $mdPagesDarkCss = mix('assets/css/custom-pages-dark.css'); } catch (\Throwable $e) { $mdPagesDarkCss = asset('assets/css/custom-pages-dark.css'); }
+    @endphp
+    <link rel="stylesheet" type="text/css" href="{{ $mdPagesCss }}">
 
     @if (Auth::check() && Auth::user()->dark_mode)
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style-dark.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.dark.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/custom-pages-dark.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ $mdPagesDarkCss }}">
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.css') }}">
@@ -35,8 +39,12 @@
     {{--    <script src='fullcalendar/core/locales-all.js'></script> --}}
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="{{ mix('js/third-party.js') }}"></script>
-    <script src="{{ mix('js/pages.js') }}"></script>
+    @php
+        try { $mdThirdPartyJs = mix('js/third-party.js'); } catch (\Throwable $e) { $mdThirdPartyJs = asset('js/third-party.js'); }
+        try { $mdPagesJs = mix('js/pages.js'); } catch (\Throwable $e) { $mdPagesJs = asset('js/pages.js'); }
+    @endphp
+    <script src="{{ $mdThirdPartyJs }}"></script>
+    <script src="{{ $mdPagesJs }}"></script>
     <script data-turbo-eval="false">
         let stripe = '';
         @if (config('services.stripe.key'))

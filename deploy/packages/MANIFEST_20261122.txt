@@ -1,0 +1,5 @@
+Built: 2026-11-21T22:12:34Z
+App zip: mydent_app_new_20261122.zip (61M)
+Public zip: public_html_20261122.zip (225M)
+index.php appBase: ../mydent_app_new
+Excluded: .env, node_modules, tests, e2e, .git, *.sql, local caches

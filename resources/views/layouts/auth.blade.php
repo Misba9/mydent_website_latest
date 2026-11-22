@@ -12,11 +12,43 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/third-party.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/pages.css') }}">
+    @php
+        try {
+            $mdPagesCssHref = mix('assets/css/pages.css');
+        } catch (\Throwable $e) {
+            $mdPagesCssHref = asset('assets/css/pages.css');
+        }
+    @endphp
+    <link rel="stylesheet" type="text/css" href="{{ $mdPagesCssHref }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <style>
+        :root { --bs-primary: #E83D45; --bs-primary-rgb: 232, 61, 69; }
+        body { font-family: Inter, system-ui, sans-serif; background: #F5F9FA; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+        .btn-primary { background: #E83D45; border-color: #E83D45; border-radius: 999px; font-weight: 600; }
+        .btn-primary:hover { background: #C92F37; border-color: #C92F37; }
+        .bg-white.rounded-15, .width-540 > .bg-white { border-radius: 1.25rem !important; border: 1px solid #E7EEF0; box-shadow: 0 10px 30px rgba(24,43,53,.08); }
+        .form-control { border-radius: .65rem; min-height: 46px; border-color: #E7EEF0; }
+        .form-control:focus { border-color: #76B9C8; box-shadow: 0 0 0 .2rem rgba(118,185,200,.25); }
+        .link-info { color: #E83D45 !important; }
+        .md-password-field { position: relative; }
+        .md-password-field .form-control { padding-right: 3rem; }
+        .md-password-toggle {
+            position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
+            border: 0; background: transparent; padding: .25rem; line-height: 0;
+            color: #6B7C85; cursor: pointer; border-radius: .35rem;
+        }
+        .md-password-toggle:hover, .md-password-toggle:focus { color: #E83D45; outline: none; }
+        .md-password-toggle svg { width: 1.15rem; height: 1.15rem; display: block; }
+        .md-password-toggle .md-eye-off { display: none; }
+        .md-password-toggle.is-visible .md-eye { display: none; }
+        .md-password-toggle.is-visible .md-eye-off { display: block; }
+    </style>
 
     <!-- CSS Libraries -->
     @stack('css')
@@ -52,6 +84,19 @@
     <script>
     $(document).ready(function () {
         $('.alert').delay(5000).slideUp(300);
+
+        $(document).on('click', '.md-password-toggle', function () {
+            var $btn = $(this);
+            var target = $btn.attr('data-target') || $btn.data('target');
+            var $input = target ? $(target) : $btn.closest('.md-password-field').find('input');
+            if (!$input.length) return;
+
+            var show = $input.attr('type') === 'password';
+            $input.attr('type', show ? 'text' : 'password');
+            $btn.toggleClass('is-visible', show);
+            $btn.attr('aria-label', show ? 'Hide password' : 'Show password');
+            $btn.attr('aria-pressed', show ? 'true' : 'false');
+        });
     });
 </script>
 </body>

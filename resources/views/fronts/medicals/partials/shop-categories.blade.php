@@ -1,108 +1,76 @@
-<section style="padding: 40px; background-color: #f9f9f9; font-family: Arial, sans-serif;">
-  <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative;">
-    <h2 style="font-size: 28px; color: #2c3e50; margin-bottom: 30px; text-align: center;">Shop by Category</h2>
+<section class="md-section md-section--white md-reveal" aria-labelledby="md-products-title">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="md-section__eyebrow">Shop</span>
+                <h2 id="md-products-title" class="md-section__title mb-2">Dental products</h2>
+                <p class="md-section__lead mb-0">Care essentials from the MyDent shop — powered by your live catalogue.</p>
+            </div>
+            <a href="{{ route('products.index') }}" class="md-btn md-btn--outline" data-turbo="false">View all products</a>
+        </div>
 
-    <!-- Arrows -->
-    <button class="scroll-btn left" onclick="scrollCategory(-1)">&#10094;</button>
-    <button class="scroll-btn right" onclick="scrollCategory(1)">&#10095;</button>
-
-    <!-- Scrollable container -->
-    <div id="category-scroll" class="category-scroll">
-     @foreach ($categories as $category)
-  <div class="category-card">
-    <a href="{{ route('products.index') }}" style="text-decoration: none;">
-      <img src="{{ asset($category->category_thumbnail) }}" alt="{{ $category->category }}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">
-      <h3 style="margin-top: 15px; font-size: 18px; color: #34495e;">
-        {{ ucfirst($category->category) }}
-      </h3>
-    </a>
-  </div>
-@endforeach
-
+        @if(isset($featuredProducts) && $featuredProducts->count())
+            <div class="row g-4">
+                @foreach($featuredProducts as $product)
+                    @php
+                        $discountPrice = $product->discount_price;
+                        $originalPrice = $product->price;
+                        $hasDiscount = $discountPrice && $discountPrice < $originalPrice;
+                    @endphp
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <article class="md-product-card">
+                            <a href="{{ route('front.product.show', $product->id) }}" class="md-product-card__media text-decoration-none">
+                                <img src="{{ asset($product->thumbnail) }}"
+                                     alt="{{ $product->name }}"
+                                     width="400"
+                                     height="220"
+                                     loading="lazy"
+                                     onerror="{!! imgOnErrorFallback() !!}">
+                            </a>
+                            <div class="md-product-card__body">
+                                <h3 class="md-product-card__title">{{ $product->name }}</h3>
+                                <div class="md-product-card__price">
+                                    @if($hasDiscount)
+                                        <span class="md-price">₹{{ number_format($discountPrice, 2) }}</span>
+                                        <span class="md-price-old">₹{{ number_format($originalPrice, 2) }}</span>
+                                    @else
+                                        <span class="md-price">₹{{ number_format($originalPrice, 2) }}</span>
+                                    @endif
+                                </div>
+                                <div class="md-product-card__actions">
+                                    <a href="{{ route('front.product.show', $product->id) }}" class="md-btn md-btn--outline md-btn--sm">View</a>
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="md-product-card__cart-form">
+                                        @csrf
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="md-btn md-btn--primary md-btn--sm">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                @endforeach
+            </div>
+        @elseif(isset($categories) && $categories->count())
+            <div class="md-scroll-row">
+                @foreach($categories as $category)
+                    <a href="{{ route('products.index') }}" class="md-product-card text-decoration-none" style="min-width: 220px; max-width: 220px;" data-turbo="false">
+                        <div class="md-product-card__media">
+                            <img src="{{ asset($category->category_thumbnail) }}"
+                                 alt="{{ $category->category }}"
+                                 width="220"
+                                 height="150"
+                                 loading="lazy"
+                                 style="height: 150px;"
+                                 onerror="{!! imgOnErrorFallback() !!}">
+                        </div>
+                        <div class="md-product-card__body">
+                            <h3 class="md-product-card__title mb-0">{{ ucfirst($category->category) }}</h3>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @else
+            <p class="text-muted mb-0">Products will appear here when available in the catalogue.</p>
+        @endif
     </div>
-  </div>
-
-  <!-- Styles -->
-  <style>
-    .category-scroll {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 10px;
-}
-
-.category-card {
-  flex: 0 0 auto;
-  width: 220px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  text-align: center;
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  scroll-snap-align: center;
-}
-
-
-    .category-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .scroll-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(255, 255, 255, 0.8);
-      border: none;
-      font-size: 24px;
-      padding: 10px 15px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 10;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .scroll-btn.left {
-      left: 0;
-    }
-
-    .scroll-btn.right {
-      right: 0;
-    }
-
-    @media (max-width: 768px) {
-      .scroll-btn {
-        display: block;
-      }
-
-      .category-card {
-        flex: 0 0 80%;
-      }
-
-      .container h2 {
-        font-size: 22px;
-      }
-    }
-  </style>
-
-  <!-- JS -->
-  <script>
-    function scrollCategory(direction) {
-  const container = document.getElementById('category-scroll');
-  if (!container) return;
-  const cardWidth = container.querySelector('.category-card')?.offsetWidth || 220;
-  const gap = 20;
-  const scrollAmount = cardWidth + gap;
-
-  container.scrollBy({
-    left: direction * scrollAmount,
-    behavior: 'smooth'
-  });
-}
-
-  </script>
 </section>

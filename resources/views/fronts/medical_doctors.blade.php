@@ -7,11 +7,6 @@
 
 @section('front-content')
 
-<style>
-    .alligners{
-        overflow-x: hidden;
-    }
-</style>
 <div class="alligners">
    @include('fronts.partials.banner-carousel', [
     'page' => 'alligners',
@@ -185,119 +180,49 @@
 
 </section>
 
-<!-- start dental issues section -->
-<section class="p-t-50 p-b-100" style="background-color: #D8F1F8;">
-    <div class="container position-relative">
-                    <h2 class="text-center mb-5" style="padding-top: 30px;">Teeth alignment issues we can fix</h2>
-            
-                    {{-- Left Arrow --}}
-                    {{-- Left Arrow --}}
-        <button id="scrollLeft"
-            class="btn position-absolute top-50 start-0 translate-middle-y"
-            style="z-index: 10; 
-               border-radius: 50%; 
-               width: 50px; 
-               height: 50px; 
-               min-width: 50px;
-               min-height: 50px;
-               background: linear-gradient(135deg, #ffffff, #f8f9fa); 
-               border: 2px solid #e9ecef; 
-               color: #495057; 
-               font-size: 20px; 
-               font-weight: bold;
-               padding: 0;
-               line-height: 1;
-               transition: all 0.3s ease; 
-               box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-               cursor: pointer;"
-            onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; 
-                     this.style.background='linear-gradient(135deg, #667eea, #764ba2)'; 
-                     this.style.color='white'; 
-                     this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'; 
-                     this.style.borderColor='#667eea';"
-            onmouseout="this.style.transform='translateY(-50%) scale(1)'; 
-                    this.style.background='linear-gradient(135deg, #ffffff, #f8f9fa)'; 
-                    this.style.color='#495057'; 
-                    this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; 
-                    this.style.borderColor='#e9ecef';"
-            onmousedown="this.style.transform='translateY(-50%) scale(0.95)';"
-            onmouseup="this.style.transform='translateY(-50%) scale(1.1)';">
-            <i class="tio-chevron-left" style="display: inline-block; vertical-align: middle;">←</i>
-        </button>
+<section class="md-section md-section--accent md-issues-carousel" aria-labelledby="md-issues-title">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="md-section__eyebrow">Treatments</span>
+            <h2 id="md-issues-title" class="md-section__title">Teeth alignment issues we can fix</h2>
+            <p class="md-section__lead mx-auto">Overbites, gaps, crowding, and more — discreetly corrected with MyDent clear aligners.</p>
+        </div>
 
-            {{-- Right Arrow --}}
-        <button id="scrollRight"
-                class="btn position-absolute top-50 end-0 translate-middle-y"
-                style="z-index: 10; 
-                   border-radius: 50%; 
-                   width: 50px; 
-                   height: 50px; 
-                   min-width: 50px;
-                   min-height: 50px;
-                   background: linear-gradient(135deg, #ffffff, #f8f9fa); 
-                   border: 2px solid #e9ecef; 
-                   color: #495057; 
-                   font-size: 20px; 
-                   font-weight: bold;
-                   padding: 0;
-                   line-height: 1;
-                   transition: all 0.3s ease; 
-                   box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-                   cursor: pointer;"
-                onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; 
-                     this.style.background='linear-gradient(135deg, #667eea, #764ba2)'; 
-                     this.style.color='white'; 
-                     this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'; 
-                     this.style.borderColor='#667eea';"
-                onmouseout="this.style.transform='translateY(-50%) scale(1)'; 
-                    this.style.background='linear-gradient(135deg, #ffffff, #f8f9fa)'; 
-                    this.style.color='#495057'; 
-                    this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; 
-                    this.style.borderColor='#e9ecef';"
-                onmousedown="this.style.transform='translateY(-50%) scale(0.95)';"
-                onmouseup="this.style.transform='translateY(-50%) scale(1.1)';">
-                <i class="tio-chevron-right" style="display: inline-block; vertical-align: middle;">→</i>
-        </button>
+        <div class="md-carousel" data-md-carousel>
+            <button type="button" class="md-carousel__btn md-carousel__btn--prev" data-md-carousel-prev aria-label="Scroll left">
+                <span aria-hidden="true">←</span>
+            </button>
+            <button type="button" class="md-carousel__btn md-carousel__btn--next" data-md-carousel-next aria-label="Scroll right">
+                <span aria-hidden="true">→</span>
+            </button>
 
-        {{-- Scrollable Card Row --}}
-        <div id="scrollCards" class="d-flex gap-4 px-5"
-             style="overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none;">
-            <style>
-                #scrollCards::-webkit-scrollbar {
-                    display: none;
-                }
-            </style>
+            <div class="md-carousel__track" data-md-carousel-track tabindex="0">
+                @php
+                    $cards = [
+                        ['slug' => 'teethgaps', 'video' => 'p1c1vi1.mp4', 'title' => 'Overbite', 'desc' => 'When the upper front teeth significantly overlap the lower front teeth while biting.'],
+                        ['slug' => 'crookedteeth', 'video' => 'p1c1vi2.mp4', 'title' => 'Underbite', 'desc' => 'Occurs when the lower teeth extend beyond the upper teeth, affecting appearance and bite.'],
+                        ['slug' => 'overbite', 'video' => 'p1c1vi4.mp4', 'title' => 'Crossbite', 'desc' => 'Upper and lower teeth do not align correctly, often causing wear or jaw problems.'],
+                        ['slug' => 'open-bite', 'video' => 'p1c1vi5.mp4', 'title' => 'Open Bite', 'desc' => 'Front upper and lower teeth do not meet when the mouth is fully closed.'],
+                        ['slug' => 'crossbite', 'video' => 'p1c1vi6.mp4', 'title' => 'Crowding', 'desc' => 'Not enough space for teeth to align properly, leading to overlapping or twisting.'],
+                        ['slug' => 'underbite', 'video' => 'p1c1vi7.mp4', 'title' => 'Spacing', 'desc' => 'Gaps between teeth that can affect bite, speech, and smile appearance.'],
+                    ];
+                @endphp
 
-            @php
-                $cards = [
-                    ['slug' => 'teethgaps', 'video' => 'p1c1vi1.mp4', 'title' => 'Overbite', 'desc' => 'When the upper front teeth significantly overlap the lower front teeth while biting.'],
-                    ['slug' => 'crookedteeth', 'video' => 'p1c1vi2.mp4', 'title' => 'Underbite', 'desc' => 'Occurs when the lower teeth extend beyond the upper teeth, affecting appearance and bite.'],
-                    ['slug' => 'overbite', 'video' => 'p1c1vi4.mp4', 'title' => 'Crossbite', 'desc' => 'Upper and lower teeth do not align correctly, often causing wear or jaw problems.'],
-                    ['slug' => 'open-bite', 'video' => 'p1c1vi5.mp4', 'title' => 'Open Bite', 'desc' => 'Front upper and lower teeth do not meet when the mouth is fully closed.'],
-                    ['slug' => 'crossbite', 'video' => 'p1c1vi6.mp4', 'title' => 'Open Bite', 'desc' => 'Front upper and lower teeth do not meet when the mouth is fully closed.'],
-                    ['slug' => 'underbite', 'video' => 'p1c1vi7.mp4', 'title' => 'Open Bite', 'desc' => 'Front upper and lower teeth do not meet when the mouth is fully closed.'],
-                ];
-            @endphp
-
-            @foreach ($cards as $card)
-                <a href="{{ route('issue.show', $card['slug']) }}" style="text-decoration: none; color: inherit;">
-                    <div style="min-width: 300px; max-width: 300px;border-radius: 20px;">
-                        <video class="w-100" style="height: 350px; object-fit: cover; border-radius: 20px;
-               " autoplay loop muted playsinline>
-                            <source src="{{ asset('storage/vids/' . $card['video']) }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </a>
-            @endforeach
-
-            {{-- Static Images --}}
-            <div style="min-width: 300px; max-width: 300px;border-radius: 20px;" >
-                <img src="{{ asset('storage/vids/i1.jpeg') }}" class="w-100" style="height: 350px; object-fit: cover;border-radius: 20px;" alt="i1">
-            </div>
-
-            <div style="min-width: 300px; max-width: 300px;border-radius: 20px;" >
-                <img src="{{ asset('storage/vids/i2.jpeg') }}" class="w-100" style="height: 350px; object-fit: cover;border-radius: 20px;" alt="i2">
+                @foreach ($cards as $card)
+                    <article class="md-issue-card">
+                        <div class="md-issue-card__media">
+                            <video autoplay loop muted playsinline>
+                                <source src="{{ asset('storage/vids/' . $card['video']) }}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="md-issue-card__body">
+                            <p class="md-issue-card__desc">{{ $card['desc'] }}</p>
+                            <a href="{{ route('issue.show', $card['slug']) }}" class="md-btn md-btn--primary md-btn--block">
+                                {{ $card['title'] }} →
+                            </a>
+                        </div>
+                    </article>
+                @endforeach
             </div>
         </div>
     </div>
@@ -601,22 +526,39 @@
 @endsection
 @push('scripts')
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const scrollContainer = document.getElementById('scrollCards');
-        const btnLeft = document.getElementById('scrollLeft');
-        const btnRight = document.getElementById('scrollRight');
+    (function () {
+        function initMdCarousels() {
+            document.querySelectorAll('[data-md-carousel]').forEach(function (root) {
+                if (root.dataset.mdCarouselReady === '1') return;
+                root.dataset.mdCarouselReady = '1';
 
-        if (btnLeft && scrollContainer) {
-            btnLeft.addEventListener('click', function () {
-                scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
+                var track = root.querySelector('[data-md-carousel-track]');
+                var prev = root.querySelector('[data-md-carousel-prev]');
+                var next = root.querySelector('[data-md-carousel-next]');
+                if (!track) return;
+
+                var step = function () {
+                    var card = track.querySelector('.md-issue-card');
+                    return card ? card.getBoundingClientRect().width + 16 : 320;
+                };
+
+                if (prev) {
+                    prev.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        track.scrollBy({ left: -step(), behavior: 'smooth' });
+                    });
+                }
+                if (next) {
+                    next.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        track.scrollBy({ left: step(), behavior: 'smooth' });
+                    });
+                }
             });
         }
 
-        if (btnRight && scrollContainer) {
-            btnRight.addEventListener('click', function () {
-                scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
-            });
-        }
-    });
+        document.addEventListener('DOMContentLoaded', initMdCarousels);
+        document.addEventListener('turbo:load', initMdCarousels);
+    })();
 </script>
 @endpush

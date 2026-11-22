@@ -1,50 +1,29 @@
-<section class="md-section md-section--mint md-reveal">
+<section class="md-section md-section--white md-reveal" aria-labelledby="md-why-title">
     <div class="container">
-        <h2 class="md-section__title text-center">Why should you go for clear aligners?</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle md-compare" style="border-radius: var(--md-radius); overflow: hidden;">
-                <thead>
-                    <tr>
-                        <th class="fw-bold fs-5 text-start p-3">The facts</th>
-                        <th class="md-compare__aligners">
-                            <div class="fw-bold fs-5">Clear aligners</div>
-                        </th>
-                        <th class="fw-bold fs-5">Braces</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $compareRows = [
-                            ['text' => 'Conveniently removable during meals and brushing', 'clear' => true, 'braces' => false],
-                            ['text' => 'Virtually invisible for a discreet look', 'clear' => true, 'braces' => false],
-                            ['text' => 'No dietary limitations — enjoy your favorite foods', 'clear' => true, 'braces' => false],
-                            ['text' => 'Simple to maintain oral hygiene — brush and floss with ease!', 'clear' => true, 'braces' => false],
-                            ['text' => 'Requires frequent dental appointments', 'clear' => false, 'braces' => true],
-                            ['text' => 'Offers a more comfortable experience', 'clear' => true, 'braces' => false],
-                            ['text' => 'Delivers quicker results (typically 6–8 months)', 'clear' => true, 'braces' => false],
-                        ];
-                    @endphp
-                    @foreach($compareRows as $row)
-                        <tr style="background-color: {{ $loop->even ? 'var(--md-warm)' : 'var(--md-white)' }};">
-                            <td class="text-start p-3">{{ $row['text'] }}</td>
-                            <td class="md-compare__aligners">
-                                @if($row['clear'])
-                                    <span class="text-success fs-4">&#10003;</span>
-                                @else
-                                    <span class="text-danger fs-4">&#10007;</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($row['braces'])
-                                    <span class="text-success fs-4">&#10003;</span>
-                                @else
-                                    <span class="text-danger fs-4">&#10007;</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="md-split">
+            <div>
+                <span class="md-section__eyebrow">Why MyDent?</span>
+                <h2 id="md-why-title" class="md-section__title">Built for confidence, comfort, and clinical care</h2>
+                <p class="md-section__lead mb-3">
+                    MyDent focuses on clear aligner treatment with modern clinics, patient-first guidance,
+                    and a seamless path from enquiry to appointment.
+                </p>
+                <ul class="md-split__list">
+                    <li>Clear aligner expertise with a dedicated clinic experience</li>
+                    <li>Centers in Jubilee Hills, Hyderabad and Basaveshwarnagar, Bengaluru</li>
+                    <li>Easy online booking and product shop for dental care essentials</li>
+                    <li>Transparent communication from first scan to treatment support</li>
+                </ul>
+                <x-front.button href="{{ route('medicalAppointment') }}">Schedule a Consultation</x-front.button>
+            </div>
+            <div class="md-split__media">
+                <img src="{{ asset('images/confident-smile.jpg') }}"
+                     alt="Confident smile with MyDent care"
+                     width="800"
+                     height="600"
+                     loading="lazy"
+                     onerror="{!! imgOnErrorFallback('images/smile-with-aligners.jpg') !!}">
+            </div>
         </div>
     </div>
 </section>

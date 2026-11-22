@@ -1,7 +1,7 @@
-{{-- Brand-first full-bleed hero: brand + headline + support + CTAs + media --}}
-<section class="md-hero">
+{{-- Brand-first full-bleed hero --}}
+<section class="md-hero" aria-label="MyDent hero">
     <div class="md-hero__media" aria-hidden="true">
-        <video autoplay muted loop playsinline poster="{{ asset('images/invisible.jpeg') }}">
+        <video autoplay muted loop playsinline poster="{{ asset('images/smile-with-aligners.jpg') }}">
             <source src="{{ asset('storage/vids/heroandchat.mp4') }}" type="video/mp4">
         </video>
     </div>
@@ -11,17 +11,18 @@
             <div class="md-hero-rise" style="max-width: 40rem;">
                 <p class="md-hero__brand">mydent</p>
                 <h1 class="md-hero__headline">
-                    {{ $sliders->short_description ?? 'Invisible path to smile' }}
+                    Your Dream Smile Starts Here.
                 </h1>
                 <p class="md-hero__support">
-                    {{ $sliders->title ?? 'Premium clear aligners with expert orthodontist supervision — start with a free 3D scan.' }}
+                    Discover the confidence of a naturally beautiful smile with MyDent Clear Aligners.
+                    Comfortable, discreet and designed around you.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <x-front.button href="{{ route('medicalAppointment') }}" data-turbo="false">
-                        Book a Scan
+                    <x-front.button href="{{ route('medicalDoctors') }}">
+                        Explore Clear Aligners
                     </x-front.button>
-                    <a href="{{ route('medicalDoctors') }}" class="btn btn-outline-light">
-                        Explore Aligners
+                    <a href="{{ route('medicalAppointment') }}" class="btn btn-outline-light" data-turbo="false">
+                        Book a Consultation
                     </a>
                 </div>
             </div>

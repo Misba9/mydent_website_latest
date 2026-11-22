@@ -18,6 +18,7 @@ use App\Models\Article;
 use App\Models\Blog;
 use App\Models\HomepageVideo;
 use App\Models\Product;
+use App\Models\FrontPatientTestimonial;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -51,6 +52,8 @@ class FrontController extends AppBaseController
         $characteristicCards = HomepageVideo::where('section', 'characteristics')->orderBy('order')->get();
         $section1Videos = HomepageVideo::where('section', 'section-1')->orderBy('order')->get();
         $section2Video = HomepageVideo::where('section', 'section-2')->latest()->first();
+        $featuredProducts = Product::latest()->take(8)->get();
+        $testimonials = FrontPatientTestimonial::with('media')->latest()->take(6)->get();
 
         return view('fronts.medicals.index', compact(
             'doctors',
@@ -63,7 +66,9 @@ class FrontController extends AppBaseController
             'categories',
             'characteristicCards',
             'section1Videos',
-            'section2Video'
+            'section2Video',
+            'featuredProducts',
+            'testimonials'
         ));
     }
 

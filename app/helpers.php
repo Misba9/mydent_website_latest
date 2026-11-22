@@ -66,6 +66,15 @@ function getAppLogo()
             return $logo;
         }
     }
+
+    // Prefer transparent brand mark for header/footer on any background.
+    if (file_exists(public_path('assets/image/mydent-logo-transparent.png'))) {
+        return 'assets/image/mydent-logo-transparent.png';
+    }
+    if (file_exists(public_path('storage/imgs/logo-transparent.png'))) {
+        return 'storage/imgs/logo-transparent.png';
+    }
+
     return 'storage/imgs/logo.png';
 }
 
@@ -90,7 +99,14 @@ function getAppFavicon()
 function getMediaUrl($path, $defaultFallback = null)
 {
     if (empty($path)) {
-        return $defaultFallback && file_exists(public_path($defaultFallback)) ? asset($defaultFallback) : asset('assets/image/mydent-logo.png');
+        if ($defaultFallback && file_exists(public_path($defaultFallback))) {
+            return asset($defaultFallback);
+        }
+        if (file_exists(public_path('assets/image/mydent-logo.png'))) {
+            return asset('assets/image/mydent-logo.png');
+        }
+
+        return asset('storage/imgs/logo.png');
     }
 
     // If path is a full HTTP/HTTPS URL, extract path component if it belongs to local domain or contains uploads/uploads
@@ -138,7 +154,24 @@ function getMediaUrl($path, $defaultFallback = null)
         return asset($defaultFallback);
     }
 
-    return asset('assets/image/mydent-logo.png');
+    if (file_exists(public_path('assets/image/mydent-logo.png'))) {
+        return asset('assets/image/mydent-logo.png');
+    }
+
+    return asset('storage/imgs/logo.png');
+}
+
+/**
+ * Safe img onerror attribute: set fallback once to prevent 404 retry loops.
+ */
+function imgOnErrorFallback(?string $fallback = null): string
+{
+    $path = $fallback ?: (file_exists(public_path('assets/image/mydent-logo.png'))
+        ? 'assets/image/mydent-logo.png'
+        : 'storage/imgs/logo.png');
+
+    // Intentionally unescaped for use with Blade {!! ... !!}
+    return "this.onerror=null;this.src='".asset($path)."';";
 }
 
 
@@ -457,16 +490,30 @@ function getCurrencyCode()
     return $currencies->currency_code;
 }
 
+
 function version()
 {
-    if (config('app.is_version') == 'true') {
-        $composerFile = file_get_contents('../composer.json');
-        $composerData = json_decode($composerFile, true);
-        $currentVersion = $composerData['version'];
+    if (config('app.is_version') === 'true') {
+        $composerFile = base_path('composer.json');
 
-        return 'v'.$currentVersion;
+        if (!file_exists($composerFile)) {
+            return '';
+        }
+
+        $composerData = json_decode(file_get_contents($composerFile), true);
+
+        $currentVersion = $composerData['version'] ?? null;
+
+        if (!$currentVersion) {
+            return '';
+        }
+
+        return 'v' . $currentVersion;
     }
+
+    return '';
 }
+
 
 if (! function_exists('getNotification')) {
     function getNotification()

@@ -105,14 +105,21 @@ hold you back— shine confidently with Mydent</strong></p>
             @endphp
 
             @foreach($braces as $brace)
-            <div class="col-md-4">
-                <div class="md-product-card text-center h-100">
-                    <img src="{{ $brace['img'] }}" alt="{{ $brace['title'] }}">
-                    <div class="p-3">
-                        <h5 class="mb-2" style="font-family: var(--md-font-display);">{{ $brace['title'] }}</h5>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <article class="md-product-card md-product-card--tile text-center h-100">
+                    <div class="md-product-card__media">
+                        <img src="{{ $brace['img'] }}"
+                             alt="{{ $brace['title'] }}"
+                             width="400"
+                             height="220"
+                             loading="lazy"
+                             onerror="{!! imgOnErrorFallback('images/mydent-care.jpeg') !!}">
+                    </div>
+                    <div class="md-product-card__body text-center">
+                        <h3 class="md-product-card__title">{{ $brace['title'] }}</h3>
                         <p class="text-muted mb-0">{{ $brace['desc'] }}</p>
                     </div>
-                </div>
+                </article>
             </div>
             @endforeach
         </div>

@@ -11,7 +11,7 @@
             image="images/Supervision.jpeg"
         />
 
-        <section class="md-section md-section--warm">
+        <section class="md-section md-section--soft">
             <div class="container">
                 @if(isset($faqs) && count($faqs))
                     <div class="row justify-content-center g-4">
@@ -19,7 +19,7 @@
                             <div class="accordion" id="accordionRow1">
                                 @foreach($faqs as $faq)
                                     @if($loop->odd)
-                                        <div class="accordion-item mb-3 border-0 shadow-sm rounded overflow-hidden">
+                                        <div class="accordion-item mb-3">
                                             <h2 class="accordion-header" id="heading{{ $loop->index + 1 }}">
                                                 <button class="accordion-button collapsed" type="button"
                                                         data-bs-toggle="collapse"

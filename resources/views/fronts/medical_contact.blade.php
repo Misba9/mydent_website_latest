@@ -158,13 +158,35 @@ advanced technology and personalized care from skilled orthodontists.  </p>
     <div class="container">
         <h2 class="md-section__title text-center">Services available at our centres</h2>
         <div class="row justify-content-center g-4">
-            <div class="col-md-6 text-center">
-                <img src="{{ asset('images/Supervision.jpeg') }}" alt="Expert Supervision at mydent" class="img-fluid rounded" style="max-height: 420px; width: 100%; object-fit: cover; box-shadow: var(--md-shadow-soft);">
-                <p class="mt-3 fw-semibold mb-0">Expert supervision</p>
+            <div class="col-12 col-md-6">
+                <article class="md-product-card md-product-card--tile text-center h-100">
+                    <div class="md-product-card__media" style="height: 280px;">
+                        <img src="{{ asset('images/Supervision.jpeg') }}"
+                             alt="Expert Supervision at mydent"
+                             width="600"
+                             height="280"
+                             loading="lazy"
+                             onerror="{!! imgOnErrorFallback('images/mydent-care.jpeg') !!}">
+                    </div>
+                    <div class="md-product-card__body text-center">
+                        <h3 class="md-product-card__title mb-0">Expert supervision</h3>
+                    </div>
+                </article>
             </div>
-            <div class="col-md-6 text-center">
-                <img src="{{ asset('images/mydent-care.jpeg') }}" alt="mydent aligner care consultation" class="img-fluid rounded" style="max-height: 420px; width: 100%; object-fit: cover; box-shadow: var(--md-shadow-soft);">
-                <p class="mt-3 fw-semibold mb-0">Aligner care consultation</p>
+            <div class="col-12 col-md-6">
+                <article class="md-product-card md-product-card--tile text-center h-100">
+                    <div class="md-product-card__media" style="height: 280px;">
+                        <img src="{{ asset('images/mydent-care.jpeg') }}"
+                             alt="mydent aligner care consultation"
+                             width="600"
+                             height="280"
+                             loading="lazy"
+                             onerror="{!! imgOnErrorFallback('images/Supervision.jpeg') !!}">
+                    </div>
+                    <div class="md-product-card__body text-center">
+                        <h3 class="md-product-card__title mb-0">Aligner care consultation</h3>
+                    </div>
+                </article>
             </div>
         </div>
     </div>
@@ -238,16 +260,17 @@ advanced technology and personalized care from skilled orthodontists.  </p>
                                             {{ Form::textarea('message', null, ['class' => 'form-control form-textarea', 'id' => 'message','placeholder' =>  __('messages.web.message'),'required']) }}
                                         </div>
                                     </div>
+                                    @if(!empty(config('app.google_recaptcha_site_key')))
                                     <div class="col-lg-12">
                                         <div class="input-group">
                                             <div class="g-recaptcha"
                                                  data-sitekey="{{ config('app.google_recaptcha_site_key') }}"
                                                  data-callback="verifyRecaptchaCallback"
                                                  data-expired-callback="expiredRecaptchaCallback"></div>
-                                            <input class="form-control d-none" {{$styleCss}}="display:none;" name="
-                                        gre_captcha" data-recaptcha="true" data-error="Please complete the Captcha">
+                                            <input class="form-control d-none" {{$styleCss}}="display:none;" name="gre_captcha" data-recaptcha="true" data-error="Please complete the Captcha">
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="col-lg-12 text-end mt-3">
                                         {{ Form::button(__('messages.web.send_message'),['type'=>'submit','class' => 'btn btn-primary','id'=>'submitBtn']) }}
                                     </div>

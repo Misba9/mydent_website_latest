@@ -364,8 +364,11 @@ footer .ft-contact .contact-bx .contact-number .number {
 }
 
 .front-app-logo {
-    max-height: 50px;
-    max-width: 120px;
+    max-height: 64px;
+    max-width: 220px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .g-recaptcha{

@@ -1,13 +1,4 @@
 {
-    "/js/pages.js": "/js/pages.js?id=4070990ac7f54c84094a",
-    "/js/front-pages.js": "/js/front-pages.js?id=6374c61e84a0b43ae009",
-    "/assets/front/css/front-custom.css": "/assets/front/css/front-custom.css?id=7806ca5542edcba44977",
-    "/assets/css/prescription-pdf.css": "/assets/css/prescription-pdf.css?id=210ca7b5165b1fb3a34a",
-    "/assets/css/bill-pdf.css": "/assets/css/bill-pdf.css?id=7661191f83176849a30d",
-    "/assets/css/pages.css": "/assets/css/pages.css?id=d16ecf1fb5a48f16de36",
-    "/assets/css/custom-pages-dark.css": "/assets/css/custom-pages-dark.css?id=cce69edcbb037cd58d41",
-    "/css/front-pages.css": "/css/front-pages.css?id=4fd18fefa27e6fcbe455",
-    "/assets/front/css/about.css": "/assets/front/css/about.css?id=6017b2504fde79b041dd",
     "/assets/image/copy.svg": "/assets/image/copy.svg?id=0cd197d7793b5abd5791",
     "/assets/image/delete.svg": "/assets/image/delete.svg?id=62f1fb34c560d4f4cfeb",
     "/assets/image/favicon-infyom.png": "/assets/image/favicon-infyom.png?id=7ea13145e8a8b0e2cc9b",
@@ -40,5 +31,10 @@
     "/js/third-party.js": "/js/third-party.js?id=f732da65eef74fadd3d6",
     "/js/front-third-party.js": "/js/front-third-party.js?id=4dea633d3e0635d3cec8",
     "/assets/js/auto_fill/auto_fill.js": "/assets/js/auto_fill/auto_fill.js?id=2ce01d55e867c3ab0651",
-    "/css/front-third-party.css": "/css/front-third-party.css?id=d41d8cd98f00b204e980"
+    "/css/front-third-party.css": "/css/front-third-party.css?id=d41d8cd98f00b204e980",
+    "/css/front-pages.css": "/css/front-pages.css?id=9e2eef1d08d10d066d42",
+    "/js/front-pages.js": "/js/front-pages.js?id=6374c61e84a0b43ae009",
+    "/assets/css/pages.css": "/assets/css/pages.css?id=41810a7c0e68cc5ec900",
+    "/js/pages.js": "/js/pages.js?id=4070990ac7f54c84094a",
+    "/assets/css/custom-pages-dark.css": "/assets/css/custom-pages-dark.css?id=cce69edcbb037cd58d41"
 }

@@ -1,40 +1,29 @@
-<section class="md-section md-section--white md-reveal">
+<section class="md-section md-section--white md-reveal" aria-labelledby="md-discover-title">
     <div class="container">
-        <h2 class="md-section__title text-center">What are clear aligners and how do they work?</h2>
-        <p class="md-section__lead text-center">
-            Clear teeth aligners are transparent plastic trays that gradually straighten misaligned, crooked, and
-            crowded teeth for people of all ages (10 to 50). They are comfortable and a removable alternative to painful braces.
-        </p>
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div class="d-flex flex-column gap-4">
-                    <div class="text-center">
-                        <img src="{{ asset('images/mydent-care.jpeg') }}" alt="Removable and Convenient" class="mb-2 md-feature-thumb" />
-                        <h5 class="fw-bold">Removable and Convenient</h5>
-                        <p class="text-muted mb-0">You can remove them while eating or brushing.</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="{{ asset('images/invisible.jpeg') }}" alt="Virtually Invisible" class="mb-2 md-feature-thumb" />
-                        <h5 class="fw-bold">Virtually Invisible</h5>
-                        <p class="text-muted mb-0">No metal brackets or wires, just a confident smile.</p>
-                    </div>
-                    <div class="text-center">
-                        <img src="{{ asset('images/3d-dental-scan.jpg') }}" alt="Custom-Made for You" class="mb-2 md-feature-thumb" />
-                        <h5 class="fw-bold">Custom-Made for You</h5>
-                        <p class="text-muted mb-0">Each aligner is crafted based on your dental needs.</p>
-                    </div>
-                </div>
+        <div class="md-split">
+            <div class="md-split__media">
+                @if($section2Video)
+                    <video autoplay loop muted playsinline poster="{{ asset('images/invisible.jpeg') }}">
+                        <source src="{{ getMediaUrl($section2Video->video_path, 'storage/vids/heroandchat.mp4') }}" type="video/mp4">
+                    </video>
+                @else
+                    <img src="{{ asset('images/invisible.jpeg') }}" alt="MyDent clear aligners" width="800" height="600" loading="lazy">
+                @endif
             </div>
-            <div class="col-lg-6 text-center">
-                <div class="ratio ratio-16x9">
-                    @if($section2Video)
-                        <video class="w-100 h-100 rounded" style="object-fit: cover; box-shadow: var(--md-shadow-soft);" autoplay loop muted playsinline>
-                            <source src="{{ getMediaUrl($section2Video->video_path, 'storage/vids/heroandchat.mp4') }}" type="video/mp4">
-                        </video>
-                    @else
-                        <img src="{{ asset('images/invisible.jpeg') }}" alt="Clear aligners" class="w-100 h-100 rounded" style="object-fit: cover;">
-                    @endif
-                </div>
+            <div>
+                <span class="md-section__eyebrow">Clear Aligners</span>
+                <h2 id="md-discover-title" class="md-section__title">Discover MyDent Clear Aligners</h2>
+                <p class="md-section__lead mb-0">
+                    Transparent trays that gradually straighten misaligned, crooked, or crowded teeth —
+                    a comfortable, removable alternative to traditional braces.
+                </p>
+                <ul class="md-split__list">
+                    <li>Virtually invisible for work, school, and daily life</li>
+                    <li>Removable for meals and oral hygiene</li>
+                    <li>Custom-made from your dental assessment</li>
+                    <li>Supervised by MyDent’s clinical team</li>
+                </ul>
+                <x-front.button href="{{ route('medicalDoctors') }}">Explore Aligners</x-front.button>
             </div>
         </div>
     </div>
