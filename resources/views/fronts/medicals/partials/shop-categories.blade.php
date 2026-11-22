@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="md-product-card__actions">
                                     <a href="{{ route('front.product.show', $product->id) }}" class="md-btn md-btn--outline md-btn--sm">View</a>
-                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="md-product-card__cart-form">
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="md-product-card__cart-form" data-turbo="false">
                                         @csrf
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="md-btn md-btn--primary md-btn--sm">Add to Cart</button>

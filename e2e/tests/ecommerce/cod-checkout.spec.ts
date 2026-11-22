@@ -2,17 +2,20 @@ import { test, expect } from '../../fixtures/test';
 
 test.describe('COD checkout E2E @smoke @ecommerce', () => {
   test('complete COD order from product to success', async ({ page }) => {
-    // 1. Pick a product
+    // 1. Pick a product (listing uses /product/{id} links + card cart forms)
     await page.goto('/products', { waitUntil: 'domcontentloaded' });
-    const productLink = page.locator('a.product-link');
+    const productLink = page.locator('a[href*="/product/"]');
     const count = await productLink.count();
     test.skip(count === 0, 'No products available for COD checkout');
 
-    await productLink.first().click();
-    await expect(page).toHaveURL(/\/product\//);
-
-    // 2. Add to cart
-    await page.getByRole('button', { name: /add to cart/i }).click();
+    const listingAdd = page.locator('form.md-product-card__cart-form button[type="submit"]').first();
+    if (await listingAdd.count()) {
+      await listingAdd.click();
+    } else {
+      await productLink.first().click();
+      await expect(page).toHaveURL(/\/product\//);
+      await page.getByRole('button', { name: /add to cart/i }).click();
+    }
     await page.waitForLoadState('domcontentloaded');
 
     // 3. Open checkout (via cart or direct)
@@ -60,11 +63,16 @@ test.describe('COD checkout E2E @smoke @ecommerce', () => {
 
   test('checkout validation rejects empty required fields', async ({ page }) => {
     await page.goto('/products', { waitUntil: 'domcontentloaded' });
-    const productLink = page.locator('a.product-link');
+    const productLink = page.locator('a[href*="/product/"]');
     test.skip((await productLink.count()) === 0, 'No products');
 
-    await productLink.first().click();
-    await page.getByRole('button', { name: /add to cart/i }).click();
+    const listingAdd = page.locator('form.md-product-card__cart-form button[type="submit"]').first();
+    if (await listingAdd.count()) {
+      await listingAdd.click();
+    } else {
+      await productLink.first().click();
+      await page.getByRole('button', { name: /add to cart/i }).click();
+    }
     await page.goto('/checkout', { waitUntil: 'domcontentloaded' });
 
     const form = page.locator('#checkout-form');

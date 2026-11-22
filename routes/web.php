@@ -97,9 +97,8 @@ Route::post('/admin/orders/{order}/status', [\App\Http\Controllers\OrderControll
 // Sitemap Route
 Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
-// Blog Routes
+// Blog Routes — admin create/edit BEFORE public {blog} show so "create" is not captured as a slug.
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
-Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show');
 
 Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
     Route::get('/blogs/create', [BlogController::class, 'create'])->name('blogs.create');
@@ -109,13 +108,14 @@ Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
     Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
 });
 
+Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show');
+
 
 // Public Product Listing & Detail
 Route::get('/products', [App\Http\Controllers\Front\FrontController::class, 'ecom'])->name('products.index');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('front.product.show');
-Route::get('/products/{id}', [ProductController::class, 'show']);
 
-// Admin Product Management
+// Admin Product Management — create/edit before public {id} show.
 Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
     Route::get('/admin/products', [App\Http\Controllers\ProductController::class, 'index'])->name('admin.products.index');
     Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
@@ -124,6 +124,8 @@ Route::middleware(['auth', 'role:clinic_admin'])->group(function () {
     Route::put('/products/{product}', [App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('products.destroy');
 });
+
+Route::get('/products/{id}', [ProductController::class, 'show']);
 
 
 // Cart routes (single definitions — avoid duplicate named routes)
@@ -312,21 +314,21 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
         Route::put('doctor-status', [UserController::class, 'changeDoctorStatus'])->name('doctor.status');
     });
 
-    // Countries routes
+    // Countries routes (modal CRUD — no dedicated create/show pages)
     Route::middleware('permission:manage_countries')->group(function () {
-        Route::resource('countries', CountryController::class);
+        Route::resource('countries', CountryController::class)->except(['create', 'show']);
         Route::post('countries/{country}', [CountryController::class, 'update']);
     });
 
-    // States routes
+    // States routes (modal CRUD)
     Route::middleware('permission:manage_states')->group(function () {
-        Route::resource('states', StateController::class);
+        Route::resource('states', StateController::class)->except(['create', 'show']);
         Route::post('states/{state}', [StateController::class, 'update']);
     });
 
-    // Cities Routes
+    // Cities Routes (modal CRUD)
     Route::middleware('permission:manage_cities')->group(function () {
-        Route::resource('cities', CityController::class);
+        Route::resource('cities', CityController::class)->except(['create', 'show']);
     });
 
     // Role route
@@ -340,7 +342,7 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
         Route::post('/settings', [SettingController::class, 'update'])->name('setting.update');
         Route::get('states-list', [SettingController::class, 'getStates'])->name('states-list');
         Route::get('cities-list', [SettingController::class, 'getCities'])->name('cities-list');
-        Route::resource('clinic-schedules', ClinicScheduleController::class);
+        Route::resource('clinic-schedules', ClinicScheduleController::class)->except(['create', 'show']);
         Route::resource('holidays', HolidayContoller::class);
         Route::post('checkRecord', [ClinicScheduleController::class, 'checkRecord'])->name('checkRecord');
     });
@@ -360,16 +362,16 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
         Route::get('/get-slot-by-gap', [DoctorSessionController::class, 'getSlotByGap'])->name('get.slot.by.gap');
     });
 
-    // Specialization routes
+    // Specialization routes (modal CRUD — no dedicated create/show pages)
     Route::middleware('permission:manage_specialities')->group(function () {
-        Route::resource('specializations', SpecializationController::class);
+        Route::resource('specializations', SpecializationController::class)->except(['create', 'show']);
     });
 
     // Services and Service Category route
     Route::middleware('permission:manage_services')->group(function () {
         Route::resource('services', ServiceController::class);
         Route::put('service-status', [ServiceController::class, 'changeServiceStatus'])->name('service.status');
-        Route::resource('service-categories', ServiceCategoryController::class);
+        Route::resource('service-categories', ServiceCategoryController::class)->except(['create', 'show']);
     });
 
     // Staff route
@@ -400,9 +402,9 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
         [AppointmentController::class, 'appointmentCalendar']
     )->name('appointments.calendar');
 
-    // Currency route
+    // Currency route (modal CRUD)
     Route::middleware('permission:manage_currencies')->group(function () {
-        Route::resource('currencies', CurrencyController::class);
+        Route::resource('currencies', CurrencyController::class)->except(['create', 'show']);
     });
 
     //Encounter route
@@ -460,7 +462,7 @@ Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'checkImper
 
 Route::prefix('admin')->middleware('auth', 'xss', 'checkUserStatus', 'role:clinic_admin')->group(function () {
    // Manage medicine route
-    Route::resource('categories', CategoryController::class)->parameters(['categories' => 'category']);
+    Route::resource('categories', CategoryController::class)->parameters(['categories' => 'category'])->except(['create', 'show']);
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post(
         'categories/{category_id}/active-deactive',

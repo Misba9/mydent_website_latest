@@ -15,9 +15,18 @@ return [
     |
     */
 
-    'default' => (env('DB_CONNECTION') === 'sqlite' && env('DB_DATABASE') && !file_exists(env('DB_DATABASE')))
-        ? 'mysql'
-        : env('DB_CONNECTION', 'mysql'),
+    // Prefer configured connection. Only fall back from sqlite→mysql when a
+    // *file* path is missing — never treat ":memory:" as a missing file (PHPUnit).
+    'default' => (function () {
+        $connection = env('DB_CONNECTION', 'mysql');
+        $database = env('DB_DATABASE');
+
+        if ($connection === 'sqlite' && $database && $database !== ':memory:' && ! file_exists($database)) {
+            return 'mysql';
+        }
+
+        return $connection;
+    })(),
 
     /*
     |--------------------------------------------------------------------------

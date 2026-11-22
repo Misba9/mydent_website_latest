@@ -75,14 +75,14 @@
 
                         <!-- Action Buttons -->
                         <div class="d-flex flex-wrap gap-3">
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline" data-turbo="false">
                                 @csrf
                                 <button type="submit" class="btn btn-primary btn-lg rounded-pill px-6 py-3 fw-bold shadow-sm">
                                     <i class="fa-solid fa-cart-shopping me-2"></i> Add to Cart
                                 </button>
                             </form>
 
-                            <form action="{{ route('checkout.buyNow', $product->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('checkout.buyNow', $product->id) }}" method="POST" class="d-inline" data-turbo="false">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-primary btn-lg rounded-pill px-6 py-3 fw-bold">
                                     Buy Now

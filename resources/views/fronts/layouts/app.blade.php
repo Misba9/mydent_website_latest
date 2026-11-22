@@ -94,13 +94,29 @@
 
     <!-- Document Title ===================== -->
     <title>@yield('front-title') | {{ getAppName() }}</title>
-    <script src="{{ asset('messages.js') }}"></script>
-    <script src="{{ asset('assets/front/vendor/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ $mdFrontThirdPartyJs }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script src="{{ $mdFrontPagesJs }}"></script>
+    {{-- data-turbo-eval="false": prevent Turbo Drive from re-executing head bundles on visit
+         (avoids turbo-frame redefine, FullCalendar/Stripe double-load). --}}
+    <script data-turbo-eval="false">
+        // Soft-guard: if a bundle is still re-injected, ignore duplicate custom element defines.
+        (function () {
+            if (window.__mydentCustomElementGuard) return;
+            window.__mydentCustomElementGuard = true;
+            var define = CustomElementRegistry.prototype.define;
+            CustomElementRegistry.prototype.define = function (name, constructor, options) {
+                if (this.get(name)) {
+                    return;
+                }
+                return define.call(this, name, constructor, options);
+            };
+        })();
+    </script>
+    <script src="{{ asset('messages.js') }}" data-turbo-eval="false"></script>
+    <script src="{{ asset('assets/front/vendor/bootstrap.bundle.min.js') }}" data-turbo-eval="false"></script>
+    <script src="{{ $mdFrontThirdPartyJs }}" data-turbo-eval="false" data-turbo-track="reload"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" data-turbo-eval="false"></script>
+    <script src="{{ $mdFrontPagesJs }}" data-turbo-eval="false" data-turbo-track="reload"></script>
 
-    <script src="{{ asset('assets/js/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datepicker/bootstrap-datepicker.js') }}" data-turbo-eval="false"></script>
 
 
     <!-- JavaScript Bundle with Popper -->
@@ -110,10 +126,10 @@
         let csrfToken = "{{ csrf_token() }}"
         let defaultCountryCodeValue = "{{ getSettingValue('default_country_code') }}"
     </script>
-    <script src="//js.stripe.com/v3/"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.stripe.com/v3/" data-turbo-eval="false"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" data-turbo-eval="false"></script>
     @if(!empty(config('app.google_recaptcha_site_key')))
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer data-turbo-eval="false"></script>
     @endif
     @routes
 
@@ -121,7 +137,10 @@
         let appointmentStripePaymentUrl = '{{ url('appointment-stripe-charge') }}';
         let stripe = '';
         @if (config('services.stripe.key'))
-            stripe = Stripe('{{ config('services.stripe.key') }}');
+            if (typeof Stripe !== 'undefined' && !window.__mydentStripe) {
+                window.__mydentStripe = Stripe('{{ config('services.stripe.key') }}');
+            }
+            stripe = window.__mydentStripe || '';
         @endif
         let manually = "{{ \App\Models\Appointment::MANUALLY }}";
         let paystack = "{{ \App\Models\Appointment::PAYSTACK }}";

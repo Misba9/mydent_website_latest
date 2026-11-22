@@ -1,4 +1,4 @@
-import "flatpickr/dist/l10n";
+require('flatpickr/dist/l10n');
 document.addEventListener('turbo:load', loadAppointmentCreateEditData)
 
 let appointmentDate = $('#appointmentDate')

@@ -37,18 +37,21 @@
     <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js"
         data-turbolinks-eval="false" data-turbo-eval="false"></script>
     {{--    <script src='fullcalendar/core/locales-all.js'></script> --}}
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.stripe.com/v3/" data-turbo-eval="false"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" data-turbo-eval="false"></script>
     @php
         try { $mdThirdPartyJs = mix('js/third-party.js'); } catch (\Throwable $e) { $mdThirdPartyJs = asset('js/third-party.js'); }
         try { $mdPagesJs = mix('js/pages.js'); } catch (\Throwable $e) { $mdPagesJs = asset('js/pages.js'); }
     @endphp
-    <script src="{{ $mdThirdPartyJs }}"></script>
-    <script src="{{ $mdPagesJs }}"></script>
+    <script src="{{ $mdThirdPartyJs }}" data-turbo-eval="false" data-turbo-track="reload"></script>
+    <script src="{{ $mdPagesJs }}" data-turbo-eval="false" data-turbo-track="reload"></script>
     <script data-turbo-eval="false">
         let stripe = '';
         @if (config('services.stripe.key'))
-            stripe = Stripe('{{ config('services.stripe.key') }}');
+            if (typeof Stripe !== 'undefined' && !window.__mydentStripe) {
+                window.__mydentStripe = Stripe('{{ config('services.stripe.key') }}');
+            }
+            stripe = window.__mydentStripe || '';
         @endif
         let usersRole = '{{ (Auth::check() && !empty(getLogInUser()->roles->first())) ? getLogInUser()->roles->first()->name : '' }}';
         let currencyIcon = '{{ getCurrencyIcon() }}';

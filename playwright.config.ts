@@ -4,6 +4,12 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, 'e2e/.env') });
 
+// Prefer the user cache when sandbox/temp Playwright browsers are missing.
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
+  const homeCache = path.join(process.env.HOME || '', 'Library/Caches/ms-playwright');
+  process.env.PLAYWRIGHT_BROWSERS_PATH = homeCache;
+}
+
 const baseURL = process.env.BASE_URL || 'http://127.0.0.1:8000';
 
 export default defineConfig({

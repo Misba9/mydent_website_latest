@@ -13,6 +13,7 @@ export class AdminPage extends BasePage {
     await login.open();
     await login.login(env.admin.email, env.admin.password);
     await this.page.waitForURL((url) => !url.pathname.endsWith('/login'), { timeout: 30_000 });
+    await expect(this.page).toHaveURL(/admin/i);
   }
 
   async open(path: string) {
@@ -22,5 +23,11 @@ export class AdminPage extends BasePage {
   async expectDashboard() {
     await expect(this.page).toHaveURL(/admin/i);
     await expect(this.page.locator('body')).toContainText(/dashboard|appointment|patient|doctor/i);
+  }
+
+  async expectNoServerError() {
+    await expect(this.page.locator('body')).not.toContainText(
+      /Whoops|SQLSTATE|BadMethodCallException|server error/i,
+    );
   }
 }

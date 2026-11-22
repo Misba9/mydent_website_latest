@@ -39,7 +39,9 @@ class FaqController extends AppBaseController
             return Datatables::of((new FaqDataTable())->get())->make(true);
         }
 
-        return view('fronts.faqs.index');
+        $faqs = Faq::query()->latest('id')->get();
+
+        return view('fronts.faqs.index', compact('faqs'));
     }
 
     /**

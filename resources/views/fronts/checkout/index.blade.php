@@ -14,7 +14,7 @@
             @include('layouts.errors')
             <div id="checkout-message-container" class="mb-4"></div>
 
-            <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
+            <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" data-turbo="false">
                 @csrf
                 <div class="row g-4 align-items-start">
                     <div class="col-lg-7">

@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="footer-subcribe mt-3">
-                    {{ Form::open(['id' => 'subscribeForm', 'class' => 'subscribe-form subscription-form']) }}
+                    {{ Form::open(['id' => 'subscribeForm', 'class' => 'subscribe-form subscription-form', 'data-turbo' => 'false']) }}
                     <div class="subscribeForm-message"></div>
                     <div class="input-group">
                         {{ Form::email('email', null, ['class' => 'form-control form-control-transparent', 'id' => 'email', 'placeholder' => __('messages.web.enter_your_email'), 'required', 'aria-label' => 'Email for newsletter']) }}

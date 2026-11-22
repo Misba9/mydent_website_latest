@@ -47,7 +47,7 @@
                                                 </div>
                                                 <div class="md-cart-item__meta">
                                                     <span class="md-cart-item__price">₹{{ number_format($item['price'], 2) }}</span>
-                                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="md-qty" data-md-qty>
+                                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="md-qty" data-md-qty data-turbo="false">
                                                         @csrf
                                                         <button type="button" class="md-qty__btn" data-md-qty-dec aria-label="Decrease quantity">−</button>
                                                         <input type="number"

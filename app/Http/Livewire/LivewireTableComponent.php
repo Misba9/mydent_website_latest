@@ -34,6 +34,23 @@ class LivewireTableComponent extends DataTableComponent
         // TODO: Implement configure() method.
     }
 
+    /**
+     * Wire legacy showButtonOnHeader/buttonComponent into Rappasoft toolbar areas.
+     * Child configure() overrides do not call parent, so this runs after configure().
+     */
+    public function booted(): void
+    {
+        parent::booted();
+
+        if (
+            $this->showButtonOnHeader
+            && $this->buttonComponent !== ''
+            && view()->exists($this->buttonComponent)
+        ) {
+            $this->configurableAreas['toolbar-right-start'] = $this->buttonComponent;
+        }
+    }
+
     public function columns(): array
     {
         // TODO: Implement columns() method.

@@ -49,15 +49,16 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
+        // Never auto-migrate on boot — that belongs to CLI/deploy only (QA-2026-002).
+        // Optional one-time Spatie morph-type repair when explicitly enabled in local/dev.
         try {
-            if (\Illuminate\Support\Facades\Schema::hasTable('users')) {
-                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            }
-            if (\Illuminate\Support\Facades\Schema::hasTable('model_has_roles')) {
-                \Illuminate\Support\Facades\DB::table('model_has_roles')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
-            }
-            if (\Illuminate\Support\Facades\Schema::hasTable('model_has_permissions')) {
-                \Illuminate\Support\Facades\DB::table('model_has_permissions')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
+            if ($this->app->environment('local', 'testing') && env('FIX_SPATIE_MORPH_TYPES', false)) {
+                if (\Illuminate\Support\Facades\Schema::hasTable('model_has_roles')) {
+                    \Illuminate\Support\Facades\DB::table('model_has_roles')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
+                }
+                if (\Illuminate\Support\Facades\Schema::hasTable('model_has_permissions')) {
+                    \Illuminate\Support\Facades\DB::table('model_has_permissions')->where('model_type', '!=', 'App\Models\User')->update(['model_type' => 'App\Models\User']);
+                }
             }
         } catch (\Throwable $e) {
             // Silently swallow any database boot connection errors if database is initializing
