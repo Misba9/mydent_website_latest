@@ -15,7 +15,6 @@
         @include('fronts.medicals.partials.stories')
         @include('fronts.medicals.partials.shop-categories')
         @include('fronts.medicals.partials.centers')
-        @include('fronts.medicals.partials.testimonials')
         @include('fronts.medicals.partials.faqs')
         @include('fronts.medicals.partials.cta')
         @include('fronts.medicals.partials.fab')

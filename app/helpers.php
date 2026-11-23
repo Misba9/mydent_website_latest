@@ -57,12 +57,13 @@ function getAppName()
 function getAppLogo()
 {
     $logo = optional(getSettingsKeyedByKey()->get('logo'))->value;
-    if (!empty($logo)) {
+    if (! empty($logo)) {
         if (str_starts_with($logo, 'http://') || str_starts_with($logo, 'https://')) {
             $parsed = parse_url($logo, PHP_URL_PATH);
-            $logo = ltrim($parsed, '/');
+            $logo = ltrim($parsed ?? '', '/');
         }
-        if (file_exists(public_path($logo))) {
+        // Never serve legacy InfyCare / InfyOm brand assets.
+        if (! preg_match('/infy(care|om)|infyCare/i', $logo) && file_exists(public_path($logo))) {
             return $logo;
         }
     }
@@ -74,6 +75,9 @@ function getAppLogo()
     if (file_exists(public_path('storage/imgs/logo-transparent.png'))) {
         return 'storage/imgs/logo-transparent.png';
     }
+    if (file_exists(public_path('assets/image/mydent-logo.png'))) {
+        return 'assets/image/mydent-logo.png';
+    }
 
     return 'storage/imgs/logo.png';
 }
@@ -84,7 +88,25 @@ function getAppLogo()
  */
 function getAppFavicon()
 {
-    return optional(getSettingsKeyedByKey()->get('favicon'))->value ?? 'assets/image/mydent-favicon.ico';
+    $favicon = optional(getSettingsKeyedByKey()->get('favicon'))->value;
+    if (! empty($favicon)) {
+        if (str_starts_with($favicon, 'http://') || str_starts_with($favicon, 'https://')) {
+            $parsed = parse_url($favicon, PHP_URL_PATH);
+            $favicon = ltrim($parsed ?? '', '/');
+        }
+        // Never serve legacy InfyCare / InfyOm brand assets.
+        if (preg_match('/infy(care|om)|infyCare/i', $favicon)) {
+            $favicon = null;
+        } elseif (file_exists(public_path($favicon))) {
+            return $favicon;
+        }
+    }
+
+    if (file_exists(public_path('assets/image/mydent-favicon.ico'))) {
+        return 'assets/image/mydent-favicon.ico';
+    }
+
+    return 'assets/image/mydent-logo.png';
 }
 
 /**

@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="{{ getAppName() }}" />
-    <link rel="icon" href="{{ asset(getAppFavicon()) }}" type="image/png">
+    <link rel="icon" href="{{ asset(getAppFavicon()) }}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>document.documentElement.classList.add('md-js','md-page-loading');</script>
 
