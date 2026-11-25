@@ -3,7 +3,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
             <div>
                 <span class="md-section__eyebrow">Centers</span>
-                <h2 id="md-centers-title" class="md-section__title mb-2">Visit a MyDent clinic</h2>
+                <h2 id="md-centers-title" class="md-section__title mb-2">Vist mydent center</h2>
                 <p class="md-section__lead mb-0">Book a consultation at one of our dental centers.</p>
             </div>
             <a href="{{ route('medicalContact') }}" class="btn btn-outline-primary" data-turbo="false">All centers</a>

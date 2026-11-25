@@ -16,11 +16,11 @@
                 </ul>
                 <x-front.button href="{{ route('medicalAppointment') }}">Schedule a Consultation</x-front.button>
             </div>
-            <div class="md-split__media">
-                <img src="{{ asset('images/confident-smile.jpg') }}"
+            <div class="md-split__media md-split__media--natural">
+                <img src="{{ asset('images/before-after.png') }}"
                      alt="Confident smile with MyDent care"
-                     width="800"
-                     height="600"
+                     width="1536"
+                     height="1024"
                      loading="lazy"
                      onerror="{!! imgOnErrorFallback('images/smile-with-aligners.jpg') !!}">
             </div>

@@ -7,6 +7,7 @@ The application is accessible locally at: [http://127.0.0.1:8000](http://127.0.0
 
 To start or restart the server manually:
 ```bash
+php artisan optimize:clear
 php artisan serve --port=8000
 ```
 

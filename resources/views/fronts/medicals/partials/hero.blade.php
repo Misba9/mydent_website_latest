@@ -9,7 +9,7 @@
     <div class="md-hero__content">
         <div class="container">
             <div class="md-hero-rise" style="max-width: 40rem;">
-                <p class="md-hero__brand">mydent</p>
+                <p class="md-hero__brand text-danger">mydent</p>
                 <h1 class="md-hero__headline">
                     Your Dream Smile Starts Here.
                 </h1>

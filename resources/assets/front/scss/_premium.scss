@@ -4,7 +4,7 @@
     position: sticky;
     top: 0;
     z-index: 1040;
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(238, 247, 252, 0.96);
     // Avoid backdrop-filter here — it creates a containing block that traps nested fixed UI.
     border-bottom: 1px solid transparent;
     min-height: var(--md-header-h);
@@ -12,8 +12,8 @@
 
     &.is-scrolled {
         box-shadow: var(--md-shadow-header);
-        border-bottom-color: var(--md-border);
-        background: rgba(255, 255, 255, 0.98);
+        border-bottom-color: #CFE4EF;
+        background: rgba(238, 247, 252, 0.98);
     }
 
     .header-logo {
@@ -46,8 +46,8 @@
 
         &.active,
         &:hover {
-            color: var(--md-coral) !important;
-            background: rgba(232, 61, 69, 0.06);
+            color: var(--md-blue-deep) !important;
+            background: rgba(118, 185, 200, 0.16);
         }
     }
 
@@ -64,8 +64,8 @@
         background: var(--md-white);
 
         &:hover {
-            border-color: var(--md-coral);
-            color: var(--md-coral);
+            border-color: var(--md-blue-deep);
+            color: var(--md-blue-deep);
         }
 
         .badge {
@@ -89,7 +89,7 @@
 .md-mobile-nav.offcanvas {
     --bs-offcanvas-width: min(100%, 320px);
     z-index: 1085;
-    background: #fff;
+    background: #EEF7FC;
 }
 
 .md-mobile-nav .offcanvas-title {
@@ -125,8 +125,8 @@
 
     &.active,
     &:hover {
-        color: var(--md-coral);
-        background: rgba(232, 61, 69, 0.06);
+        color: var(--md-blue-deep);
+        background: rgba(118, 185, 200, 0.16);
     }
 }
 
@@ -499,6 +499,10 @@
         box-shadow: var(--md-shadow-soft);
         aspect-ratio: 4 / 3;
         background: var(--md-soft);
+
+        &--natural {
+            aspect-ratio: 3 / 2;
+        }
 
         img,
         video {
