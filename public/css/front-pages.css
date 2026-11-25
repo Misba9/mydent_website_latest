@@ -1650,7 +1650,7 @@ h6,
   position: sticky;
   top: 0;
   z-index: 1040;
-  background: rgba(238, 247, 252, 0.96);
+  background: var(--md-accent);
   border-bottom: 1px solid transparent;
   min-height: var(--md-header-h);
   transition: box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
@@ -1658,7 +1658,7 @@ h6,
 .md-header.is-scrolled {
   box-shadow: var(--md-shadow-header);
   border-bottom-color: #CFE4EF;
-  background: rgba(238, 247, 252, 0.98);
+  background: var(--md-accent);
 }
 .md-header .header-logo {
   line-height: 0;
@@ -1723,7 +1723,7 @@ h6,
 .md-mobile-nav.offcanvas {
   --bs-offcanvas-width: min(100%, 320px);
   z-index: 1085;
-  background: #EEF7FC;
+  background: var(--md-accent);
 }
 
 .md-mobile-nav .offcanvas-title {

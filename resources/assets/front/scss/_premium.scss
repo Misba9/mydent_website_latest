@@ -4,7 +4,7 @@
     position: sticky;
     top: 0;
     z-index: 1040;
-    background: rgba(238, 247, 252, 0.96);
+    background: var(--md-accent);
     // Avoid backdrop-filter here — it creates a containing block that traps nested fixed UI.
     border-bottom: 1px solid transparent;
     min-height: var(--md-header-h);
@@ -13,7 +13,7 @@
     &.is-scrolled {
         box-shadow: var(--md-shadow-header);
         border-bottom-color: #CFE4EF;
-        background: rgba(238, 247, 252, 0.98);
+        background: var(--md-accent);
     }
 
     .header-logo {
@@ -89,7 +89,7 @@
 .md-mobile-nav.offcanvas {
     --bs-offcanvas-width: min(100%, 320px);
     z-index: 1085;
-    background: #EEF7FC;
+    background: var(--md-accent);
 }
 
 .md-mobile-nav .offcanvas-title {
